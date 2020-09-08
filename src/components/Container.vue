@@ -7,7 +7,8 @@
           <el-button>创建报表</el-button>
 <!--          <el-button>创建自由列表</el-button>-->
 <!--          <el-button>创建行式列表</el-button>-->
-          <el-button @click="saveToJSON">保存</el-button>
+          <el-button @click="saveToJSON">保存报表数据</el-button>
+          <el-button @click="saveTemplateJSON">保存模板数据</el-button>
           <el-button>删除</el-button>
           <el-button>参考创建</el-button>
           <el-button @click="handlePreview">预览</el-button>
@@ -347,6 +348,9 @@ export default {
       })
       // console.log(this.widgetForm.config)
     },
+    saveTemplateJSON() {
+      post(this.widgetForm)
+    },
     handlePreview() {
       this.previewVisible = true
     },
@@ -409,7 +413,7 @@ export default {
         }
         this.jsonCopyValue = JSON.stringify(this.widgetForm)
       })
-      post(this.widgetForm)
+      // post(this.widgetForm)
     },
     handleGenerateCode () {
 
