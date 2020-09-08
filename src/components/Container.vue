@@ -4,17 +4,18 @@
       <div class="add-column-mask-container" v-if="showAddColumn"></div>
       <el-header height="45">
         <el-row class="btn-container">
+          <el-button @click="saveTemplateJSON">保存模板数据</el-button>
+          <el-button @click="queryTemplateData">获取模板数据</el-button>
+          <el-button @click="saveReportJSON">保存报表数据</el-button>
+          <el-button @click="queryReportData">获取报表数据</el-button>
           <el-button>创建报表</el-button>
 <!--          <el-button>创建自由列表</el-button>-->
 <!--          <el-button>创建行式列表</el-button>-->
-          <el-button @click="saveToJSON">保存报表数据</el-button>
-          <el-button @click="saveTemplateJSON">保存模板数据</el-button>
           <el-button>删除</el-button>
           <el-button>参考创建</el-button>
           <el-button @click="handlePreview">预览</el-button>
           <el-button>发布</el-button>
           <el-button>启用</el-button>
-          <el-button @click="queryData">获取测试</el-button>
         </el-row>
       </el-header>
       <el-main class="fm2-main">
@@ -295,7 +296,7 @@ export default {
     }
   },
   methods: {
-    saveToJSON() {
+    saveReportJSON() {
       const { list } = this.widgetForm
 
       let dataList = []
@@ -348,17 +349,20 @@ export default {
       })
       // console.log(this.widgetForm.config)
     },
+    queryReportData() {
+
+    },
     saveTemplateJSON() {
       post(this.widgetForm)
     },
-    handlePreview() {
-      this.previewVisible = true
-    },
-    queryData() {
-      get('code2').then(result => {
+    queryTemplateData() {
+      get('code3').then(result => {
         const { json } = result.dataset.datas[0]
         this.setJSON(JSON.parse(json), null)
       })
+    },
+    handlePreview() {
+      this.previewVisible = true
     },
     addColumn() {
       this.showAddColumn = true
