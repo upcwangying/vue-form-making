@@ -203,6 +203,7 @@ import templateInitialData from '@/components/templateInitialData';
 import templateJson from '../mock/template.json';
 import reportJson from '../mock/report.json';
 import { get, post } from '@/api/template';
+import { getReport, postReport } from '@/api/report';
 
 export default {
   name: 'fm-making-form',
@@ -326,6 +327,7 @@ export default {
             data['datasource'] = item.options.datasource
             data['table'] = item.options.table
             data['field'] = item.options.field
+            data['otherfields'] = "werks,bukrs,create_by,create_time,update_by,update_time,is_del"
             dataList.push(data)
           }
         }
@@ -348,6 +350,7 @@ export default {
         this.jsonCopyValue = JSON.stringify(dataList)
       })
       // console.log(this.widgetForm.config)
+      postReport(dataList)
     },
     queryReportData() {
 
@@ -356,7 +359,7 @@ export default {
       post(this.widgetForm)
     },
     queryTemplateData() {
-      get('code3').then(result => {
+      get('code4').then(result => {
         const { json } = result.dataset.datas[0]
         this.setJSON(JSON.parse(json), null)
       })

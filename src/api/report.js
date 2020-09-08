@@ -1,17 +1,24 @@
 import request from '@/util/request'
 
-export function get() {
+export function getReport() {
   return request({
-    url: '/dev-api/vue-element-admin/user/login',
+    url: '/tpridmp/process/dmp_report?method=save',
     method: 'get',
     data
   })
 }
 
-export function post(data) {
+export function postReport(rows) {
   return request({
-    url: '/dev-api/vue-element-admin/user/login',
-    method: 'post',
-    data
+    url: '/tpridmp/process/dmp_report?method=test_save',
+    method: 'get',
+    params: {
+      jsonStr: {
+        type: "form",
+        werks: 'W074',
+        bukrs: 4010,
+        datas: rows
+      }
+    }
   })
 }
