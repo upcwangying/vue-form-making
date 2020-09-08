@@ -13,6 +13,7 @@
           <el-button @click="handlePreview">预览</el-button>
           <el-button>发布</el-button>
           <el-button>启用</el-button>
+          <el-button @click="queryData">获取测试</el-button>
         </el-row>
       </el-header>
       <el-main class="fm2-main">
@@ -345,10 +346,15 @@ export default {
         this.jsonCopyValue = JSON.stringify(dataList)
       })
       // console.log(this.widgetForm.config)
-      post(dataList)
     },
     handlePreview() {
       this.previewVisible = true
+    },
+    queryData() {
+      get('code2').then(result => {
+        const { json } = result.dataset.datas[0]
+        this.setJSON(JSON.parse(json), null)
+      })
     },
     addColumn() {
       this.showAddColumn = true
@@ -403,6 +409,7 @@ export default {
         }
         this.jsonCopyValue = JSON.stringify(this.widgetForm)
       })
+      post(this.widgetForm)
     },
     handleGenerateCode () {
 
