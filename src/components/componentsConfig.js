@@ -360,6 +360,9 @@ export const layoutComponents = [
     columns: [],
     rows: [],
     options: {
+      datasource: 'tpri_dmp_admin',
+      table: 'TPRI_DMP_REPORT_DATA_TEST',
+      field: 'value',
       stripe: false,
       height: '300',
       border: false,
