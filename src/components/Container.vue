@@ -203,7 +203,7 @@ import TableEditable from '@/components/TableEditable';
 import templateInitialData from '@/components/templateInitialData';
 import templateJson from '../mock/template.json';
 import reportJson from '../mock/report.json';
-import { get, post } from '@/api/template';
+import { getTemplate, postTemplate } from '@/api/template';
 import { getReport, postReport } from '@/api/report';
 
 export default {
@@ -362,7 +362,7 @@ export default {
       })
     },
     queryData() {
-      Promise.all([get('code'), getReport('1013037683385085952', 0, '')])
+      Promise.all([getTemplate('code'), getReport('1013037683385085952', 0, '')])
         .then(([{ success: templateSuccess, dataset }, { success, fromData }]) => {
           // console.log(templateSuccess, dataset, success, fromData)
           const { json } = dataset.datas[0]
@@ -372,7 +372,7 @@ export default {
       })
     },
     saveTemplateJSON() {
-      const { list } = this.widgetForm
+      const { list, config: { werks, bukrs, templateName, templateCode } } = this.widgetForm
 
       let tables = []
       const listFunc = (data) => {
@@ -400,11 +400,10 @@ export default {
       }
 
       listFunc(list)
-      console.log(tables)
-      post(this.widgetForm, tables)
+      postTemplate(werks, bukrs, templateName, templateCode, this.widgetForm, tables)
     },
     queryTemplateData() {
-      get('code').then(result => {
+      getTemplate('code').then(result => {
         const { json } = result.dataset.datas[0]
         this.setJSON(JSON.parse(json), null)
       })

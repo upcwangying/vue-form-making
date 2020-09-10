@@ -1,6 +1,6 @@
 import request from '@/util/request'
 
-export function get(code) {
+export function getTemplate(code) {
   return request({
     url: '/tpridmp/process/dmp_report?method=query',
     method: 'get',
@@ -10,16 +10,16 @@ export function get(code) {
   })
 }
 
-export function post(data, tables) {
+export function postTemplate(werks, bukrs, name, code, data, tables) {
   return request({
     url: '/tpridmp/process/dmp_report?method=save',
     method: 'get',
     params: {
       // dbid: 1012304476813438976,
-      werks: 'W074',
-      bukrs: 4010,
-      name: 'name',
-      code: 'code',
+      werks,
+      bukrs,
+      name,
+      code,
       json: JSON.stringify(data),
       version: 0,
       tempjb: 0,

@@ -262,6 +262,15 @@ export const basicComponents = [
       table: 'TPRI_DMP_REPORT_DATA_TEST',
       field: 'value'
     }
+  },
+  {
+    type: 'jizu',
+    icon: '',
+    options: {
+      datasource: 'TPRI_VUE',
+      table: 'TPRI_DMP_REPORT_DATA_TEST',
+      field: 'value'
+    }
   }
 ]
 

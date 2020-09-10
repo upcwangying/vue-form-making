@@ -23,7 +23,8 @@ export default {
         table: 'Table',
         grid: 'Grid',
         tabs: 'Tabs',
-        divider: 'Divider'
+        divider: 'Divider',
+        jizu: 'Unit'
       },
       basic: {
         title: 'Basic Component',

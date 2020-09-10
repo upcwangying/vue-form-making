@@ -16,7 +16,8 @@ module.exports = {
         target: 'http://127.0.0.1:8099',
         changeOrigin: true,
         pathRewrite: {
-          '/tpridmp/': '/prod-api/'
+          '/tpridmp/': '/prod-api/',
+          '/sjgl/': '/prod-api/'
         }
       }
     }
