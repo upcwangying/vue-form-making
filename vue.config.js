@@ -12,11 +12,11 @@ module.exports = {
     },
     // 本地开发环境请求的代理配置
     proxy: {
-      '/dev-api/': {
+      '/': {
         target: 'http://127.0.0.1:8099',
         changeOrigin: true,
         pathRewrite: {
-          '/': '/'
+          '/tpridmp/': '/prod-api/'
         }
       }
     }

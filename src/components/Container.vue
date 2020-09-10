@@ -4,10 +4,13 @@
       <div class="add-column-mask-container" v-if="showAddColumn"></div>
       <el-header height="45">
         <el-row class="btn-container">
+          <el-button @click="saveTemplateJSON">保存模板数据</el-button>
+          <el-button @click="queryTemplateData">获取模板数据</el-button>
+          <el-button @click="saveReportJSON">保存报表数据</el-button>
+          <el-button @click="queryReportData">获取报表数据</el-button>
           <el-button>创建报表</el-button>
 <!--          <el-button>创建自由列表</el-button>-->
 <!--          <el-button>创建行式列表</el-button>-->
-          <el-button @click="saveToJSON">保存</el-button>
           <el-button>删除</el-button>
           <el-button>参考创建</el-button>
           <el-button @click="handlePreview">预览</el-button>
@@ -200,6 +203,7 @@ import templateInitialData from '@/components/templateInitialData';
 import templateJson from '../mock/template.json';
 import reportJson from '../mock/report.json';
 import { get, post } from '@/api/template';
+import { getReport, postReport } from '@/api/report';
 
 export default {
   name: 'fm-making-form',
@@ -293,7 +297,7 @@ export default {
     }
   },
   methods: {
-    saveToJSON() {
+    saveReportJSON() {
       const { list } = this.widgetForm
 
       let dataList = []
@@ -323,6 +327,7 @@ export default {
             data['datasource'] = item.options.datasource
             data['table'] = item.options.table
             data['field'] = item.options.field
+            data['otherfields'] = "werks,bukrs,create_by,create_time,update_by,update_time,is_del"
             dataList.push(data)
           }
         }
@@ -345,7 +350,19 @@ export default {
         this.jsonCopyValue = JSON.stringify(dataList)
       })
       // console.log(this.widgetForm.config)
-      post(dataList)
+      postReport(dataList)
+    },
+    queryReportData() {
+
+    },
+    saveTemplateJSON() {
+      post(this.widgetForm)
+    },
+    queryTemplateData() {
+      get('code4').then(result => {
+        const { json } = result.dataset.datas[0]
+        this.setJSON(JSON.parse(json), null)
+      })
     },
     handlePreview() {
       this.previewVisible = true
@@ -408,6 +425,7 @@ export default {
         }
         this.jsonCopyValue = JSON.stringify(this.widgetForm)
       })
+      // post(this.widgetForm)
     },
     handleGenerateCode () {
 
