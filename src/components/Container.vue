@@ -10,8 +10,6 @@
           <el-button @click="queryReportData">获取报表数据</el-button>
           <el-button @click="queryData">获取数据</el-button>
           <el-button>创建报表</el-button>
-<!--          <el-button>创建自由列表</el-button>-->
-<!--          <el-button>创建行式列表</el-button>-->
           <el-button>删除</el-button>
           <el-button>参考创建</el-button>
           <el-button @click="handlePreview">预览</el-button>
@@ -87,14 +85,12 @@
             <el-container>
               <el-header height="45px">
                 <div class="config-tab" :class="{active: configTab ==='header'}" @click="handleConfigSelect('header')">{{$t('fm.config.header.title')}}</div>
-<!--                <div class="config-tab" :class="{active: configTab ==='table'}" @click="handleConfigSelect('table')">{{$t('fm.config.table.title')}}</div>-->
                 <div class="config-tab" :class="{active: configTab ==='zhibiao'}" @click="handleConfigSelect('zhibiao')">{{$t('fm.config.zhibiao.title')}}</div>
                 <div class="config-tab" :class="{active: configTab ==='widget'}" @click="handleConfigSelect('widget')">{{$t('fm.config.widget.title')}}</div>
                 <div class="config-tab" :class="{active: configTab ==='form'}" @click="handleConfigSelect('form')">{{$t('fm.config.form.title')}}</div>
               </el-header>
               <el-main class="config-content">
                 <header-config v-show="configTab ==='header'" :data="headerFormSelect"></header-config>
-<!--                <table-config v-show="configTab ==='table'" :data="tableSelect"></table-config>-->
                 <zhi-biao-config v-show="configTab ==='zhibiao'" :data="zhiBiaoSelect"></zhi-biao-config>
                 <widget-config ref="widgetConfig" v-show="configTab ==='widget'" :data="widgetFormSelect" @showAddColumn="addColumn" @showAddRow="addRow" @draggableend="dragend"></widget-config>
                 <form-config v-show="configTab ==='form'" :data="widgetForm.config"></form-config>
@@ -247,9 +243,6 @@ export default {
       resetJson: false,
       showAddColumn:false,
       widgetForm: JSON.parse(JSON.stringify(templateInitialData)),
-      tableSelect: {
-        config: {}
-      },
       zhiBiaoSelect: {
         config: {}
       },

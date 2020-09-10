@@ -24,7 +24,7 @@ export function postTemplate(werks, bukrs, name, code, data, tables) {
       version: 0,
       tempjb: 0,
       flid: '1012434389059379200',
-      tables
+      tables: JSON.stringify(tables)
     }
   })
 }
