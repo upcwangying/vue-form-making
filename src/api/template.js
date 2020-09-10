@@ -10,7 +10,7 @@ export function get(code) {
   })
 }
 
-export function post(data) {
+export function post(data, tables) {
   return request({
     url: '/tpridmp/process/dmp_report?method=save',
     method: 'get',
@@ -21,7 +21,10 @@ export function post(data) {
       name: 'name',
       code: 'code',
       json: JSON.stringify(data),
-      version: 0
+      version: 0,
+      tempjb: 0,
+      flid: '1012434389059379200',
+      tables
     }
   })
 }

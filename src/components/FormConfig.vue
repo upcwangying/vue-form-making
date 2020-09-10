@@ -2,6 +2,18 @@
   <el-form class="form-config-container" label-width="20px">
     <el-row>
       <el-col :span="12">
+        <el-form-item label="工厂编码" prop="werks">
+          <el-input v-model="data.werks" placeholder="" size="mini" label=""/>
+        </el-form-item>
+      </el-col>
+      <el-col :span="12">
+        <el-form-item label="公司编码" prop="bukrs">
+          <el-input v-model="data.bukrs" placeholder="" size="mini" label=""/>
+        </el-form-item>
+      </el-col>
+    </el-row>
+    <el-row>
+      <el-col :span="12">
         <el-form-item label="模板名称" prop="templateName">
           <el-input v-model="data.templateName" placeholder="" size="mini" label=""/>
         </el-form-item>
@@ -69,7 +81,10 @@
         </el-form-item>
       </el-col>
       <el-col :span="12">
-        <div style="height: 68px; border-bottom: 1px solid #e1e1e1;"></div>
+        <el-form-item label="模板编码" prop="enabler">
+          <el-input v-model="data.templateCode" placeholder="" size="mini" label=""/>
+        </el-form-item>
+<!--        <div style="height: 68px; border-bottom: 1px solid #e1e1e1;"></div>-->
       </el-col>
     </el-row>
   </el-form>

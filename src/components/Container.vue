@@ -8,6 +8,7 @@
           <el-button @click="queryTemplateData">获取模板数据</el-button>
           <el-button @click="saveReportJSON">保存报表数据</el-button>
           <el-button @click="queryReportData">获取报表数据</el-button>
+          <el-button @click="queryData">获取数据</el-button>
           <el-button>创建报表</el-button>
 <!--          <el-button>创建自由列表</el-button>-->
 <!--          <el-button>创建行式列表</el-button>-->
@@ -353,13 +354,57 @@ export default {
       postReport(dataList)
     },
     queryReportData() {
-
+      getReport('1013037683385085952', 0, '').then(({ success, fromData }) => {
+        if (fromData) {
+          const { bukrs, datas, werks, type } = JSON.parse(fromData);
+          console.log(bukrs, datas, werks, type)
+        }
+      })
+    },
+    queryData() {
+      Promise.all([get('code'), getReport('1013037683385085952', 0, '')])
+        .then(([{ success: templateSuccess, dataset }, { success, fromData }]) => {
+          // console.log(templateSuccess, dataset, success, fromData)
+          const { json } = dataset.datas[0]
+          const { bukrs, datas, werks, type } = JSON.parse(fromData);
+          console.log(json, datas)
+          this.setJSON(JSON.parse(json), datas)
+      })
     },
     saveTemplateJSON() {
-      post(this.widgetForm)
+      const { list } = this.widgetForm
+
+      let tables = []
+      const listFunc = (data) => {
+        for (const item of list) {
+          if (item.type === 'grid') {
+            const { columns } = item
+            if (columns) {
+              const gridData = []
+              for (const column of columns) {
+                gridData.push(column.list)
+              }
+              console.log(gridData)
+              // gridData && listFunc(gridData)
+            }
+          } else {
+            let data = Object.create(null)
+            data['type'] = item.type
+            data['key'] = item.model
+            data['datasource'] = item.options.datasource
+            data['table'] = item.options.table
+            data['field'] = item.options.field
+            tables.push(data)
+          }
+        }
+      }
+
+      listFunc(list)
+      console.log(tables)
+      post(this.widgetForm, tables)
     },
     queryTemplateData() {
-      get('code4').then(result => {
+      get('code').then(result => {
         const { json } = result.dataset.datas[0]
         this.setJSON(JSON.parse(json), null)
       })
