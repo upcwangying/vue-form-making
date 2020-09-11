@@ -15,13 +15,12 @@
       @row-click="zbTableChange"
     >
       <el-table-column
-        prop="zbbm"
-        min-width="220"
+        prop="dbid"
+        min-width="140"
         height="0">
       </el-table-column>
       <el-table-column
         prop="zbmc"
-        min-width="100"
         height="0">
       </el-table-column>
     </el-table>
