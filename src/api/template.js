@@ -28,3 +28,19 @@ export function postTemplate(werks, bukrs, name, code, data, tables) {
     }
   })
 }
+
+export function publishTemplate(params) {
+  return request({
+    url: '/tpridmp/process/dmp_report?method=publish',
+    method: 'get',
+    params
+  })
+}
+
+export function enableTemplate(params) {
+  return request({
+    url: '/tpridmp/process/dmp_report?method=enable',
+    method: 'get',
+    params
+  })
+}

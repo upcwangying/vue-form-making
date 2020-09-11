@@ -347,7 +347,7 @@ export default {
       postReport(dataList)
     },
     queryReportData() {
-      getReport('1013037683385085952', 0, '').then(({ success, fromData }) => {
+      getReport('1013114899288600576', 0, '14').then(({ success, fromData }) => {
         if (fromData) {
           const { bukrs, datas, werks, type } = JSON.parse(fromData);
           console.log(bukrs, datas, werks, type)
@@ -355,7 +355,7 @@ export default {
       })
     },
     queryData() {
-      Promise.all([getTemplate('code'), getReport('1013037683385085952', 0, '')])
+      Promise.all([getTemplate('template_test'), getReport('1013114899288600576', 0, '14')])
         .then(([{ success: templateSuccess, dataset }, { success, fromData }]) => {
           // console.log(templateSuccess, dataset, success, fromData)
           const { json } = dataset.datas[0]
@@ -396,7 +396,7 @@ export default {
       postTemplate(werks, bukrs, templateName, templateCode, this.widgetForm, tables)
     },
     queryTemplateData() {
-      getTemplate('code').then(result => {
+      getTemplate('template_test').then(result => {
         const { json } = result.dataset.datas[0]
         this.setJSON(JSON.parse(json), null)
       })
