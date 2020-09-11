@@ -120,7 +120,12 @@
         name: 'ZhiBiaoConfig',
         components: {},
         mixins: [],
-        props: {},
+        props: {
+          zbattribute: {
+            type: Object,
+            default: () => {}
+          }
+        },
         data() {
             return {
                 zbAttribute: {
@@ -147,7 +152,15 @@
         },
         created() {},
         mounted() {},
-        methods: {}
+        methods: {},
+        watch: {
+          zbattribute: {
+            handler(val) {
+              this.zbAttribute = val
+            },
+            deep: true
+          },
+        },
     }
 </script>
 
