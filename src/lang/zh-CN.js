@@ -23,7 +23,8 @@ export default {
         table: '表格布局',
         grid: '栅格布局',
         tabs: '标签页',
-        divider: '分割线'
+        divider: '分割线',
+        jizu: '机组'
       },
       basic: {
         title: '基础字段',

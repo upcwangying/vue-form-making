@@ -10,7 +10,7 @@ export const basicComponents = [
       pattern: '',
       placeholder: '',
       disabled: false,
-      datasource: 'tpri_dmp_admin',
+      datasource: 'TPRI_VUE',
       table: 'TPRI_DMP_REPORT_DATA_TEST',
       field: 'value'
     }
@@ -25,7 +25,7 @@ export const basicComponents = [
       disabled: false,
       pattern: '',
       placeholder: '',
-      datasource: 'tpri_dmp_admin',
+      datasource: 'TPRI_VUE',
       table: 'TPRI_DMP_REPORT_DATA_TEST',
       field: 'value'
     }
@@ -42,7 +42,7 @@ export const basicComponents = [
       step: 1,
       disabled: false,
       controlsPosition: '',
-      datasource: 'tpri_dmp_admin',
+      datasource: 'TPRI_VUE',
       table: 'TPRI_DMP_REPORT_DATA_TEST',
       field: 'value'
     }
@@ -78,7 +78,7 @@ export const basicComponents = [
       },
       remoteFunc: '',
       disabled: false,
-      datasource: 'tpri_dmp_admin',
+      datasource: 'TPRI_VUE',
       table: 'TPRI_DMP_REPORT_DATA_TEST',
       field: 'value'
     }
@@ -111,7 +111,7 @@ export const basicComponents = [
       },
       remoteFunc: '',
       disabled: false,
-      datasource: 'tpri_dmp_admin',
+      datasource: 'TPRI_VUE',
       table: 'TPRI_DMP_REPORT_DATA_TEST',
       field: 'value'
     }
@@ -133,7 +133,7 @@ export const basicComponents = [
       format: 'HH:mm:ss',
       required: false,
       width: '',
-      datasource: 'tpri_dmp_admin',
+      datasource: 'TPRI_VUE',
       table: 'TPRI_DMP_REPORT_DATA_TEST',
       field: 'value'
     }
@@ -155,7 +155,7 @@ export const basicComponents = [
       timestamp: false,
       required: false,
       width: '',
-      datasource: 'tpri_dmp_admin',
+      datasource: 'TPRI_VUE',
       table: 'TPRI_DMP_REPORT_DATA_TEST',
       field: 'value'
     }
@@ -169,7 +169,7 @@ export const basicComponents = [
       disabled: false,
       allowHalf: false,
       required: false,
-      datasource: 'tpri_dmp_admin',
+      datasource: 'TPRI_VUE',
       table: 'TPRI_DMP_REPORT_DATA_TEST',
       field: 'value'
     }
@@ -182,7 +182,7 @@ export const basicComponents = [
       disabled: false,
       showAlpha: false,
       required: false,
-      datasource: 'tpri_dmp_admin',
+      datasource: 'TPRI_VUE',
       table: 'TPRI_DMP_REPORT_DATA_TEST',
       field: 'value'
     }
@@ -217,7 +217,7 @@ export const basicComponents = [
         label: 'label'
       },
       remoteFunc: '',
-      datasource: 'tpri_dmp_admin',
+      datasource: 'TPRI_VUE',
       table: 'TPRI_DMP_REPORT_DATA_TEST',
       field: 'value'
     }
@@ -229,7 +229,7 @@ export const basicComponents = [
       defaultValue: false,
       required: false,
       disabled: false,
-      datasource: 'tpri_dmp_admin',
+      datasource: 'TPRI_VUE',
       table: 'TPRI_DMP_REPORT_DATA_TEST',
       field: 'value'
     }
@@ -247,7 +247,7 @@ export const basicComponents = [
       showInput: false,
       range: false,
       width: '',
-      datasource: 'tpri_dmp_admin',
+      datasource: 'TPRI_VUE',
       table: 'TPRI_DMP_REPORT_DATA_TEST',
       field: 'value'
     }
@@ -258,7 +258,16 @@ export const basicComponents = [
     options: {
       defaultValue: 'This is a text',
       customClass: '',
-      datasource: 'tpri_dmp_admin',
+      datasource: 'TPRI_VUE',
+      table: 'TPRI_DMP_REPORT_DATA_TEST',
+      field: 'value'
+    }
+  },
+  {
+    type: 'jizu',
+    icon: '',
+    options: {
+      datasource: 'TPRI_VUE',
       table: 'TPRI_DMP_REPORT_DATA_TEST',
       field: 'value'
     }
@@ -294,7 +303,7 @@ export const advanceComponents = [
       min: 0,
       isEdit: false,
       action: 'https://jsonplaceholder.typicode.com/photos/',
-      datasource: 'tpri_dmp_admin',
+      datasource: 'TPRI_VUE',
       table: 'TPRI_DMP_REPORT_DATA_TEST',
       field: 'value'
     }
@@ -305,7 +314,7 @@ export const advanceComponents = [
     options: {
       defaultValue: '',
       width: '',
-      datasource: 'tpri_dmp_admin',
+      datasource: 'TPRI_VUE',
       table: 'TPRI_DMP_REPORT_DATA_TEST',
       field: 'value'
     }
@@ -327,7 +336,7 @@ export const advanceComponents = [
         children: 'children'
       },
       remoteFunc: '',
-      datasource: 'tpri_dmp_admin',
+      datasource: 'TPRI_VUE',
       table: 'TPRI_DMP_REPORT_DATA_TEST',
       field: 'value'
     }
@@ -360,7 +369,7 @@ export const layoutComponents = [
     columns: [],
     rows: [],
     options: {
-      datasource: 'tpri_dmp_admin',
+      datasource: 'TPRI_VUE',
       table: 'TPRI_DMP_REPORT_DATA_TEST',
       field: 'value',
       stripe: false,

@@ -8,9 +8,8 @@
           <el-button @click="queryTemplateData">获取模板数据</el-button>
           <el-button @click="saveReportJSON">保存报表数据</el-button>
           <el-button @click="queryReportData">获取报表数据</el-button>
+          <el-button @click="queryData">获取数据</el-button>
           <el-button>创建报表</el-button>
-<!--          <el-button>创建自由列表</el-button>-->
-<!--          <el-button>创建行式列表</el-button>-->
           <el-button>删除</el-button>
           <el-button>参考创建</el-button>
           <el-button @click="handlePreview">预览</el-button>
@@ -87,7 +86,6 @@
             <el-container>
               <el-header height="45px">
                 <div class="config-tab" :class="{active: configTab ==='header'}" @click="handleConfigSelect('header')">{{$t('fm.config.header.title')}}</div>
-<!--                <div class="config-tab" :class="{active: configTab ==='table'}" @click="handleConfigSelect('table')">{{$t('fm.config.table.title')}}</div>-->
                 <div class="config-tab" :class="{active: configTab ==='zhibiao'}" @click="handleConfigSelect('zhibiao')">{{$t('fm.config.zhibiao.title')}}</div>
                 <div class="config-tab" :class="{active: configTab ==='widget'}" @click="handleConfigSelect('widget')">{{$t('fm.config.widget.title')}}</div>
                 <div class="config-tab" :class="{active: configTab ==='form'}" @click="handleConfigSelect('form')">{{$t('fm.config.form.title')}}</div>
@@ -202,7 +200,7 @@ import TableEditable from '@/components/TableEditable';
 import templateInitialData from '@/components/templateInitialData';
 import templateJson from '../mock/template.json';
 import reportJson from '../mock/report.json';
-import { get, post } from '@/api/template';
+import { getTemplate, postTemplate } from '@/api/template';
 import { getReport, postReport, getBbfl } from '@/api/report';
 import { getZb, getZbDetal } from '@/api/jsjdQuery';
 
@@ -247,9 +245,6 @@ export default {
       resetJson: false,
       showAddColumn:false,
       widgetForm: JSON.parse(JSON.stringify(templateInitialData)),
-      tableSelect: {
-        config: {}
-      },
       zhiBiaoSelect: {
         config: {}
       },
@@ -433,13 +428,56 @@ export default {
       postReport(dataList)
     },
     queryReportData() {
-
+      getReport('1013114899288600576', 0, '14').then(({ success, fromData }) => {
+        if (fromData) {
+          const { bukrs, datas, werks, type } = JSON.parse(fromData);
+          console.log(bukrs, datas, werks, type)
+        }
+      })
+    },
+    queryData() {
+      Promise.all([getTemplate('template_test'), getReport('1013114899288600576', 0, '14')])
+        .then(([{ success: templateSuccess, dataset }, { success, fromData }]) => {
+          // console.log(templateSuccess, dataset, success, fromData)
+          const { json } = dataset.datas[0]
+          const { bukrs, datas, werks, type } = JSON.parse(fromData);
+          console.log(json, datas)
+          this.setJSON(JSON.parse(json), datas)
+      })
     },
     saveTemplateJSON() {
-      post(this.widgetForm)
+      const { list, config: { werks, bukrs, templateName, templateCode } } = this.widgetForm
+
+      let tables = []
+      const listFunc = (data) => {
+        for (const item of list) {
+          if (item.type === 'grid') {
+            const { columns } = item
+            if (columns) {
+              const gridData = []
+              for (const column of columns) {
+                gridData.push(column.list)
+              }
+              console.log(gridData)
+              // gridData && listFunc(gridData)
+            }
+          } else {
+            let data = Object.create(null)
+            data['type'] = item.type
+            data['key'] = item.model
+            data['datasource'] = item.options.datasource
+            data['table'] = item.options.table
+            data['field'] = item.options.field
+            tables.push(data)
+          }
+        }
+      }
+
+      listFunc(list)
+      postTemplate(werks, bukrs, templateName, templateCode, this.widgetForm, tables)
     },
     queryTemplateData() {
-      get('code4').then(result => {
+      getTemplate('template_test').then(result => {
         const { json } = result.dataset.datas[0]
         this.setJSON(JSON.parse(json), null)
       })

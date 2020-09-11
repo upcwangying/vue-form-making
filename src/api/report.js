@@ -1,10 +1,14 @@
 import request from '@/util/request'
 
-export function getReport() {
+export function getReport(temp_id, version, baobid) {
   return request({
-    url: '/tpridmp/process/dmp_report?method=save',
+    url: '/tpridmp/process/dmp_report?method=query_data',
     method: 'get',
-    data
+    params: {
+      temp_id,
+      version,
+      baobid,
+    }
   })
 }
 

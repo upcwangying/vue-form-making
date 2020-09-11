@@ -3,6 +3,11 @@
                 :label="widget.type === 'table' ? '' : widget.name"
                 :label-width="widget.type === 'table' ? '0px' : 'auto'"
   >
+
+    <template v-if="widget.type === 'jizu'">
+      <jizu-component />
+    </template>
+
     <template v-if="widget.type == 'input'">
       <el-input
           v-if="widget.options.dataType == 'number' || widget.options.dataType == 'integer' || widget.options.dataType == 'float'"
@@ -241,11 +246,13 @@
 
 <script>
 import FmUpload from './Upload'
+import JizuComponent from '@/components/JizuComponent';
 
 export default {
   props: ['widget', 'models', 'rules', 'remote'],
   components: {
-    FmUpload
+    FmUpload,
+    JizuComponent
   },
   data() {
     return {
