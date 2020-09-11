@@ -6,6 +6,11 @@
                 :label-width="element.type === 'table' ? '0px' : 'auto'"
                 @click.native.stop="handleSelectWidget(index)"
   >
+
+    <template v-if="element.type === 'jizu'">
+      <jizu-component />
+    </template>
+
     <template v-if="element.type === 'input'">
       <el-input
           v-model="element.options.defaultValue"
@@ -281,10 +286,12 @@
 
 <script>
 import FmUpload from './Upload'
+import JizuComponent from '@/components/JizuComponent';
 
 export default {
   props: ['element', 'select', 'index', 'data', 'changeshowtt'],
   components: {
+    JizuComponent,
     FmUpload,
   },
   data() {

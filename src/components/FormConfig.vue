@@ -2,20 +2,25 @@
   <el-form class="form-config-container" label-width="20px">
     <el-row>
       <el-col :span="12">
+        <el-form-item label="工厂编码" prop="werks">
+          <el-input v-model="data.werks" placeholder="" size="mini" label=""/>
+        </el-form-item>
+      </el-col>
+      <el-col :span="12">
+        <el-form-item label="公司编码" prop="bukrs">
+          <el-input v-model="data.bukrs" placeholder="" size="mini" label=""/>
+        </el-form-item>
+      </el-col>
+    </el-row>
+    <el-row>
+      <el-col :span="12">
         <el-form-item label="模板名称" prop="templateName">
           <el-input v-model="data.templateName" placeholder="" size="mini" label=""/>
         </el-form-item>
       </el-col>
       <el-col :span="12">
-        <el-form-item label="模板级别" prop="templateGrade">
-          <el-select v-model="data.templateGrade" value="group" placeholder="请选择">
-            <el-option
-                v-for="item in templateGradeOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-            </el-option>
-          </el-select>
+        <el-form-item label="模板编码" prop="enabler">
+          <el-input v-model="data.templateCode" placeholder="" size="mini" label=""/>
         </el-form-item>
       </el-col>
     </el-row>
@@ -45,31 +50,41 @@
     </el-row>
     <el-row>
       <el-col :span="12">
-        <el-form-item label="模板状态" prop="templateStatus">
-          <el-select v-model="data.templateStatus" value="beta" placeholder="请选择">
+        <el-form-item label="模板级别" prop="templateGrade">
+          <el-select v-model="data.templateGrade" value="group" placeholder="请选择">
             <el-option
-                v-for="item in templateStatusOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
+              v-for="item in templateGradeOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
             </el-option>
           </el-select>
         </el-form-item>
       </el-col>
       <el-col :span="12">
-        <el-form-item label="启用人" prop="enabler">
-          <el-input v-model="data.enabler" placeholder="" size="mini" label=""/>
+        <el-form-item label="模板状态" prop="templateStatus">
+          <el-select v-model="data.templateStatus" value="beta" placeholder="请选择">
+            <el-option
+              v-for="item in templateStatusOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
         </el-form-item>
       </el-col>
     </el-row>
     <el-row>
       <el-col :span="12">
-        <el-form-item label="启用时间" prop="enabledTime">
-          <el-date-picker v-model="data.enabledTime" placeholder="" size="mini" />
+        <el-form-item label="启用人" prop="enabler">
+          <el-input v-model="data.enabler" placeholder="" size="mini" label=""/>
         </el-form-item>
       </el-col>
       <el-col :span="12">
-        <div style="height: 68px; border-bottom: 1px solid #e1e1e1;"></div>
+        <el-form-item label="启用时间" prop="enabledTime">
+          <el-date-picker v-model="data.enabledTime" placeholder="" size="mini" />
+        </el-form-item>
+<!--        <div style="height: 68px; border-bottom: 1px solid #e1e1e1;"></div>-->
       </el-col>
     </el-row>
   </el-form>
