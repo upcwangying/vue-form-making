@@ -8,29 +8,59 @@
   </div>
 
   <div class="table-container">
-    <el-table
-        :data="tableData"
-        stripe
-        :show-header="false"
-    >
-      <el-table-column
-          prop="name"
-          height="0">
-      </el-table-column>
-    </el-table>
+    <el-select v-model="value" placeholder="请选择" @change="zbSelChange">
+      <el-option
+        v-for="item in tableData"
+        :key="item.dbid"
+        :label="item.zbmc"
+        :value="item.dbid">
+      </el-option>
+    </el-select>
   </div>
 </div>
 </template>
 
 <script>
-import quotas from '@/mock/quotas';
 export default {
   name: 'QuotaTable',
+  props: {
+    zbflZbData: {
+      type: Array,
+      default: () => []
+    },
+    syorjb: {
+      type: String,
+      default: ''
+    }
+  },
   data() {
     return {
-      tableData: quotas
+      value: '',
+      tableData: [],
+      syorjbParam: 'sy',  //默认实验报表
     }
-  }
+  },
+  watch: {
+    zbflZbData: {
+      handler(val) {
+        this.tableData = val
+        console.log('watch : ', val)
+      },
+      deep: true
+    },
+    syorjb(val) {
+      this.syorjbParam = val
+    },
+  },
+  methods: {
+    zbSelChange(val) {
+      let item_ = null
+      this.tableData.forEach(item => {
+        (item.dbid === val) && (item_ = item)
+      })
+      this.$emit('change', item_)
+    },
+  },
 }
 </script>
 

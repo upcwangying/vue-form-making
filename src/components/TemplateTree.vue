@@ -11,39 +11,78 @@
       class="filter-tree"
       :data="data"
       :props="defaultProps"
-      default-expand-all
       show-checkbox
       :filter-node-method="filterNode"
+      @node-expand="handleExpNode"
+      @node-click="handleClickNode"
       ref="tree">
   </el-tree>
 </div>
 </template>
 
 <script>
-import templates from '@/mock/templates';
+import request from '../util/request.js'
 export default {
   name: 'TemplateTree',
+  props: {
+    treeData: {
+      type: Array,
+      default: () => []
+    },
+    syorjb: {
+      type: String,
+      default: ''
+    }
+  },
   data() {
     return {
       filterText: '',
-      data: templates,
+      data: this.treeData,
       defaultProps: {
         children: 'children',
         label: 'label'
-      }
+      },
+      syorjbParam: 'sy',  //默认实验报表
     }
   },
   watch: {
+    treeData: {
+      handler(val) {
+        this.data = val
+      },
+      deep: true
+    },
+    syorjb(val) {
+      this.syorjbParam = val
+    },
     filterText(val) {
       this.$refs.tree.filter(val);
-    }
+    },
   },
-
   methods: {
     filterNode(value, data) {
       if (!value) return true;
       return data.label.indexOf(value) !== -1;
-    }
+    },
+    handleExpNode(obj, node, dom) {
+      // console.log('obj : ', obj);
+      // console.log('node : ', node);
+      // console.log('dom : ', dom);
+      this.$emit('node-expand', obj, node, dom) // 发布展开事件
+      // request({
+      //   url: '/dev-api/tpridmp/process/dmp_report?method=query',
+      //   method: 'get',
+      //   params: {
+      //     flid: obj.dbid
+      //   }
+      // }).then(res => {
+      //   if (res.success) {
+      //     console.log('res : ', res);
+      //     this.sybbTreeData = this.transIdLabel(res.dataset.datas)
+      //   }
+      // }).catch(err => { err; })
+    },
+    handleClickNode(obj, node, dom) {},
   },
 }
 </script>

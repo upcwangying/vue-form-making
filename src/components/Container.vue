@@ -34,7 +34,7 @@
                       <div class="config-tab all middle">报表分类</div>
                     </el-header>
                     <el-main>
-                      <template-tree />
+                      <template-tree :syorjb="syorjbParam" :tree-data="bbflTreeData" @node-expand="handleExpNode" />
                     </el-main>
                   </el-container>
                   <el-container style="height: 50% !important;">
@@ -42,7 +42,7 @@
                       <div class="config-tab all middle">指标分类</div>
                     </el-header>
                     <el-main>
-                      <quota-table />
+                      <quota-table :syorjb="syorjbParam" :zbfl-zb-data="zbflSelectData" @change="zbSelChange" />
                     </el-main>
                   </el-container>
                 </div>
@@ -52,7 +52,7 @@
                       <div class="config-tab all middle">报表分类</div>
                     </el-header>
                     <el-main>
-                      <jian-du-report-classify />
+                      <template-tree :syorjb="syorjbParam" :tree-data="bbflTreeData" @node-expand="handleExpNode" />
                     </el-main>
                   </el-container>
                   <el-container style="height: 50% !important;">
@@ -60,7 +60,8 @@
                       <div class="config-tab all middle">指标分类</div>
                     </el-header>
                     <el-main>
-                      <jian-du-index-classify />
+                      <!--<jian-du-index-classify :syorjb="syorjbParam" :zbfl-zb-data="zbflSelectData" @change="zbSelChange" />-->
+                      <quota-table :syorjb="syorjbParam" :zbfl-zb-data="zbflSelectData" @change="zbSelChange" />
                     </el-main>
                   </el-container>
                 </div>
@@ -94,7 +95,7 @@
               <el-main class="config-content">
                 <header-config v-show="configTab ==='header'" :data="headerFormSelect"></header-config>
 <!--                <table-config v-show="configTab ==='table'" :data="tableSelect"></table-config>-->
-                <zhi-biao-config v-show="configTab ==='zhibiao'" :data="zhiBiaoSelect"></zhi-biao-config>
+                <zhi-biao-config v-show="configTab ==='zhibiao'" :data="zhiBiaoSelect" :zbattribute="zbAttribute" ></zhi-biao-config>
                 <widget-config ref="widgetConfig" v-show="configTab ==='widget'" :data="widgetFormSelect" @showAddColumn="addColumn" @showAddRow="addRow" @draggableend="dragend"></widget-config>
                 <form-config v-show="configTab ==='form'" :data="widgetForm.config"></form-config>
               </el-main>
@@ -294,9 +295,86 @@ export default {
       jsonReportEg: reportJson,
       codeActiveName: 'vue',
       dataActiveName: 'template',
+      bbflTreeData: [],
+      bbflTreeDataForsy: [],
+      bbflTreeDataForjb: [],
+      zbflSelectData: [],
+      zbflSelectDataForsy: [],
+      zbflSelectDataForjb: [],
+      syorjbParam: 'sy',  //默认实验报表
+      zbAttribute: null,
     }
   },
+  mounted() {
+    this.query_bbfl();
+    this.query_zb();
+  },
   methods: {
+    transIdLabel(datas) {
+      datas.forEach(item => {
+        item.id = item.dbid;
+        item.label = item.name;
+        (item.children) && (item.children = this.transIdLabel(item.children));
+      })
+      return datas
+    },
+    setSybbTreeDataForBB(val) {
+      this['bbflTreeDataFor' + this.syorjbParam] = val
+    },
+    setSybbTreeDataForZB(val) {
+      this['zbflSelectDataFor' + this.syorjbParam] = val
+    },
+    query_bbfl() {  // 报表查询 方法
+      if (this['bbflTreeDataFor' + this.syorjbParam].length < 1) {
+        request({
+          url: '/dev-api/tpridmp/process/dmp_report?method=query_fl',
+          method: 'get',
+          params: {
+            syorjb: this.syorjbParam
+          }
+        }).then(res => {
+          if (res.success) {
+            const sybbTreeData_ = [ ...res.dataset.datas[0].children ]
+            this.bbflTreeData = this.transIdLabel(sybbTreeData_)
+            this.setSybbTreeDataForBB(this.bbflTreeData)
+          }
+        }).catch(err => { err; })
+      } else {
+        this.bbflTreeData = this['bbflTreeDataFor' + this.syorjbParam]
+      }
+    },
+    query_zb() {
+      if (this['zbflSelectDataFor' + this.syorjbParam].length < 1) {
+        request({
+          url: '/dev-api/jsjd/process/aqsc_jsjd_sybg_zb?method=query',
+          method: 'get',
+          params: {
+            syorjb: this.syorjbParam
+          }
+        }).then(res => {
+          if (res.success) {
+            this.zbflSelectData = [ ...res.dataset.datas ]
+            this.setSybbTreeDataForZB(this.zbflSelectData)
+          }
+        }).catch(err => { err; })
+      } else {
+        this.zbflSelectData = this['zbflSelectDataFor' + this.syorjbParam]
+      }
+    },
+    handleExpNode(obj, node, dom) {
+      // request({
+      //   url: '/dev-api/tpridmp/process/dmp_report?method=query',
+      //   method: 'get',
+      //   params: {
+      //     syorjb: this.syorjbParam,
+      //     flid: this.syorjbParam
+      //   }
+      // }).then(res => {}).catch(err => { err; })
+    },
+    zbSelChange(val) {
+      this.zbAttribute = val;
+      console.log('zbSelChange : ', val);
+    },
     saveReportJSON() {
       const { list } = this.widgetForm
 
@@ -393,6 +471,9 @@ export default {
     },
     handleLeftConfigSelect (value) {
       this.leftConfigTab = value
+      this.syorjbParam = ( value === 'shiyan') ? 'sy' : 'jb' // 设置查询参数 syorjb - 实验or监督
+      this.query_bbfl() // 做查询
+      this.query_zb();
     },
     handleConfigSelect (value) {
       this.configTab = value
