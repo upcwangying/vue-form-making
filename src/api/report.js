@@ -22,3 +22,13 @@ export function postReport(rows) {
     }
   })
 }
+
+export function getBbfl(syorjb) {
+  return request({
+    url: '/tpridmp/process/dmp_report?method=query_fl',
+    method: 'get',
+    params: {
+      syorjb: syorjb
+    }
+  })
+}

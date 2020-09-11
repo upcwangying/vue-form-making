@@ -191,7 +191,6 @@ import WidgetForm from './WidgetForm'
 import CusDialog from './CusDialog'
 import GenerateForm from './GenerateForm'
 import Clipboard from 'clipboard'
-import request from '../util/request.js'
 import generateCode from './generateCode.js'
 import TemplateTree from '@/components/TemplateTree';
 import QuotaTable from '@/components/QuotaTable';
@@ -204,7 +203,8 @@ import templateInitialData from '@/components/templateInitialData';
 import templateJson from '../mock/template.json';
 import reportJson from '../mock/report.json';
 import { get, post } from '@/api/template';
-import { getReport, postReport } from '@/api/report';
+import { getReport, postReport, getBbfl } from '@/api/report';
+import { getZb, getZbDetal } from '@/api/jsjdQuery';
 
 export default {
   name: 'fm-making-form',
@@ -326,13 +326,7 @@ export default {
     },
     query_bbfl() {  // 报表查询 方法
       if (this['bbflTreeDataFor' + this.syorjbParam].length < 1) {
-        request({
-          url: '/dev-api/tpridmp/process/dmp_report?method=query_fl',
-          method: 'get',
-          params: {
-            syorjb: this.syorjbParam
-          }
-        }).then(res => {
+        getBbfl(this.syorjbParam).then(res => {
           if (res.success) {
             const sybbTreeData_ = [ ...res.dataset.datas[0].children ]
             this.bbflTreeData = this.transIdLabel(sybbTreeData_)
@@ -345,13 +339,7 @@ export default {
     },
     query_zb() {
       if (this['zbflSelectDataFor' + this.syorjbParam].length < 1) {
-        request({
-          url: '/dev-api/jsjd/process/aqsc_jsjd_sybg_zb?method=query',
-          method: 'get',
-          params: {
-            syorjb: this.syorjbParam
-          }
-        }).then(res => {
+        getZb(this.syorjbParam).then(res => {
           if (res.success) {
             this.zbflSelectData = [ ...res.dataset.datas ]
             this.setSybbTreeDataForZB(this.zbflSelectData)
@@ -372,8 +360,22 @@ export default {
       // }).then(res => {}).catch(err => { err; })
     },
     zbSelChange(val) {
-      this.zbAttribute = val;
-      console.log('zbSelChange : ', val);
+      getZbDetal(val.dbid).then(res => {
+        if (res.success) {
+          const zbAttribute_ = res.dataset.datas[0]
+          zbAttribute_.zbdw = zbAttribute_.zbuint // 规划字段名 指标单位
+          zbAttribute_.zbsjlx = zbAttribute_.datatype // 规划字段名 指标类型
+          zbAttribute_.zbsjy = zbAttribute_.attribute1 // 规划字段名 指标数据源
+          zbAttribute_.zbshux = zbAttribute_.attribute2 // 规划字段名 指标属性
+          zbAttribute_.zbbzz = zbAttribute_.bzvalue // 规划字段名 指标标准值
+          zbAttribute_.zbqwz = zbAttribute_.qwvalue // 规划字段名 指标期望值
+          zbAttribute_.zbshangx = zbAttribute_.uplimit // 规划字段名 指标上限
+          zbAttribute_.zbxx = zbAttribute_.lowlimit // 规划字段名 指标下限
+          zbAttribute_.zbgx = val.jsgs
+          this.zbAttribute = zbAttribute_
+        }
+      }).catch(err => { err; })
+
     },
     saveReportJSON() {
       const { list } = this.widgetForm

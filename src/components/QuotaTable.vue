@@ -8,14 +8,23 @@
   </div>
 
   <div class="table-container">
-    <el-select v-model="value" placeholder="请选择" @change="zbSelChange">
-      <el-option
-        v-for="item in tableData"
-        :key="item.dbid"
-        :label="item.zbmc"
-        :value="item.dbid">
-      </el-option>
-    </el-select>
+    <el-table
+      :data="tableData"
+      stripe
+      :show-header="false"
+      @row-click="zbTableChange"
+    >
+      <el-table-column
+        prop="zbbm"
+        min-width="220"
+        height="0">
+      </el-table-column>
+      <el-table-column
+        prop="zbmc"
+        min-width="100"
+        height="0">
+      </el-table-column>
+    </el-table>
   </div>
 </div>
 </template>
@@ -44,7 +53,6 @@ export default {
     zbflZbData: {
       handler(val) {
         this.tableData = val
-        console.log('watch : ', val)
       },
       deep: true
     },
@@ -53,12 +61,8 @@ export default {
     },
   },
   methods: {
-    zbSelChange(val) {
-      let item_ = null
-      this.tableData.forEach(item => {
-        (item.dbid === val) && (item_ = item)
-      })
-      this.$emit('change', item_)
+    zbTableChange(row, column, event) {
+      this.$emit('change', row)
     },
   },
 }
