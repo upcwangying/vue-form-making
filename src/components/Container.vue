@@ -375,7 +375,13 @@ export default {
 
       let dataList = []
       const listFunc = (data) => {
-        for (const item of list) {
+        for (let item of data) {
+          if (!item || (item instanceof Array && item.length === 0)) continue
+
+          if (item instanceof Array) {
+            item = item[0]
+          }
+
           if (item.type === 'table') {
             let data = Object.create(null)
             data['type'] = item.type
@@ -389,19 +395,18 @@ export default {
               for (const column of columns) {
                 gridData.push(column.list)
               }
-              console.log(gridData)
-              // gridData && listFunc(gridData)
+              gridData && listFunc(gridData)
             }
           } else {
-            let data = Object.create(null)
-            data['type'] = item.type
-            data['key'] = item.model
-            data['value'] = item.options.defaultValue
-            data['datasource'] = item.options.datasource
-            data['table'] = item.options.table
-            data['field'] = item.options.field
-            data['otherfields'] = "werks,bukrs,create_by,create_time,update_by,update_time,is_del"
-            dataList.push(data)
+            let OtherData = Object.create(null)
+            OtherData['type'] = item.type
+            OtherData['key'] = item.model
+            OtherData['value'] = item.options.defaultValue
+            OtherData['datasource'] = item.options.datasource
+            OtherData['table'] = item.options.table
+            OtherData['field'] = item.options.field
+            OtherData['otherfields'] = "werks,bukrs,create_by,create_time,update_by,update_time,is_del"
+            dataList.push(OtherData)
           }
         }
       }
@@ -422,7 +427,6 @@ export default {
         }
         this.jsonCopyValue = JSON.stringify(dataList)
       })
-      // console.log(this.widgetForm.config)
       postReport(dataList)
     },
     queryReportData() {
@@ -448,25 +452,38 @@ export default {
 
       let tables = []
       const listFunc = (data) => {
-        for (const item of list) {
-          if (item.type === 'grid') {
+        for (let item of data) {
+          if (!item || (item instanceof Array && item.length === 0)) continue
+
+          if (item instanceof Array) {
+            item = item[0]
+          }
+
+          if (item.type === 'table') {
+            let tableData = Object.create(null)
+            tableData['type'] = item.type
+            tableData['key'] = item.model
+            tableData['datasource'] = item.options.datasource
+            tableData['table'] = item.options.table
+            tableData['field'] = item.options.field
+            tables.push(tableData)
+          } else if (item.type === 'grid') {
             const { columns } = item
             if (columns) {
               const gridData = []
               for (const column of columns) {
                 gridData.push(column.list)
               }
-              console.log(gridData)
-              // gridData && listFunc(gridData)
+              gridData && listFunc(gridData)
             }
           } else {
-            let data = Object.create(null)
-            data['type'] = item.type
-            data['key'] = item.model
-            data['datasource'] = item.options.datasource
-            data['table'] = item.options.table
-            data['field'] = item.options.field
-            tables.push(data)
+            let OtherData = Object.create(null)
+            OtherData['type'] = item.type
+            OtherData['key'] = item.model
+            OtherData['datasource'] = item.options.datasource
+            OtherData['table'] = item.options.table
+            OtherData['field'] = item.options.field
+            tables.push(OtherData)
           }
         }
       }
