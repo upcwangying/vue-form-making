@@ -457,7 +457,11 @@ export default {
       })
     },
     createTemplate() {
-      // todo 创建模板
+      const { dbid, is_temp } = this.selectTreeNode
+      if (is_temp !== '0') { // 分类节点
+        return
+      }
+      this.saveTemplateJSON('', dbid)
     },
     saveTemplate() {
       const { dbid, is_temp, parentid } = this.selectTreeNode
