@@ -457,15 +457,25 @@ export default {
       })
     },
     createTemplate() {
+      if (!this.selectTreeNode) {
+        this.$alert('未选中报表分类', '提示')
+        return
+      }
       const { dbid, is_temp } = this.selectTreeNode
       if (is_temp !== '0') { // 分类节点
+        this.$alert('选中的报表分类非分类节点', '提示')
         return
       }
       this.saveTemplateJSON('', dbid)
     },
     saveTemplate() {
+      if (!this.selectTreeNode) {
+        this.$alert('未选中报表分类', '提示')
+        return
+      }
       const { dbid, is_temp, parentid } = this.selectTreeNode
       if (is_temp !== '1') { // 分类节点
+        this.$alert('选中的报表分类非模板节点', '提示')
         return
       }
       this.saveTemplateJSON(dbid, parentid)
@@ -482,6 +492,31 @@ export default {
     },
     saveTemplateJSON(dbid, flid) {
       const { list, config: { werks, bukrs, templateName, templateCode, templateGrade } } = this.widgetForm
+
+      if (!werks) {
+        this.$alert('工厂编码不允许为空', '提示')
+        return
+      }
+
+      if (!bukrs) {
+        this.$alert('公司编码不允许为空', '提示')
+        return
+      }
+
+      if (!templateName) {
+        this.$alert('模板名称不允许为空', '提示')
+        return
+      }
+
+      if (!templateCode) {
+        this.$alert('模板编码不允许为空', '提示')
+        return
+      }
+
+      if (!templateGrade) {
+        this.$alert('模板级别不允许为空', '提示')
+        return
+      }
 
       let tables = []
       const listFunc = (data) => {
