@@ -8,15 +8,17 @@
   </div>
 
   <el-tree
+      ref="tree"
       class="filter-tree"
       :data="data"
       :props="defaultProps"
       show-checkbox
+      node-key="dbid"
       :filter-node-method="filterNode"
       @node-expand="handleExpNode"
       @node-click="handleClickNode"
       @check-change="handleCheckChange"
-      ref="tree">
+      >
   </el-tree>
 </div>
 </template>
@@ -87,6 +89,7 @@ export default {
     handleCheckChange(obj, isCheck, node) { // 勾选事件
       if (isCheck) {
         this.$emit('check-change', obj)
+        this.$refs.tree.setCheckedKeys([obj.dbid], false);
       }
     },
   },
