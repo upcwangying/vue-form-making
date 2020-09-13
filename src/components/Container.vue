@@ -4,12 +4,10 @@
       <div class="add-column-mask-container" v-if="showAddColumn"></div>
       <el-header height="45">
         <el-row class="btn-container">
-          <el-button @click="saveTemplateJSON">保存模板数据</el-button>
-          <el-button @click="queryTemplateData">获取模板数据</el-button>
           <el-button @click="saveReportJSON">保存报表数据</el-button>
           <el-button @click="queryReportData">获取报表数据</el-button>
           <el-button @click="queryData">获取数据</el-button>
-          <el-button>创建报表</el-button>
+          <el-button @click="createTemplate">创建</el-button>
           <el-button @click="saveTemplate">保存</el-button>
           <el-button>删除</el-button>
           <el-button>参考创建</el-button>
@@ -34,7 +32,7 @@
                       <div class="config-tab all middle">报表分类</div>
                     </el-header>
                     <el-main>
-                      <template-tree :syorjb="syorjbParam" :tree-data="bbflTreeData" @node-expand="handleExpNode" />
+                      <template-tree :syorjb="syorjbParam" :tree-data="bbflTreeData" @node-expand="handleExpNode" @check-change="selectTree" />
                     </el-main>
                   </el-container>
                   <el-container style="height: 50% !important;">
@@ -299,6 +297,7 @@ export default {
       zbflSelectDataForjb: [],
       syorjbParam: 'sy',  //默认实验报表
       zbAttribute: null,
+      selectTreeNode: null
     }
   },
   mounted() {
@@ -354,6 +353,13 @@ export default {
       //     flid: this.syorjbParam
       //   }
       // }).then(res => {}).catch(err => { err; })
+    },
+    selectTree(obj) {
+      this.selectTreeNode = obj
+      const { dbid, code, is_temp } = this.selectTreeNode
+      if (is_temp === '1') { // template node
+        this.queryTemplateData(code)
+      }
     },
     zbSelChange(val) {
       getZbDetal(val.dbid).then(res => {
@@ -450,10 +456,17 @@ export default {
           this.setJSON(JSON.parse(json), datas)
       })
     },
-    saveTemplate() {
-      this.saveTemplateJSON('1012434389059379200')
+    createTemplate() {
+      // todo 创建模板
     },
-    saveTemplateJSON(flid) {
+    saveTemplate() {
+      const { dbid, is_temp, parentid } = this.selectTreeNode
+      if (is_temp !== '1') { // 分类节点
+        return
+      }
+      this.saveTemplateJSON(dbid, parentid)
+    },
+    saveTemplateJSON(dbid, flid) {
       const { list, config: { werks, bukrs, templateName, templateCode, templateGrade } } = this.widgetForm
 
       let tables = []
@@ -495,10 +508,10 @@ export default {
       }
 
       listFunc(list)
-      postTemplate(werks, bukrs, templateName, templateCode, this.widgetForm, templateGrade, flid, tables)
+      postTemplate(dbid, werks, bukrs, templateName, templateCode, this.widgetForm, templateGrade, flid, tables)
     },
-    queryTemplateData() {
-      getTemplate('template_test').then(result => {
+    queryTemplateData(code) {
+      getTemplate(code).then(result => {
         const { json } = result.dataset.datas[0]
         this.setJSON(JSON.parse(json), null)
       })

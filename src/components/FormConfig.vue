@@ -51,7 +51,7 @@
     <el-row>
       <el-col :span="12">
         <el-form-item label="模板级别" prop="templateGrade">
-          <el-select v-model="data.templateGrade" value="group" placeholder="请选择">
+          <el-select v-model="data.templateGrade" value="0" placeholder="请选择">
             <el-option
               v-for="item in templateGradeOptions"
               :key="item.value"
@@ -96,10 +96,10 @@ export default {
   data() {
     return {
       templateGradeOptions: [{
-        value: 'group',
+        value: '0',
         label: '集团'
       }, {
-        value: 'company',
+        value: '1',
         label: '电厂'
       }],
       templateStatusOptions: [{
