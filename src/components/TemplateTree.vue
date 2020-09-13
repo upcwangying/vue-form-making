@@ -13,6 +13,7 @@
       :data="data"
       :props="defaultProps"
       show-checkbox
+      check-strictly
       node-key="dbid"
       :filter-node-method="filterNode"
       @node-expand="handleExpNode"
@@ -24,7 +25,6 @@
 </template>
 
 <script>
-import request from '../util/request.js'
 export default {
   name: 'TemplateTree',
   props: {
@@ -68,22 +68,7 @@ export default {
       return data.label.indexOf(value) !== -1;
     },
     handleExpNode(obj, node, dom) {
-      // console.log('obj : ', obj);
-      // console.log('node : ', node);
-      // console.log('dom : ', dom);
       this.$emit('node-expand', obj, node, dom) // 发布展开事件
-      // request({
-      //   url: '/dev-api/tpridmp/process/dmp_report?method=query',
-      //   method: 'get',
-      //   params: {
-      //     flid: obj.dbid
-      //   }
-      // }).then(res => {
-      //   if (res.success) {
-      //     console.log('res : ', res);
-      //     this.sybbTreeData = this.transIdLabel(res.dataset.datas)
-      //   }
-      // }).catch(err => { err; })
     },
     handleClickNode(obj, node, dom) {},
     handleCheckChange(obj, isCheck, node) { // 勾选事件
