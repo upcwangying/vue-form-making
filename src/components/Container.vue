@@ -9,11 +9,11 @@
           <el-button @click="queryData">获取数据</el-button>
           <el-button @click="createTemplate">创建</el-button>
           <el-button @click="saveTemplate">保存</el-button>
-          <el-button>删除</el-button>
-          <el-button>参考创建</el-button>
+          <el-button @click="deleteTemplate">删除</el-button>
+          <el-button @click="copyTemplate">参考创建</el-button>
           <el-button @click="handlePreview">预览</el-button>
-          <el-button>发布</el-button>
-          <el-button>启用</el-button>
+          <el-button @click="publish">发布</el-button>
+          <el-button @click="enable">启用</el-button>
         </el-row>
       </el-header>
       <el-main class="fm2-main">
@@ -470,6 +470,16 @@ export default {
       }
       this.saveTemplateJSON(dbid, parentid)
     },
+    deleteTemplate() {
+      const { dbid, is_temp, parentid } = this.selectTreeNode
+      if (is_temp !== '1') { // 分类节点
+        return
+      }
+      // todo
+    },
+    copyTemplate() {
+      // todo
+    },
     saveTemplateJSON(dbid, flid) {
       const { list, config: { werks, bukrs, templateName, templateCode, templateGrade } } = this.widgetForm
 
@@ -522,6 +532,12 @@ export default {
     },
     handlePreview() {
       this.previewVisible = true
+    },
+    publish() {
+      // todo
+    },
+    enable() {
+      // todo
     },
     addColumn() {
       this.showAddColumn = true
