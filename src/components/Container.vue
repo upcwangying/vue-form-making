@@ -10,6 +10,7 @@
           <el-button @click="queryReportData">获取报表数据</el-button>
           <el-button @click="queryData">获取数据</el-button>
           <el-button>创建报表</el-button>
+          <el-button @click="saveTemplate">保存</el-button>
           <el-button>删除</el-button>
           <el-button>参考创建</el-button>
           <el-button @click="handlePreview">预览</el-button>
@@ -449,8 +450,11 @@ export default {
           this.setJSON(JSON.parse(json), datas)
       })
     },
-    saveTemplateJSON() {
-      const { list, config: { werks, bukrs, templateName, templateCode } } = this.widgetForm
+    saveTemplate() {
+      this.saveTemplateJSON('1012434389059379200')
+    },
+    saveTemplateJSON(flid) {
+      const { list, config: { werks, bukrs, templateName, templateCode, templateGrade } } = this.widgetForm
 
       let tables = []
       const listFunc = (data) => {
@@ -491,7 +495,7 @@ export default {
       }
 
       listFunc(list)
-      postTemplate(werks, bukrs, templateName, templateCode, this.widgetForm, tables)
+      postTemplate(werks, bukrs, templateName, templateCode, this.widgetForm, templateGrade, flid, tables)
     },
     queryTemplateData() {
       getTemplate('template_test').then(result => {
