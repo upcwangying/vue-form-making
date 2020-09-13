@@ -15,6 +15,7 @@
       :filter-node-method="filterNode"
       @node-expand="handleExpNode"
       @node-click="handleClickNode"
+      @check-change="handleCheckChange"
       ref="tree">
   </el-tree>
 </div>
@@ -83,6 +84,11 @@ export default {
       // }).catch(err => { err; })
     },
     handleClickNode(obj, node, dom) {},
+    handleCheckChange(obj, isCheck, node) { // 勾选事件
+      if (isCheck) {
+        this.$emit('check-change', obj)
+      }
+    },
   },
 }
 </script>
