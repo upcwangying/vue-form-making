@@ -12,6 +12,13 @@ module.exports = {
     },
     // 本地开发环境请求的代理配置
     proxy: {
+      '/jsjd/': {
+        target: 'https://aqsc.tpridmp.com:8000/',
+        changeOrigin: true,
+        pathRewrite: {
+          '/jsjd/': '/prod-api/jsjd/'
+        }
+      },
       '/': {
         target: 'http://127.0.0.1:8099',
         changeOrigin: true,
@@ -19,7 +26,7 @@ module.exports = {
           '/tpridmp/': '/prod-api/',
           '/sjgl/': '/prod-api/'
         }
-      }
+      },
     }
   },
   configureWebpack: config => {

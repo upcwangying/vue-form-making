@@ -10,20 +10,21 @@ export function getTemplate(code) {
   })
 }
 
-export function postTemplate(werks, bukrs, name, code, data, tables) {
+export function postTemplate(dbid, werks, bukrs, name, code, data, tempjb, flid, tables) {
+  console.log(dbid, tempjb, flid)
   return request({
     url: '/tpridmp/process/dmp_report?method=save',
     method: 'get',
     params: {
-      // dbid: 1012304476813438976,
+      dbid,
       werks,
       bukrs,
       name,
       code,
       json: JSON.stringify(data),
       version: 0,
-      tempjb: 0,
-      flid: '1012434389059379200',
+      tempjb,
+      flid,
       tables: JSON.stringify(tables)
     }
   })

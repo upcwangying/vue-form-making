@@ -4,12 +4,11 @@
       <div class="add-column-mask-container" v-if="showAddColumn"></div>
       <el-header height="45">
         <el-row class="btn-container">
-          <el-button @click="saveTemplateJSON">保存模板数据</el-button>
-          <el-button @click="queryTemplateData">获取模板数据</el-button>
           <el-button @click="saveReportJSON">保存报表数据</el-button>
           <el-button @click="queryReportData">获取报表数据</el-button>
           <el-button @click="queryData">获取数据</el-button>
-          <el-button>创建报表</el-button>
+          <el-button @click="createTemplate">创建</el-button>
+          <el-button @click="saveTemplate">保存</el-button>
           <el-button>删除</el-button>
           <el-button>参考创建</el-button>
           <el-button @click="handlePreview">预览</el-button>
@@ -33,7 +32,7 @@
                       <div class="config-tab all middle">报表分类</div>
                     </el-header>
                     <el-main>
-                      <template-tree :syorjb="syorjbParam" :tree-data="bbflTreeData" @node-expand="handleExpNode" />
+                      <template-tree :syorjb="syorjbParam" :tree-data="bbflTreeData" @node-expand="handleExpNode" @check-change="selectTree" />
                     </el-main>
                   </el-container>
                   <el-container style="height: 50% !important;">
@@ -298,6 +297,7 @@ export default {
       zbflSelectDataForjb: [],
       syorjbParam: 'sy',  //默认实验报表
       zbAttribute: null,
+      selectTreeNode: null
     }
   },
   mounted() {
@@ -354,6 +354,13 @@ export default {
       //   }
       // }).then(res => {}).catch(err => { err; })
     },
+    selectTree(obj) {
+      this.selectTreeNode = obj
+      const { dbid, code, is_temp } = this.selectTreeNode
+      if (is_temp === '1') { // template node
+        this.queryTemplateData(code)
+      }
+    },
     zbSelChange(val) {
       getZbDetal(val.dbid).then(res => {
         if (res.success) {
@@ -377,7 +384,13 @@ export default {
 
       let dataList = []
       const listFunc = (data) => {
-        for (const item of list) {
+        for (let item of data) {
+          if (!item || (item instanceof Array && item.length === 0)) continue
+
+          if (item instanceof Array) {
+            item = item[0]
+          }
+
           if (item.type === 'table') {
             let data = Object.create(null)
             data['type'] = item.type
@@ -391,19 +404,18 @@ export default {
               for (const column of columns) {
                 gridData.push(column.list)
               }
-              console.log(gridData)
-              // gridData && listFunc(gridData)
+              gridData && listFunc(gridData)
             }
           } else {
-            let data = Object.create(null)
-            data['type'] = item.type
-            data['key'] = item.model
-            data['value'] = item.options.defaultValue
-            data['datasource'] = item.options.datasource
-            data['table'] = item.options.table
-            data['field'] = item.options.field
-            data['otherfields'] = "werks,bukrs,create_by,create_time,update_by,update_time,is_del"
-            dataList.push(data)
+            let OtherData = Object.create(null)
+            OtherData['type'] = item.type
+            OtherData['key'] = item.model
+            OtherData['value'] = item.options.defaultValue
+            OtherData['datasource'] = item.options.datasource
+            OtherData['table'] = item.options.table
+            OtherData['field'] = item.options.field
+            OtherData['otherfields'] = "werks,bukrs,create_by,create_time,update_by,update_time,is_del"
+            dataList.push(OtherData)
           }
         }
       }
@@ -424,7 +436,6 @@ export default {
         }
         this.jsonCopyValue = JSON.stringify(dataList)
       })
-      // console.log(this.widgetForm.config)
       postReport(dataList)
     },
     queryReportData() {
@@ -445,39 +456,62 @@ export default {
           this.setJSON(JSON.parse(json), datas)
       })
     },
-    saveTemplateJSON() {
-      const { list, config: { werks, bukrs, templateName, templateCode } } = this.widgetForm
+    createTemplate() {
+      // todo 创建模板
+    },
+    saveTemplate() {
+      const { dbid, is_temp, parentid } = this.selectTreeNode
+      if (is_temp !== '1') { // 分类节点
+        return
+      }
+      this.saveTemplateJSON(dbid, parentid)
+    },
+    saveTemplateJSON(dbid, flid) {
+      const { list, config: { werks, bukrs, templateName, templateCode, templateGrade } } = this.widgetForm
 
       let tables = []
       const listFunc = (data) => {
-        for (const item of list) {
-          if (item.type === 'grid') {
+        for (let item of data) {
+          if (!item || (item instanceof Array && item.length === 0)) continue
+
+          if (item instanceof Array) {
+            item = item[0]
+          }
+
+          if (item.type === 'table') {
+            let tableData = Object.create(null)
+            tableData['type'] = item.type
+            tableData['key'] = item.model
+            tableData['datasource'] = item.options.datasource
+            tableData['table'] = item.options.table
+            tableData['field'] = item.options.field
+            tables.push(tableData)
+          } else if (item.type === 'grid') {
             const { columns } = item
             if (columns) {
               const gridData = []
               for (const column of columns) {
                 gridData.push(column.list)
               }
-              console.log(gridData)
-              // gridData && listFunc(gridData)
+              gridData && listFunc(gridData)
             }
           } else {
-            let data = Object.create(null)
-            data['type'] = item.type
-            data['key'] = item.model
-            data['datasource'] = item.options.datasource
-            data['table'] = item.options.table
-            data['field'] = item.options.field
-            tables.push(data)
+            let OtherData = Object.create(null)
+            OtherData['type'] = item.type
+            OtherData['key'] = item.model
+            OtherData['datasource'] = item.options.datasource
+            OtherData['table'] = item.options.table
+            OtherData['field'] = item.options.field
+            tables.push(OtherData)
           }
         }
       }
 
       listFunc(list)
-      postTemplate(werks, bukrs, templateName, templateCode, this.widgetForm, tables)
+      postTemplate(dbid, werks, bukrs, templateName, templateCode, this.widgetForm, templateGrade, flid, tables)
     },
-    queryTemplateData() {
-      getTemplate('template_test').then(result => {
+    queryTemplateData(code) {
+      getTemplate(code).then(result => {
         const { json } = result.dataset.datas[0]
         this.setJSON(JSON.parse(json), null)
       })
