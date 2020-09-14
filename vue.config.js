@@ -19,12 +19,12 @@ module.exports = {
           '/jsjd/': '/prod-api/jsjd/'
         }
       },
-      '/': {
+      '/dev-api/': {
         target: 'http://127.0.0.1:8099',
         changeOrigin: true,
         pathRewrite: {
-          '/tpridmp/': '/prod-api/',
-          '/sjgl/': '/prod-api/'
+          '/tpridmp/': '/',
+          '/sjgl/': '/'
         }
       },
     }

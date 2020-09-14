@@ -199,7 +199,7 @@ import TableEditable from '@/components/TableEditable';
 import templateInitialData from '@/components/templateInitialData';
 import templateJson from '../mock/template.json';
 import reportJson from '../mock/report.json';
-import { getTemplate, postTemplate } from '@/api/template';
+import { getTemplate, postTemplate, deleteTemplate } from '@/api/template';
 import { getReport, postReport, getBbfl } from '@/api/report';
 import { getZb, getZbDetal } from '@/api/jsjdQuery';
 
@@ -484,11 +484,20 @@ export default {
       this.saveTemplateJSON(dbid, parentid)
     },
     deleteTemplate() {
-      const { dbid, is_temp, parentid } = this.selectTreeNode
-      if (is_temp !== '1') { // 分类节点
+      if (!this.selectTreeNode) {
+        this.$alert('未选中报表分类', '提示')
         return
       }
-      // todo
+      const { dbid, is_temp } = this.selectTreeNode
+      if (is_temp !== '1') { // 分类节点
+        this.$alert('选中的报表分类非模板节点', '提示')
+        return
+      }
+      deleteTemplate(dbid).then(result => {
+        if (result.success) {
+          this.$alert('删除成功', '提示')
+        }
+      })
     },
     copyTemplate() {
       // todo
@@ -561,6 +570,11 @@ export default {
 
       listFunc(list)
       postTemplate(dbid, werks, bukrs, templateName, templateCode, this.widgetForm, templateGrade, flid, tables)
+      .then(result => {
+        if (result.success) {
+          this.$alert('操作成功', '提示')
+        }
+      })
     },
     queryTemplateData(code) {
       getTemplate(code).then(result => {
@@ -581,13 +595,13 @@ export default {
       this.showAddColumn = true
     },
     addRow() {
-        if (this.widgetFormSelect.columns.length > 0) {
-            const props = []
-            this.widgetFormSelect.columns.forEach(item => {
-                props.push(item.prop)
-            })
-            this.$refs['widgetConfig'].saveTableRow(props)
-        }
+      if (this.widgetFormSelect.columns.length > 0) {
+        const props = []
+        this.widgetFormSelect.columns.forEach(item => {
+            props.push(item.prop)
+        })
+        this.$refs['widgetConfig'].saveTableRow(props)
+      }
     },
     dragend() {
       this.$nextTick(() => {
@@ -641,7 +655,6 @@ export default {
       // post(this.widgetForm)
     },
     handleGenerateCode () {
-
       this.codeVisible = true
       this.htmlTemplate = generateCode(JSON.stringify(this.widgetForm), 'html')
       this.vueTemplate = generateCode(JSON.stringify(this.widgetForm), 'vue')
