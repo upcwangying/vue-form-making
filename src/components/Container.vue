@@ -354,11 +354,14 @@ export default {
       //   }
       // }).then(res => {}).catch(err => { err; })
     },
-    selectTree(obj) {
-      this.selectTreeNode = obj
-      const { dbid, code, is_temp } = this.selectTreeNode
-      if (is_temp === '1') { // template node
-        this.queryTemplateData(code)
+    selectTree(isCheck, obj) {
+      if (isCheck) {
+        this.selectTreeNode = obj
+        const { code, is_temp } = this.selectTreeNode
+        is_temp === '1' && this.queryTemplateData(code)
+      } else {
+        this.selectTreeNode = null
+        this.handleClear()
       }
     },
     zbSelChange(val) {
