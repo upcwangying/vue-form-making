@@ -87,8 +87,8 @@ export default {
     },
     handleClickNode(obj, node, dom) {},
     handleCheckChange(obj, isCheck, node) { // 勾选事件
+      this.$emit('check-change', isCheck, obj)
       if (isCheck) {
-        this.$emit('check-change', obj)
         this.$refs.tree.setCheckedKeys([obj.dbid], false);
       }
     },
