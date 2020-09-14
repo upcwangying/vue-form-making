@@ -16,19 +16,18 @@
           >
             <el-col v-for="(col, colIndex) in item.columns" :key="colIndex" :span="col.span">
 
-
               <template v-for="citem in col.list" >
                 <el-form-item v-if="citem.type === 'blank'" :label="citem.name" :prop="citem.model" :key="citem.key">
                   <slot :name="citem.model" :model="models"></slot>
                 </el-form-item>
-                <genetate-form-item v-else
+                <generate-form-item v-else
                   :key="citem.key"
                   :models.sync="models"
                   :remote="remote"
                   :rules="rules"
                   :widget="citem"
                   @input-change="onInputChange">
-                </genetate-form-item>
+                </generate-form-item>
               </template>
             </el-col>
           </el-row>
@@ -41,14 +40,14 @@
         </template>
 
         <template v-else>
-          <genetate-form-item
+          <generate-form-item
             :key="item.key"
             :models.sync="models"
             :rules="rules"
             :widget="item"
             @input-change="onInputChange"
             :remote="remote">
-          </genetate-form-item>
+          </generate-form-item>
         </template>
 
       </template>
@@ -57,13 +56,12 @@
 </template>
 
 <script>
-import GenetateFormItem from './GenerateFormItem'
-import {loadJs} from '../util/index.js'
+import GenerateFormItem from './GenerateFormItem'
 
 export default {
   name: 'fm-generate-form',
   components: {
-    GenetateFormItem
+    GenerateFormItem
   },
   props: ['data', 'remote', 'value', 'insite'],
   data () {
