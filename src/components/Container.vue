@@ -9,11 +9,11 @@
           <el-button @click="queryData">获取数据</el-button>
           <el-button @click="createTemplate">创建</el-button>
           <el-button @click="saveTemplate">保存</el-button>
-          <el-button>删除</el-button>
-          <el-button>参考创建</el-button>
+          <el-button @click="deleteTemplate">删除</el-button>
+          <el-button @click="copyTemplate">参考创建</el-button>
           <el-button @click="handlePreview">预览</el-button>
-          <el-button>发布</el-button>
-          <el-button>启用</el-button>
+          <el-button @click="publish">发布</el-button>
+          <el-button @click="enable">启用</el-button>
         </el-row>
       </el-header>
       <el-main class="fm2-main">
@@ -91,7 +91,6 @@
               </el-header>
               <el-main class="config-content">
                 <header-config v-show="configTab ==='header'" :data="headerFormSelect"></header-config>
-<!--                <table-config v-show="configTab ==='table'" :data="tableSelect"></table-config>-->
                 <zhi-biao-config v-show="configTab ==='zhibiao'" :data="zhiBiaoSelect" :zbattribute="zbAttribute" ></zhi-biao-config>
                 <widget-config ref="widgetConfig" v-show="configTab ==='widget'" :data="widgetFormSelect" @showAddColumn="addColumn" @showAddRow="addRow" @draggableend="dragend"></widget-config>
                 <form-config v-show="configTab ==='form'" :data="widgetForm.config"></form-config>
@@ -199,7 +198,7 @@ import TableEditable from '@/components/TableEditable';
 import templateInitialData from '@/components/templateInitialData';
 import templateJson from '../mock/template.json';
 import reportJson from '../mock/report.json';
-import { getTemplate, postTemplate } from '@/api/template';
+import { getTemplate, postTemplate, deleteTemplate, enableTemplate, publishTemplate } from '@/api/template';
 import { getReport, postReport, getBbfl } from '@/api/report';
 import { getZb, getZbDetal } from '@/api/jsjdQuery';
 
@@ -354,11 +353,14 @@ export default {
       //   }
       // }).then(res => {}).catch(err => { err; })
     },
-    selectTree(obj) {
-      this.selectTreeNode = obj
-      const { dbid, code, is_temp } = this.selectTreeNode
-      if (is_temp === '1') { // template node
-        this.queryTemplateData(code)
+    selectTree(isCheck, obj) {
+      if (isCheck) {
+        this.selectTreeNode = obj
+        const { code, is_temp } = this.selectTreeNode
+        is_temp === '1' && this.queryTemplateData(code)
+      } else {
+        this.selectTreeNode = null
+        this.handleClear()
       }
     },
     zbSelChange(val) {
@@ -436,7 +438,7 @@ export default {
         }
         this.jsonCopyValue = JSON.stringify(dataList)
       })
-      postReport(dataList)
+      // postReport(dataList)
     },
     queryReportData() {
       getReport('1013114899288600576', 0, '14').then(({ success, fromData }) => {
@@ -457,17 +459,75 @@ export default {
       })
     },
     createTemplate() {
-      // todo 创建模板
+      if (!this.selectTreeNode) {
+        this.$alert('未选中报表分类', '提示')
+        return
+      }
+      const { dbid, is_temp } = this.selectTreeNode
+      if (is_temp !== '0') { // 分类节点
+        this.$alert('选中的报表分类非分类节点', '提示')
+        return
+      }
+      this.saveTemplateJSON('', dbid)
     },
     saveTemplate() {
+      if (!this.selectTreeNode) {
+        this.$alert('未选中报表分类', '提示')
+        return
+      }
       const { dbid, is_temp, parentid } = this.selectTreeNode
       if (is_temp !== '1') { // 分类节点
+        this.$alert('选中的报表分类非模板节点', '提示')
         return
       }
       this.saveTemplateJSON(dbid, parentid)
     },
+    deleteTemplate() {
+      if (!this.selectTreeNode) {
+        this.$alert('未选中报表分类', '提示')
+        return
+      }
+      const { dbid, is_temp } = this.selectTreeNode
+      if (is_temp !== '1') { // 分类节点
+        this.$alert('选中的报表分类非模板节点', '提示')
+        return
+      }
+      deleteTemplate(dbid).then(result => {
+        if (result.success) {
+          this.$alert('删除成功', '提示')
+        }
+      })
+    },
+    copyTemplate() {
+      // todo
+    },
     saveTemplateJSON(dbid, flid) {
       const { list, config: { werks, bukrs, templateName, templateCode, templateGrade } } = this.widgetForm
+
+      if (!werks) {
+        this.$alert('工厂编码不允许为空', '提示')
+        return
+      }
+
+      if (!bukrs) {
+        this.$alert('公司编码不允许为空', '提示')
+        return
+      }
+
+      if (!templateName) {
+        this.$alert('模板名称不允许为空', '提示')
+        return
+      }
+
+      if (!templateCode) {
+        this.$alert('模板编码不允许为空', '提示')
+        return
+      }
+
+      if (!templateGrade) {
+        this.$alert('模板级别不允许为空', '提示')
+        return
+      }
 
       let tables = []
       const listFunc = (data) => {
@@ -484,7 +544,8 @@ export default {
             tableData['key'] = item.model
             tableData['datasource'] = item.options.datasource
             tableData['table'] = item.options.table
-            tableData['field'] = item.options.field
+            tableData['dataTransformRules'] = item.options.dataTransformRules
+            // tableData['field'] = item.options.field
             tables.push(tableData)
           } else if (item.type === 'grid') {
             const { columns } = item
@@ -509,6 +570,12 @@ export default {
 
       listFunc(list)
       postTemplate(dbid, werks, bukrs, templateName, templateCode, this.widgetForm, templateGrade, flid, tables)
+      .then(result => {
+        if (result.success) {
+          this.query_bbfl()
+          this.$alert('操作成功', '提示')
+        }
+      })
     },
     queryTemplateData(code) {
       getTemplate(code).then(result => {
@@ -519,17 +586,51 @@ export default {
     handlePreview() {
       this.previewVisible = true
     },
+    publish() {
+      // todo
+      if (!this.selectTreeNode) {
+        this.$alert('未选中报表分类', '提示')
+        return
+      }
+      const { dbid, is_temp, json, version } = this.selectTreeNode
+      if (is_temp !== '1') { // 分类节点
+        this.$alert('选中的报表分类非模板节点', '提示')
+        return
+      }
+
+      publishTemplate(dbid, null, json, version).then(result => {
+        if (result.success) {
+          this.$alert('启用成功', '提示')
+        }
+      })
+    },
+    enable() {
+      if (!this.selectTreeNode) {
+        this.$alert('未选中报表分类', '提示')
+        return
+      }
+      const { dbid, is_temp } = this.selectTreeNode
+      if (is_temp !== '1') { // 分类节点
+        this.$alert('选中的报表分类非模板节点', '提示')
+        return
+      }
+      enableTemplate(dbid).then(result => {
+        if (result.success) {
+          this.$alert('启用成功', '提示')
+        }
+      })
+    },
     addColumn() {
       this.showAddColumn = true
     },
     addRow() {
-        if (this.widgetFormSelect.columns.length > 0) {
-            const props = []
-            this.widgetFormSelect.columns.forEach(item => {
-                props.push(item.prop)
-            })
-            this.$refs['widgetConfig'].saveTableRow(props)
-        }
+      if (this.widgetFormSelect.columns.length > 0) {
+        const props = []
+        this.widgetFormSelect.columns.forEach(item => {
+            props.push(item.prop)
+        })
+        this.$refs['widgetConfig'].saveTableRow(props)
+      }
     },
     dragend() {
       this.$nextTick(() => {
@@ -553,8 +654,62 @@ export default {
       this.configTab = value
     },
     handleTest () {
-      this.$refs.generateForm.getData().then(data => {
-        this.$alert(data, '').catch(e=>{})
+      this.$refs.generateForm.getData().then(result => {
+        const { list } = this.widgetForm
+
+        let dataList = []
+        const listFunc = (data) => {
+          for (let item of data) {
+            if (!item || (item instanceof Array && item.length === 0)) continue
+
+            if (item instanceof Array) {
+              item = item[0]
+            }
+
+            if (item.type === 'table') {
+              let data = Object.create(null)
+              data['type'] = item.type
+              data['rows'] = item.rows
+              data['key'] = item.model
+              data['datasource'] = item.options.datasource
+              data['table'] = item.options.table
+              data['dataTransformRules'] = item.options.dataTransformRules
+              data['otherfields'] = "werks,bukrs,create_by,create_time,update_by,update_time,is_del"
+              dataList.push(data)
+            } else if (item.type === 'grid') {
+              const { columns } = item
+              if (columns) {
+                const gridData = []
+                for (const column of columns) {
+                  gridData.push(column.list)
+                }
+                gridData && listFunc(gridData)
+              }
+            } else {
+              let OtherData = Object.create(null)
+              OtherData['type'] = item.type
+              OtherData['key'] = item.model
+              OtherData['value'] = item.options.defaultValue
+              OtherData['datasource'] = item.options.datasource
+              OtherData['table'] = item.options.table
+              OtherData['field'] = item.options.field
+              OtherData['otherfields'] = "werks,bukrs,create_by,create_time,update_by,update_time,is_del"
+              dataList.push(OtherData)
+            }
+          }
+        }
+
+        listFunc(list)
+        for (const listElement of dataList) {
+          if (Object.keys(result).includes(listElement['key'])) {
+            if (listElement['type'] === 'table') {
+              listElement['rows'] = result[listElement['key']]
+            } else {
+              listElement['value'] = result[listElement['key']]
+            }
+          }
+        }
+        this.$alert(dataList, '').catch(e=>{})
         this.$refs.widgetPreview.end()
       }).catch(e => {
         this.$refs.widgetPreview.end()
@@ -583,7 +738,6 @@ export default {
       // post(this.widgetForm)
     },
     handleGenerateCode () {
-
       this.codeVisible = true
       this.htmlTemplate = generateCode(JSON.stringify(this.widgetForm), 'html')
       this.vueTemplate = generateCode(JSON.stringify(this.widgetForm), 'vue')

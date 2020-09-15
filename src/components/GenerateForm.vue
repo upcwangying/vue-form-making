@@ -16,19 +16,18 @@
           >
             <el-col v-for="(col, colIndex) in item.columns" :key="colIndex" :span="col.span">
 
-
               <template v-for="citem in col.list" >
                 <el-form-item v-if="citem.type === 'blank'" :label="citem.name" :prop="citem.model" :key="citem.key">
                   <slot :name="citem.model" :model="models"></slot>
                 </el-form-item>
-                <genetate-form-item v-else
+                <generate-form-item v-else
                   :key="citem.key"
                   :models.sync="models"
                   :remote="remote"
                   :rules="rules"
                   :widget="citem"
                   @input-change="onInputChange">
-                </genetate-form-item>
+                </generate-form-item>
               </template>
             </el-col>
           </el-row>
@@ -41,14 +40,14 @@
         </template>
 
         <template v-else>
-          <genetate-form-item
+          <generate-form-item
             :key="item.key"
             :models.sync="models"
             :rules="rules"
             :widget="item"
             @input-change="onInputChange"
             :remote="remote">
-          </genetate-form-item>
+          </generate-form-item>
         </template>
 
       </template>
@@ -57,13 +56,12 @@
 </template>
 
 <script>
-import GenetateFormItem from './GenerateFormItem'
-import {loadJs} from '../util/index.js'
+import GenerateFormItem from './GenerateFormItem'
 
 export default {
   name: 'fm-generate-form',
   components: {
-    GenetateFormItem
+    GenerateFormItem
   },
   props: ['data', 'remote', 'value', 'insite'],
   data () {
@@ -73,16 +71,16 @@ export default {
     }
   },
   created () {
-    this.generateModle(this.data.list)
+    this.generateModule(this.data.list)
   },
   mounted () {
   },
   methods: {
-    generateModle (genList) {
+    generateModule (genList) {
       for (let i = 0; i < genList.length; i++) {
         if (genList[i].type === 'grid') {
           genList[i].columns.forEach(item => {
-            this.generateModle(item.list)
+            this.generateModule(item.list)
           })
         } else {
           if (this.value && Object.keys(this.value).indexOf(genList[i].model) >= 0) {
@@ -90,6 +88,8 @@ export default {
           } else {
             if (genList[i].type === 'blank') {
               this.$set(this.models, genList[i].model, genList[i].options.defaultType === 'String' ? '' : (genList[i].options.defaultType === 'Object' ? {} : []))
+            } else if (genList[i].type === 'table') {
+              this.models[genList[i].model] = genList[i].rows
             } else {
               this.models[genList[i].model] = genList[i].options.defaultValue
             }
@@ -142,7 +142,7 @@ export default {
     data: {
       deep: true,
       handler (val) {
-        this.generateModle(val.list)
+        this.generateModule(val.list)
       }
     },
     value: {

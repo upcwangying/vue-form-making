@@ -371,7 +371,16 @@ export const layoutComponents = [
     options: {
       datasource: 'TPRI_VUE',
       table: 'TPRI_DMP_REPORT_DATA_TEST',
-      field: 'value',
+      dataTransformRules: {
+        rows:{
+          "wd_jz": "jz",
+          "wd_sheb": "shebid"
+        },
+        columns:{
+          key: "zbid",
+          value: "value"
+        }
+      },
       stripe: false,
       height: '300',
       border: false,

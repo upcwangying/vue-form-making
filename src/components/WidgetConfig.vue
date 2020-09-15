@@ -13,7 +13,7 @@
       <el-form-item :label="$t('fm.config.widget.table')" v-if="data.type!=='grid'">
         <el-input v-model="data.options.table"></el-input>
       </el-form-item>
-      <el-form-item :label="$t('fm.config.widget.field')" v-if="data.type!=='grid'">
+      <el-form-item :label="$t('fm.config.widget.field')" v-if="data.type!=='grid' && data.type!=='table'">
         <el-input v-model="data.options.field"></el-input>
       </el-form-item>
       <el-form-item :label="$t('fm.config.widget.width')" v-if="Object.keys(data.options).indexOf('width')>=0">
@@ -338,6 +338,18 @@
         <!--        <el-form-item :label="$t('fm.config.widget.gutter')">-->
         <!--          <el-input type="number" v-model.number="data.options.gutter"></el-input>-->
         <!--        </el-form-item>-->
+        <el-form-item label="机组维度字段">
+          <el-input min="1" v-model.number="data.options.dataTransformRules.rows.wd_jz"></el-input>
+        </el-form-item>
+        <el-form-item label="设备维度字段">
+          <el-input min="1" v-model.number="data.options.dataTransformRules.rows.wd_sheb"></el-input>
+        </el-form-item>
+        <el-form-item label="指标id字段">
+          <el-input min="1" v-model.number="data.options.dataTransformRules.columns.key"></el-input>
+        </el-form-item>
+        <el-form-item label="指标值字段">
+          <el-input min="1" v-model.number="data.options.dataTransformRules.columns.value"></el-input>
+        </el-form-item>
         <el-form-item :label="$t('fm.config.widget.rows')">
           <el-input type="number" min="1" v-model.number="data.rows.length"></el-input>
         </el-form-item>
