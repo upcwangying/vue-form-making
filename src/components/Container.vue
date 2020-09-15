@@ -198,7 +198,7 @@ import TableEditable from '@/components/TableEditable';
 import templateInitialData from '@/components/templateInitialData';
 import templateJson from '../mock/template.json';
 import reportJson from '../mock/report.json';
-import { getTemplate, postTemplate, deleteTemplate } from '@/api/template';
+import { getTemplate, postTemplate, deleteTemplate, enableTemplate, publishTemplate } from '@/api/template';
 import { getReport, postReport, getBbfl } from '@/api/report';
 import { getZb, getZbDetal } from '@/api/jsjdQuery';
 
@@ -438,7 +438,7 @@ export default {
         }
         this.jsonCopyValue = JSON.stringify(dataList)
       })
-      postReport(dataList)
+      // postReport(dataList)
     },
     queryReportData() {
       getReport('1013114899288600576', 0, '14').then(({ success, fromData }) => {
@@ -544,7 +544,8 @@ export default {
             tableData['key'] = item.model
             tableData['datasource'] = item.options.datasource
             tableData['table'] = item.options.table
-            tableData['field'] = item.options.field
+            tableData['dataTransformRules'] = item.options.dataTransformRules
+            // tableData['field'] = item.options.field
             tables.push(tableData)
           } else if (item.type === 'grid') {
             const { columns } = item
@@ -571,6 +572,7 @@ export default {
       postTemplate(dbid, werks, bukrs, templateName, templateCode, this.widgetForm, templateGrade, flid, tables)
       .then(result => {
         if (result.success) {
+          this.query_bbfl()
           this.$alert('操作成功', '提示')
         }
       })
@@ -586,9 +588,37 @@ export default {
     },
     publish() {
       // todo
+      if (!this.selectTreeNode) {
+        this.$alert('未选中报表分类', '提示')
+        return
+      }
+      const { dbid, is_temp, json, version } = this.selectTreeNode
+      if (is_temp !== '1') { // 分类节点
+        this.$alert('选中的报表分类非模板节点', '提示')
+        return
+      }
+
+      publishTemplate(dbid, null, json, version).then(result => {
+        if (result.success) {
+          this.$alert('启用成功', '提示')
+        }
+      })
     },
     enable() {
-      // todo
+      if (!this.selectTreeNode) {
+        this.$alert('未选中报表分类', '提示')
+        return
+      }
+      const { dbid, is_temp } = this.selectTreeNode
+      if (is_temp !== '1') { // 分类节点
+        this.$alert('选中的报表分类非模板节点', '提示')
+        return
+      }
+      enableTemplate(dbid).then(result => {
+        if (result.success) {
+          this.$alert('启用成功', '提示')
+        }
+      })
     },
     addColumn() {
       this.showAddColumn = true

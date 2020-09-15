@@ -71,16 +71,16 @@ export default {
     }
   },
   created () {
-    this.generateModle(this.data.list)
+    this.generateModule(this.data.list)
   },
   mounted () {
   },
   methods: {
-    generateModle (genList) {
+    generateModule (genList) {
       for (let i = 0; i < genList.length; i++) {
         if (genList[i].type === 'grid') {
           genList[i].columns.forEach(item => {
-            this.generateModle(item.list)
+            this.generateModule(item.list)
           })
         } else {
           if (this.value && Object.keys(this.value).indexOf(genList[i].model) >= 0) {
@@ -118,6 +118,7 @@ export default {
     getData () {
       return new Promise((resolve, reject) => {
         this.$refs.generateForm.validate(valid => {
+          console.log(this.models)
           if (valid) {
             resolve(this.models)
           } else {

@@ -40,18 +40,25 @@ export function deleteTemplate(dbid) {
   })
 }
 
-export function publishTemplate(params) {
+export function publishTemplate(dbid, published_dw, json, version) {
   return request({
     url: '/tpridmp/process/dmp_report?method=publish',
     method: 'get',
-    params
+    params: {
+      dbid,
+      published_dw,
+      json,
+      version
+    }
   })
 }
 
-export function enableTemplate(params) {
+export function enableTemplate(dbid) {
   return request({
     url: '/tpridmp/process/dmp_report?method=enable',
     method: 'get',
-    params
+    params: {
+      dbid
+    }
   })
 }
