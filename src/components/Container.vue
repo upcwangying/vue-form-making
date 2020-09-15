@@ -654,8 +654,62 @@ export default {
       this.configTab = value
     },
     handleTest () {
-      this.$refs.generateForm.getData().then(data => {
-        this.$alert(data, '').catch(e=>{})
+      this.$refs.generateForm.getData().then(result => {
+        const { list } = this.widgetForm
+
+        let dataList = []
+        const listFunc = (data) => {
+          for (let item of data) {
+            if (!item || (item instanceof Array && item.length === 0)) continue
+
+            if (item instanceof Array) {
+              item = item[0]
+            }
+
+            if (item.type === 'table') {
+              let data = Object.create(null)
+              data['type'] = item.type
+              data['rows'] = item.rows
+              data['key'] = item.model
+              data['datasource'] = item.options.datasource
+              data['table'] = item.options.table
+              data['dataTransformRules'] = item.options.dataTransformRules
+              data['otherfields'] = "werks,bukrs,create_by,create_time,update_by,update_time,is_del"
+              dataList.push(data)
+            } else if (item.type === 'grid') {
+              const { columns } = item
+              if (columns) {
+                const gridData = []
+                for (const column of columns) {
+                  gridData.push(column.list)
+                }
+                gridData && listFunc(gridData)
+              }
+            } else {
+              let OtherData = Object.create(null)
+              OtherData['type'] = item.type
+              OtherData['key'] = item.model
+              OtherData['value'] = item.options.defaultValue
+              OtherData['datasource'] = item.options.datasource
+              OtherData['table'] = item.options.table
+              OtherData['field'] = item.options.field
+              OtherData['otherfields'] = "werks,bukrs,create_by,create_time,update_by,update_time,is_del"
+              dataList.push(OtherData)
+            }
+          }
+        }
+
+        listFunc(list)
+        for (const listElement of dataList) {
+          if (Object.keys(result).includes(listElement['key'])) {
+            if (listElement['type'] === 'table') {
+              listElement['rows'] = result[listElement['key']]
+            } else {
+              listElement['value'] = result[listElement['key']]
+            }
+          }
+        }
+        this.$alert(dataList, '').catch(e=>{})
         this.$refs.widgetPreview.end()
       }).catch(e => {
         this.$refs.widgetPreview.end()

@@ -88,6 +88,8 @@ export default {
           } else {
             if (genList[i].type === 'blank') {
               this.$set(this.models, genList[i].model, genList[i].options.defaultType === 'String' ? '' : (genList[i].options.defaultType === 'Object' ? {} : []))
+            } else if (genList[i].type === 'table') {
+              this.models[genList[i].model] = genList[i].rows
             } else {
               this.models[genList[i].model] = genList[i].options.defaultValue
             }
@@ -118,7 +120,6 @@ export default {
     getData () {
       return new Promise((resolve, reject) => {
         this.$refs.generateForm.validate(valid => {
-          console.log(this.models)
           if (valid) {
             resolve(this.models)
           } else {
@@ -141,7 +142,7 @@ export default {
     data: {
       deep: true,
       handler (val) {
-        this.generateModle(val.list)
+        this.generateModule(val.list)
       }
     },
     value: {
