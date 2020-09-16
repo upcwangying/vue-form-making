@@ -1,11 +1,11 @@
 import request from '@/util/request'
 
-export function getTemplate(code) {
+export function getTemplate(dbid) {
   return request({
     url: '/tpridmp/process/dmp_report?method=query',
     method: 'get',
     params: {
-      code,
+      dbid,
     }
   })
 }

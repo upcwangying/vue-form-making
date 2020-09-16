@@ -358,8 +358,8 @@ export default {
     selectTree(isCheck, obj) {
       if (isCheck) {
         this.selectTreeNode = obj
-        const { code, is_temp } = this.selectTreeNode
-        is_temp === '1' && this.queryTemplateData(code)
+        const { dbid, is_temp } = this.selectTreeNode
+        is_temp === '1' && this.queryTemplateData(dbid)
       } else {
         this.selectTreeNode = null
         this.handleClear()
@@ -451,7 +451,7 @@ export default {
       })
     },
     queryData() {
-      Promise.all([getTemplate('template_test'), getReport('1013114899288600576', 0, '14')])
+      Promise.all([getTemplate('1013114899288600576'), getReport('1013114899288600576', 0, '14')])
         .then(([{ success: templateSuccess, dataset }, { success, fromData }]) => {
           // console.log(templateSuccess, dataset, success, fromData)
           const { json } = dataset.datas[0]
@@ -579,8 +579,8 @@ export default {
         }
       })
     },
-    queryTemplateData(code) {
-      getTemplate(code).then(result => {
+    queryTemplateData(dbid) {
+      getTemplate(dbid).then(result => {
         const { json } = result.dataset.datas[0]
         this.setJSON(JSON.parse(json), null)
       })
