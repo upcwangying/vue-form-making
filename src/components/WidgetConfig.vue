@@ -1,9 +1,9 @@
 <template>
   <div v-if="show">
     <el-form label-position="top">
-<!--      <el-form-item :label="$t('fm.config.widget.model')" v-if="data.type!=='grid'">-->
-<!--        <el-input v-model="data.model"></el-input>-->
-<!--      </el-form-item>-->
+      <!--      <el-form-item :label="$t('fm.config.widget.model')" v-if="data.type!=='grid'">-->
+      <!--        <el-input v-model="data.model"></el-input>-->
+      <!--      </el-form-item>-->
       <el-form-item :label="$t('fm.config.widget.name')" v-if="data.type!=='grid'">
         <el-input v-model="data.name"></el-input>
       </el-form-item>
@@ -361,6 +361,7 @@
           <draggable tag="ul" :list="data.rows"
                      v-bind="{group:{ name:'options'}, ghostClass: 'ghost',handle: '.drag-item'}"
                      handle=".drag-item"
+                     @end="endevent"
           >
             <li v-for="(item, index) in data.rows" :key="index">
               <i class="drag-item" style="font-size: 16px;margin: 0 5px;cursor: move;"><i
@@ -389,7 +390,7 @@
               <el-input :placeholder="$t('fm.config.widget.span')" size="mini" style="width: 100px;" readonly
                         v-model="item.label"></el-input>
 
-              <el-button @click="handleOptionsRemoveColumn(index)" circle plain type="danger" size="mini"
+              <el-button @click="handleRemoveTableColumn(index)" circle plain type="danger" size="mini"
                          icon="el-icon-minus"
                          style="padding: 4px;margin-left: 5px;"></el-button>
 
@@ -535,7 +536,7 @@ export default {
     }
   },
   mounted() {
-    const saveTableHeaderColumn = this.saveTableHeaderColumn.bind(this)
+    // const saveTableHeaderColumn = this.saveTableHeaderColumn.bind(this)
   },
   methods: {
     handleOptionsRemove(index) {
@@ -543,12 +544,10 @@ export default {
         this.data.columns.splice(index, 1)
       } else if (this.data.type === 'table') {
         this.data.rows.splice(index, 1)
+        this.$emit('removeRow', index)
       } else {
         this.data.options.options.splice(index, 1)
       }
-    },
-    handleOptionsRemoveColumn(index) {
-      this.data.columns.splice(index, 1)
     },
     handleAddOption() {
       if (this.data.options.showLabel) {
@@ -570,50 +569,22 @@ export default {
     },
     handleAddTableColumn() {
       this.$emit('showAddColumn')
-      // this.$prompt('请输入表头', '提示', {
-      //   confirmButtonText: '确定',
-      //   cancelButtonText: '取消',
-      //   inputValidator: (value) => {
-      //     return !!value
-      //   },
-      //   inputErrorMessage: '请输入表头',
-      // }).then(({ value }) => {
-      //   this.data.columns.push({
-      //     prop: 'address',
-      //     label: value,
-      //   })
-      // }).catch(() => {
-      //   this.$message({
-      //     type: 'info',
-      //     message: '取消输入'
-      //   });
-      // });
     },
-    saveTableHeaderColumn(label, prop, width) {
-      this.data.columns.push({
-        prop,
-        label,
-        width,
-      })
+    handleRemoveTableColumn(index) {
+      this.data.columns.splice(index, 1)
+      this.$emit('removeColumn', index)
     },
     handleAddTableRow() {
-        this.$emit('showAddRow')
-    },
-    saveTableRow(props) {
-        const rowMode = {}
-        props.forEach(item => {
-            rowMode[item] = ''
-        })
-        this.data.rows.push(rowMode )
+      this.$emit('showAddRow')
     },
     generateRule() {
       this.data.rules = []
       Object.keys(this.validator)
-          .forEach(key => {
-            if (this.validator[key]) {
-              this.data.rules.push(this.validator[key])
-            }
-          })
+        .forEach(key => {
+          if (this.validator[key]) {
+            this.data.rules.push(this.validator[key])
+          }
+        })
     },
     handleSelectMuliple(value) {
       if (value) {
@@ -691,7 +662,7 @@ export default {
           this.data.options.defaultValue = null
         } else {
           if (Object.keys(this.data.options)
-              .indexOf('defaultValue') >= 0) {
+            .indexOf('defaultValue') >= 0) {
             this.data.options.defaultValue = ''
           }
         }
