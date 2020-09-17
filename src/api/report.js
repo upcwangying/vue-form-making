@@ -14,7 +14,7 @@ export function getReport(temp_id, version, baobid) {
 
 export function postReport(rows) {
   return request({
-    url: '/tpridmp/process/dmp_report?method=test_save',
+    url: '/tpridmp/process/dmp_report?method=save_data',
     method: 'get',
     params: {
       jsonStr: {

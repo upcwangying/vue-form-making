@@ -377,7 +377,7 @@ export const layoutComponents = [
           "wd_sheb": "shebid"
         },
         columns:{
-          key: "zbid",
+          key: "zbid1",
           value: "value"
         }
       },
