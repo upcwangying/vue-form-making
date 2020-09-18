@@ -358,6 +358,7 @@ export default {
         this.selectTreeNode = obj
         const { dbid, is_temp } = this.selectTreeNode
         is_temp === '1' && this.queryTemplateData(dbid)
+        is_temp === '0' && this.handleClear()
       } else {
         this.selectTreeNode = null
         this.handleClear()
