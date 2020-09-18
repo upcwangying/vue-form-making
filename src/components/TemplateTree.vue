@@ -72,9 +72,13 @@ export default {
     },
     handleClickNode(obj, node, dom) {},
     handleCheckChange(obj, isCheck, node) { // 勾选事件
-      this.$emit('check-change', isCheck, obj)
       if (isCheck) {
         this.$refs.tree.setCheckedKeys([obj.dbid], false);
+        this.$emit('check-change', isCheck, obj)
+      } else {
+        if (this.$refs.tree.getCheckedNodes().length < 1) {
+          this.$emit('check-change', isCheck, obj)
+        }
       }
     },
   },
