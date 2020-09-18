@@ -92,7 +92,7 @@
               <el-main class="config-content">
                 <header-config v-show="configTab ==='header'" :data="headerFormSelect"></header-config>
                 <zhi-biao-config v-show="configTab ==='zhibiao'" :data="zhiBiaoSelect" :zbattribute="zbAttribute" ></zhi-biao-config>
-                <widget-config ref="widgetConfig" v-show="configTab ==='widget'" :data="widgetFormSelect" @showAddColumn="addColumn" @showAddRow="addRow" @draggableend="dragend" @removeColumn="removeColumn" @removeRow="removeRow"></widget-config>
+                <widget-config ref="widgetConfig" v-show="configTab ==='widget'" :data="widgetFormSelect" @showAddColumn="addColumn" @showAddRow="addRow" @draggableend="dragend"></widget-config>
                 <form-config v-show="configTab ==='form'" :data="widgetForm.config"></form-config>
               </el-main>
             </el-container>
@@ -296,12 +296,10 @@ export default {
       zbflSelectDataForjb: [],
       syorjbParam: 'sy',  //默认实验报表
       zbAttribute: null,
-      selectTreeNode: null,
-      cloneDeep: null,
+      selectTreeNode: null
     }
   },
   mounted() {
-    this.cloneDeep = require('lodash').cloneDeep
     this.query_bbfl();
     this.query_zb();
   },
@@ -622,52 +620,26 @@ export default {
         }
       })
     },
-    updateWidgetFormRowColumn() {
-      this.widgetForm.list.forEach(item => {
-        if (item.key === this.widgetFormSelect.key) {
-          const columns_ = this.cloneDeep(this.widgetFormSelect.columns)
-          const rows_ = this.cloneDeep(this.widgetFormSelect.rows)
-          item.columns = columns_
-          item.rows = rows_
-        }
-      })
-    },
     addColumn() {
       this.showAddColumn = true
-    },
-    submitColumnInfo(label, prop, width) {
-      const label_ = label
-      const prop_ = prop
-      const width_ = width
-      this.widgetFormSelect.columns.push({ prop, label, width })
-      this.updateWidgetFormRowColumn()
-      this.showAddColumn = false
-    },
-    removeColumn() {
-      this.updateWidgetFormRowColumn()
     },
     addRow() {
       if (this.widgetFormSelect.columns.length > 0) {
         const props = []
         this.widgetFormSelect.columns.forEach(item => {
-          props.push(item.prop)
+            props.push(item.prop)
         })
-        const rowMode = {}
-        props.forEach(item => {
-          rowMode[item] = ''
-        })
-        this.widgetFormSelect.rows.push(rowMode)
-        this.updateWidgetFormRowColumn()
+        this.$refs['widgetConfig'].saveTableRow(props)
       }
     },
-    removeRow() {
-      this.updateWidgetFormRowColumn()
-    },
     dragend() {
-      this.updateWidgetFormRowColumn()
       this.$nextTick(() => {
         (this.$refs.widgetForm) && (this.$refs.widgetForm.changeTag())
       })
+    },
+    submitColumnInfo(label, prop, width) {
+      this.$refs['widgetConfig'].saveTableHeaderColumn(label, prop, width)
+      this.showAddColumn = false
     },
     handleGoGithub () {
       window.location.href = 'https://github.com/upcwangying/vue-form-making'

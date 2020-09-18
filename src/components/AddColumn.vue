@@ -38,8 +38,7 @@ export default {
     return {
       dynamicValidateForm: {
         prop: '',
-        label: '',
-        width: '',
+        label: ''
       }
     };
   },

@@ -182,7 +182,8 @@
     <template v-if="element.type === 'table'">
       <el-table
           v-if="changeShowTableTag"
-          :key="'widgetFormItemTable_' + index + '_1'"
+          key="widgetFormItemTable_1"
+          ref="widgetFormItemTable_1"
           :data="element.rows"
           :height="element.options.height"
           :border="element.options.border"
@@ -204,7 +205,8 @@
       </el-table>
       <el-table
         v-else
-        :key="'widgetFormItemTable_' + index + '_2'"
+        key="widgetFormItemTable_2"
+        ref="widgetFormItemTable_2"
         :data="element.rows"
         :height="element.options.height"
         :border="element.options.border"
@@ -297,26 +299,25 @@ export default {
       selectWidget: this.select,
       changeShowTableTag: true,
       editableTableData: [],
-      dialogEidtableTableVisible: false,
-      cloneDeep: null,
+      dialogEidtableTableVisible: false
     }
   },
   mounted() {
-    this.cloneDeep = require('lodash').cloneDeep
+
   },
   methods: {
     handleSelectWidget(index) {
-      this.selectWidget = this.cloneDeep(this.data.list[index]);
+      this.selectWidget = this.data.list[index]
     },
     handleWidgetDelete(index) {
       if (this.data.list.length - 1 === index) {
         if (index === 0) {
           this.selectWidget = {}
         } else {
-          this.selectWidget = this.cloneDeep(this.data.list[index - 1])
+          this.selectWidget = this.data.list[index - 1]
         }
       } else {
-        this.selectWidget = this.cloneDeep(this.data.list[index + 1])
+        this.selectWidget = this.data.list[index + 1]
       }
 
       this.$nextTick(() => {
@@ -355,7 +356,7 @@ export default {
       this.data.list.splice(index, 0, cloneData)
 
       this.$nextTick(() => {
-        this.selectWidget = this.cloneDeep(this.data.list[index + 1])
+        this.selectWidget = this.data.list[index + 1]
       })
     },
   },
