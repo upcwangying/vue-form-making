@@ -368,6 +368,7 @@ export const layoutComponents = [
     icon: 'icon-table',
     columns: [],
     rows: [],
+    mergeRule: [{ startRow: '', startColumn: '', endRow: '', endColumn: '' }],
     options: {
       datasource: 'TPRI_VUE',
       table: 'TPRI_DMP_REPORT_DATA_TEST',
