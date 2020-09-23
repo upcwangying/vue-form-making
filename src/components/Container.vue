@@ -66,6 +66,7 @@
               </el-main>
             </el-container>
           </el-aside>
+
           <el-container class="center-container" direction="vertical">
             <el-header class="btn-bar" style="height: 45px;">
               <slot name="action">
@@ -76,7 +77,6 @@
               <el-button v-if="generateCode" type="text" size="medium" icon="el-icon-document" @click="handleGenerateCode">{{$t('fm.actions.code')}}</el-button>
             </el-header>
             <el-main :class="{'widget-empty': widgetForm.list.length === 0}">
-
               <widget-form v-if="!resetJson"  ref="widgetForm" :data="widgetForm" :select.sync="widgetFormSelect"></widget-form>
             </el-main>
           </el-container>
@@ -92,7 +92,7 @@
               <el-main class="config-content">
                 <header-config v-show="configTab ==='header'" :data="headerFormSelect"></header-config>
                 <zhi-biao-config v-show="configTab ==='zhibiao'" :data="zhiBiaoSelect" :zbattribute="zbAttribute" ></zhi-biao-config>
-                <widget-config ref="widgetConfig" v-show="configTab ==='widget'" :data="widgetFormSelect" @showAddColumn="addColumn" @showAddRow="addRow" @draggableend="dragend" @removeColumn="removeColumn" @removeRow="removeRow"></widget-config>
+                <widget-config ref="widgetConfig" v-show="configTab ==='widget'" :data="widgetFormSelect" :currcheck.sync="currentCheck" :currrCheckOfMergeCell.sync="currrentCheckOfMergeCell" @show-add-column="addColumn" @show-add-row="addRow" @drag-end="dragend" @remove-column="removeColumn" @remove-row="removeRow" @merge-cell="mergeCell"></widget-config>
                 <form-config v-show="configTab ==='form'" :data="widgetForm.config"></form-config>
               </el-main>
             </el-container>
@@ -298,6 +298,8 @@ export default {
       zbAttribute: null,
       selectTreeNode: null,
       cloneDeep: null,
+      currentCheck: [],
+      currrentCheckOfMergeCell: [],
     }
   },
   mounted() {
@@ -622,13 +624,136 @@ export default {
         }
       })
     },
-    updateWidgetFormRowColumn() {
+    updateWidgetFormTable() {
+      this.$nextTick(() => {
+        (this.$refs.widgetForm) && (this.$refs.widgetForm.changeTag())
+      })
+    },
+    getIndex(columns, label) {
+      let index = -1
+      for (let i = 0; i < columns.length; i++) {
+        if (columns[i].label === label) {
+          index = i
+        }
+      }
+      return index
+    },
+    getLastIndex(columns, label) { // 获取列数组中 特定-label的最后一个子节点下标
+      let index = this.getIndex(columns, label)
+      for (let i = this.getIndex(columns, label) + 1;i < columns.length; i++) {
+        if (columns[i].parent && columns[i].parent === label) {
+          index = i
+        }
+      }
+      return index
+    },
+    columnHasChildren(columns, label) { // 列数组中 特定-label 是否有孩子节点
+      for (let i = 0; i < columns.length; i++) {
+        if (columns[i].label === label) {
+          return !!(columns[i].children)
+        } else if (columns[i].children) {
+          return this.columnHasChildren(columns[i].children, label)
+        }
+      }
+    },
+    structColumnsAddColumn(columns, label, column) { // 组织带结构的 '列'对象
+      columns.forEach(item => {
+        if (item.label === label) {
+          if (!item.children) {
+            item.children = []
+          }
+          item.children.push(column)
+        } else if (item.children) {
+          item.children = this.structColumnsAddColumn(item.children, label, column)
+        }
+      })
+      return columns
+    },
+    getChildrenNodeArra(columns, labelArr) { // 找特定-[label]的所有子元素,返回一个[子元素label]的合集 (广度优先)
+      let result = []
+      if (labelArr.length > 0) {
+        columns.forEach(item => {
+          if (labelArr.indexOf(item.parent) !== -1) {
+            result.push(item.label)
+          }
+        })
+        result.push( ...this.getChildrenNodeArra(columns, result) )
+      }
+      return result
+    },
+    removeTheLabelColumn(columns, label) { //非递归遍历 会破坏structColumns对象的结构 (弃用)
+      if (!columns) {
+        return;
+      }
+      var stack = [];
+      stack.push( ...columns );
+      var tmpNode;
+      while (stack.length > 0) {
+        tmpNode = stack.pop();
+        console.log('tmpNode : ', tmpNode);
+        if (tmpNode.label === label) {}
+        if (tmpNode.children && tmpNode.children.length > 0) {
+          var i = tmpNode.children.length - 1;
+          for (i = tmpNode.children.length - 1; i >= 0; i--) {
+            stack.push(tmpNode.children[i]);
+          }
+        }
+      }
+    },
+    updateWidgetFormRowColumn(tag, param) { // 将 widgetFormSelect 中的数据 处理(删除非叶子节点)后 同步到 widgetForm 中,并根据tag做不同处理
       this.widgetForm.list.forEach(item => {
         if (item.key === this.widgetFormSelect.key) {
           const columns_ = this.cloneDeep(this.widgetFormSelect.columns)
-          const rows_ = this.cloneDeep(this.widgetFormSelect.rows)
+          // const rows_ = this.cloneDeep(this.widgetFormSelect.rows)
+          if (tag === 'add-column') { // 新增行逻辑 : param => 新增 column
+            if (this.currentCheck.length === 0) {
+              if (!item.structColumns) {
+                item.structColumns = []
+              }
+              item.structColumns.push(param)
+            } else if (this.currentCheck.length === 1) {
+              item.structColumns = this.structColumnsAddColumn(item.structColumns, this.currentCheck[0], param)
+            }
+          }
+          if (tag === 'remove-column' && item.structColumns.length > 0) { // 删除行逻辑 : param => 删除 label
+            const temp = [item.structColumns]
+            let i = 0
+            // 非递归的遍历 不破坏structColumns结构
+            let isBreak = false
+            while(i >= 0) {
+              let j = 0
+              for (j; j < temp[i].length; j++) {
+                if (!isBreak && temp[i][j].label === param) {
+                  temp[i].splice(j, 1)
+                  isBreak = true
+                  break
+                } else if (!isBreak && temp[i][j].children){
+                  temp.push(temp[i][j].children)
+                }
+              }
+              if (isBreak) {
+                break
+              }
+              if (!temp[i++]) {
+                new Error('删除列出现错误,请重新创建table;如多次创建无效请联系管理员')
+                break
+              }
+            }
+          }
+          if (tag === 'drage-column') {
+            // todo : 实现表头的拖动变化
+          }
+          // if (tag === '') {}
+          for (let i = 0; i < columns_.length; i++) {
+            if (this.columnHasChildren(item.structColumns, columns_[i].label)) {
+              columns_.splice(i, 1)
+              i--
+            }
+          }
+          item.configColumns = this.cloneDeep(this.widgetFormSelect.columns)
           item.columns = columns_
-          item.rows = rows_
+          item.rows = this.widgetFormSelect.rows
+          item.mergeRule = this.widgetFormSelect.mergeRule
         }
       })
     },
@@ -639,35 +764,41 @@ export default {
       const label_ = label
       const prop_ = prop
       const width_ = width
-      this.widgetFormSelect.columns.push({ prop, label, width })
-      this.updateWidgetFormRowColumn()
+      if (this.currentCheck.length === 0) {
+        this.widgetFormSelect.columns.push({ prop, label, width })
+      } else if (this.currentCheck.length === 1) {
+        this.widgetFormSelect.columns.splice(this.getLastIndex(this.widgetFormSelect.columns, this.currentCheck[0]) + 1, 0, { prop, label, width, parent: this.currentCheck[0] })
+      }
+      this.updateWidgetFormRowColumn('add-column', { prop, label, width })
       this.showAddColumn = false
+      this.updateWidgetFormTable()
     },
-    removeColumn() {
-      this.updateWidgetFormRowColumn()
+    removeColumn(label, index) {
+      this.widgetFormSelect.columns.splice(index, 1)
+      const aimArr = this.getChildrenNodeArra(this.widgetFormSelect.columns, [label])
+      for (let i = this.widgetFormSelect.columns.length - 1; i >= 0; i--) {
+        if (aimArr.indexOf(this.widgetFormSelect.columns[i].label) !== -1) {
+          this.widgetFormSelect.columns.splice(i, 1)
+        }
+      }
+      this.updateWidgetFormRowColumn('remove-column', label)
+      this.updateWidgetFormTable()
     },
     addRow() {
       if (this.widgetFormSelect.columns.length > 0) {
-        const props = []
-        this.widgetFormSelect.columns.forEach(item => {
-          props.push(item.prop)
-        })
-        const rowMode = {}
-        props.forEach(item => {
-          rowMode[item] = ''
-        })
-        this.widgetFormSelect.rows.push(rowMode)
-        this.updateWidgetFormRowColumn()
+        this.widgetFormSelect.rows.push({})
+        this.updateWidgetFormRowColumn('add-row')
       }
     },
     removeRow() {
-      this.updateWidgetFormRowColumn()
+      this.updateWidgetFormRowColumn('remove-row')
     },
     dragend() {
-      this.updateWidgetFormRowColumn()
-      this.$nextTick(() => {
-        (this.$refs.widgetForm) && (this.$refs.widgetForm.changeTag())
-      })
+      this.updateWidgetFormRowColumn('drage-column')
+      this.updateWidgetFormTable()
+    },
+    mergeCell(label) {
+      this.updateWidgetFormRowColumn('merge-cell', '')
     },
     handleGoGithub () {
       window.location.href = 'https://github.com/upcwangying/vue-form-making'
@@ -842,7 +973,7 @@ export default {
     },
     handleDataChange (field, value, data) {
       console.log(field, value, data)
-    }
+    },
   },
   watch: {
     widgetForm: {

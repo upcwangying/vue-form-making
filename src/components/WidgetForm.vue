@@ -91,11 +91,19 @@ export default {
     this.cloneDeep = require('lodash').cloneDeep
   },
   methods: {
+    updateSelectWidget(index) {
+      if (this.data.list[index].type === 'table') {
+        this.selectWidget = this.cloneDeep(this.data.list[index])  // 深拷贝(cloneDeep) 达到非双绑的效果
+        // this.selectWidget = JSON.parse(JSON.stringify(this.data.list[index]))  // json&String互转 达到非双绑的效果
+      } else {
+        this.selectWidget = this.data.list[index]
+      }
+    },
     handleMoveEnd ({newIndex, oldIndex}) {
       console.log('index', newIndex, oldIndex)
     },
     handleSelectWidget (index) {
-      this.selectWidget = this.cloneDeep(this.data.list[index]);
+      this.updateSelectWidget(index)
     },
     handleWidgetAdd (evt) {
       const newIndex = evt.newIndex
@@ -103,8 +111,12 @@ export default {
 
       //为拖拽到容器的元素添加唯一 key
       const key = Date.parse(new Date()) + '_' + Math.ceil(Math.random() * 99999)
-      const newIndexObj = this.cloneDeep(this.data.list[newIndex])
-      newIndexObj.columns = []
+      let newIndexObj
+      if (this.data.list[newIndex].type === 'table') {
+        newIndexObj = this.cloneDeep(this.data.list[newIndex])
+      } else {
+        newIndexObj = this.data.list[newIndex]
+      }
       this.$set(this.data.list, newIndex, {
         ...newIndexObj,
         options: {
@@ -135,9 +147,7 @@ export default {
           columns: this.data.list[newIndex].columns.map(item => ({...item}))
         })
       }
-
-      // this.selectWidget = JSON.parse(JSON.stringify(this.data.list[newIndex]));  // json&String互转 达到非双绑的效果
-      this.selectWidget = this.cloneDeep(this.data.list[newIndex]);  // 深拷贝(cloneDeep) 达到非双绑的效果
+      this.updateSelectWidget(newIndex)
     },
     handleWidgetColAdd ($event, row, colIndex) {
       const newIndex = $event.newIndex
@@ -180,18 +190,17 @@ export default {
           }
         })
       }
-
-      this.selectWidget = this.cloneDeep(row.columns[colIndex].list[newIndex])
+      this.selectWidget = row.columns[colIndex].list[newIndex]
     },
     handleWidgetDelete (index) {
       if (this.data.list.length - 1 === index) {
         if (index === 0) {
           this.selectWidget = {}
         } else {
-          this.selectWidget = this.cloneDeep(this.data.list[index - 1])
+          this.updateSelectWidget(index - 1)
         }
       } else {
-        this.selectWidget = this.cloneDeep(this.data.list[index + 1])
+        this.updateSelectWidget(index + 1)
       }
 
       this.$nextTick(() => {
