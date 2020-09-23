@@ -4,9 +4,9 @@
       <div class="add-column-mask-container" v-if="showAddColumn"></div>
       <el-header height="45">
         <el-row class="btn-container">
-          <el-button @click="saveReportJSON">保存报表数据</el-button>
-          <el-button @click="queryReportData">获取报表数据</el-button>
-          <el-button @click="queryData">获取数据</el-button>
+<!--          <el-button @click="saveReportJSON">保存报表数据</el-button>-->
+<!--          <el-button @click="queryReportData">获取报表数据</el-button>-->
+<!--          <el-button @click="queryData">获取数据</el-button>-->
           <el-button @click="createTemplate">创建</el-button>
           <el-button @click="saveTemplate">保存</el-button>
           <el-button @click="deleteTemplate">删除</el-button>
@@ -68,14 +68,14 @@
           </el-aside>
 
           <el-container class="center-container" direction="vertical">
-            <el-header class="btn-bar" style="height: 45px;">
-              <slot name="action">
-              </slot>
-              <el-button v-if="upload" type="text" size="medium" icon="el-icon-upload2" @click="handleUpload">{{$t('fm.actions.import')}}</el-button>
-              <el-button v-if="clearable" type="text" size="medium" icon="el-icon-delete" @click="handleClear">{{$t('fm.actions.clear')}}</el-button>
-              <el-button v-if="generateJson" type="text" size="medium" icon="el-icon-tickets" @click="handleGenerateJson">{{$t('fm.actions.json')}}</el-button>
-              <el-button v-if="generateCode" type="text" size="medium" icon="el-icon-document" @click="handleGenerateCode">{{$t('fm.actions.code')}}</el-button>
-            </el-header>
+<!--            <el-header class="btn-bar" style="height: 45px;">-->
+<!--              <slot name="action">-->
+<!--              </slot>-->
+<!--              <el-button v-if="upload" type="text" size="medium" icon="el-icon-upload2" @click="handleUpload">{{$t('fm.actions.import')}}</el-button>-->
+<!--              <el-button v-if="clearable" type="text" size="medium" icon="el-icon-delete" @click="handleClear">{{$t('fm.actions.clear')}}</el-button>-->
+<!--              <el-button v-if="generateJson" type="text" size="medium" icon="el-icon-tickets" @click="handleGenerateJson">{{$t('fm.actions.json')}}</el-button>-->
+<!--              <el-button v-if="generateCode" type="text" size="medium" icon="el-icon-document" @click="handleGenerateCode">{{$t('fm.actions.code')}}</el-button>-->
+<!--            </el-header>-->
             <el-main :class="{'widget-empty': widgetForm.list.length === 0}">
               <widget-form v-if="!resetJson"  ref="widgetForm" :data="widgetForm" :select.sync="widgetFormSelect"></widget-form>
             </el-main>
@@ -303,7 +303,6 @@ export default {
     }
   },
   mounted() {
-    this.cloneDeep = require('lodash').cloneDeep
     this.query_bbfl();
     this.query_zb();
   },
@@ -362,6 +361,7 @@ export default {
         this.selectTreeNode = obj
         const { dbid, is_temp } = this.selectTreeNode
         is_temp === '1' && this.queryTemplateData(dbid)
+        is_temp === '0' && this.handleClear()
       } else {
         this.selectTreeNode = null
         this.handleClear()
@@ -799,6 +799,10 @@ export default {
     },
     mergeCell(label) {
       this.updateWidgetFormRowColumn('merge-cell', '')
+    },
+    submitColumnInfo(label, prop, width) {
+      this.$refs['widgetConfig'].saveTableHeaderColumn(label, prop, width)
+      this.showAddColumn = false
     },
     handleGoGithub () {
       window.location.href = 'https://github.com/upcwangying/vue-form-making'

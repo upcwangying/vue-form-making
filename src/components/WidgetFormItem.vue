@@ -289,12 +289,11 @@ export default {
       selectWidget: this.select,
       changeShowTableTag: true,
       editableTableData: [],
-      dialogEidtableTableVisible: false,
-      cloneDeep: null,
+      dialogEidtableTableVisible: false
     }
   },
   mounted() {
-    this.cloneDeep = require('lodash').cloneDeep
+
   },
   methods: {
     transferConfigcolToCol(formW) {

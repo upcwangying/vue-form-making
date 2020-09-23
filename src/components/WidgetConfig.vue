@@ -1,9 +1,9 @@
 <template>
   <div v-if="show">
     <el-form label-position="top">
-      <!--      <el-form-item :label="$t('fm.config.widget.model')" v-if="data.type!=='grid'">-->
-      <!--        <el-input v-model="data.model"></el-input>-->
-      <!--      </el-form-item>-->
+<!--      <el-form-item :label="$t('fm.config.widget.model')" v-if="data.type!=='grid'">-->
+<!--        <el-input v-model="data.model"></el-input>-->
+<!--      </el-form-item>-->
       <el-form-item :label="$t('fm.config.widget.name')" v-if="data.type!=='grid'">
         <el-input v-model="data.name"></el-input>
       </el-form-item>
@@ -361,7 +361,6 @@
           <draggable tag="ul" :list="data.rows"
                      v-bind="{group:{ name:'options'}, ghostClass: 'ghost',handle: '.drag-item'}"
                      handle=".drag-item"
-                     @end="endevent"
           >
             <li v-for="(item, index) in data.rows" :key="index">
               <i class="drag-item" style="font-size: 16px;margin: 0 5px;cursor: move;"><i
@@ -553,7 +552,7 @@ export default {
     }
   },
   mounted() {
-    // const saveTableHeaderColumn = this.saveTableHeaderColumn.bind(this)
+    const saveTableHeaderColumn = this.saveTableHeaderColumn.bind(this)
   },
   methods: {
     handleOptionsRemove(index) {
@@ -565,6 +564,9 @@ export default {
       } else {
         this.data.options.options.splice(index, 1)
       }
+    },
+    handleOptionsRemoveColumn(index) {
+      this.data.columns.splice(index, 1)
     },
     handleAddOption() {
       if (this.data.options.showLabel) {
@@ -596,11 +598,11 @@ export default {
     generateRule() {
       this.data.rules = []
       Object.keys(this.validator)
-        .forEach(key => {
-          if (this.validator[key]) {
-            this.data.rules.push(this.validator[key])
-          }
-        })
+          .forEach(key => {
+            if (this.validator[key]) {
+              this.data.rules.push(this.validator[key])
+            }
+          })
     },
     handleSelectMuliple(value) {
       if (value) {
@@ -685,7 +687,7 @@ export default {
           this.data.options.defaultValue = null
         } else {
           if (Object.keys(this.data.options)
-            .indexOf('defaultValue') >= 0) {
+              .indexOf('defaultValue') >= 0) {
             this.data.options.defaultValue = ''
           }
         }
