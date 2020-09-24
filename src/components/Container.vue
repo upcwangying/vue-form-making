@@ -92,7 +92,7 @@
               <el-main class="config-content">
                 <header-config v-show="configTab ==='header'" :data="headerFormSelect"></header-config>
                 <zhi-biao-config v-show="configTab ==='zhibiao'" :data="zhiBiaoSelect" :zbattribute="zbAttribute" ></zhi-biao-config>
-                <widget-config ref="widgetConfig" v-show="configTab ==='widget'" :data="widgetFormSelect" :currcheck.sync="currentCheck" :currrCheckOfMergeCell.sync="currrentCheckOfMergeCell" @show-add-column="addColumn" @show-add-row="addRow" @drag-end="dragend" @remove-column="removeColumn" @remove-row="removeRow" @merge-cell="mergeCell"></widget-config>
+                <widget-config ref="widgetConfig" v-show="configTab ==='widget'" :data="widgetFormSelect" :currcheck.sync="currentCheck" @show-add-column="addColumn" @show-add-row="addRow" @drag-end="dragend" @remove-column="removeColumn" @remove-row="removeRow" @merge-cell="mergeCell"></widget-config>
                 <form-config v-show="configTab ==='form'" :data="widgetForm.config"></form-config>
               </el-main>
             </el-container>
@@ -299,10 +299,10 @@ export default {
       selectTreeNode: null,
       cloneDeep: null,
       currentCheck: [],
-      currrentCheckOfMergeCell: [],
     }
   },
   mounted() {
+    this.cloneDeep = require('lodash').cloneDeep
     this.query_bbfl();
     this.query_zb();
   },
@@ -743,6 +743,41 @@ export default {
           if (tag === 'drage-column') {
             // todo : 实现表头的拖动变化
           }
+          if (tag === 'merge-cell') { // 合并单元格操作
+            // mergeRule = { startRow: 2, startColumn: 2, endRow: 3, endColumn: 3, mergeFunction: (self)=>{} }
+            const mergeFunction_ = function ({ row, column, rowIndex, columnIndex }, mergeRule) {
+              let rowArea = []
+              let columnArea = []
+              if (mergeRule.startRow < mergeRule.endRow) {
+                for (let i = mergeRule.startRow; i <= mergeRule.endRow; i++) {
+                  rowArea.push(i)
+                }
+              } else if (mergeRule.startRow === mergeRule.endRow) {
+                rowArea.push(mergeRule.startRow)
+              } else {
+                for (let i = mergeRule.endRow; i <= mergeRule.startRow; i++) {
+                  rowArea.push(i)
+                }
+              }
+              if (mergeRule.startColumn < mergeRule.endColumn) {
+                for (let i = mergeRule.startColumn; i <= mergeRule.endColumn; i++) {
+                  columnArea.push(i)
+                }
+              } else if (mergeRule.startColumn === mergeRule.endColumn) {
+                columnArea.push(mergeRule.startColumn)
+              } else {
+                for (let i = mergeRule.endColumn; i <= mergeRule.startColumn; i++) {
+                  columnArea.push(i)
+                }
+              }
+              if (rowArea.indexOf(rowIndex) === 0 && columnArea.indexOf(columnIndex) === 0) {
+                return [columnArea.length, rowArea.length]
+              } else if (rowArea.indexOf(rowIndex) !== -1 && columnArea.indexOf(columnIndex) !== -1) {
+                return [0, 0]
+              }
+            }
+            this.widgetFormSelect.mergeRule[param].mergeFunction = mergeFunction_
+          }
           // if (tag === '') {}
           for (let i = 0; i < columns_.length; i++) {
             if (this.columnHasChildren(item.structColumns, columns_[i].label)) {
@@ -798,7 +833,8 @@ export default {
       this.updateWidgetFormTable()
     },
     mergeCell(label) {
-      this.updateWidgetFormRowColumn('merge-cell', '')
+      this.updateWidgetFormRowColumn('merge-cell', label.substring(label.length - 1))
+      this.widgetFormSelect.mergeRule.push({})
     },
     submitColumnInfo(label, prop, width) {
       this.$refs['widgetConfig'].saveTableHeaderColumn(label, prop, width)
