@@ -66,7 +66,6 @@
               </el-main>
             </el-container>
           </el-aside>
-
           <el-container class="center-container" direction="vertical">
 <!--            <el-header class="btn-bar" style="height: 45px;">-->
 <!--              <slot name="action">-->
@@ -77,6 +76,7 @@
 <!--              <el-button v-if="generateCode" type="text" size="medium" icon="el-icon-document" @click="handleGenerateCode">{{$t('fm.actions.code')}}</el-button>-->
 <!--            </el-header>-->
             <el-main :class="{'widget-empty': widgetForm.list.length === 0}">
+
               <widget-form v-if="!resetJson"  ref="widgetForm" :data="widgetForm" :select.sync="widgetFormSelect"></widget-form>
             </el-main>
           </el-container>
@@ -794,38 +794,14 @@ export default {
     addColumn() {
       this.showAddColumn = true
     },
-    submitColumnInfo(label, prop, width) {
-      const label_ = label
-      const prop_ = prop
-      const width_ = width
-      if (this.currentCheck.length === 0) {
-        this.widgetFormSelect.columns.push({ prop, label, width })
-      } else if (this.currentCheck.length === 1) {
-        this.widgetFormSelect.columns.splice(this.getLastIndex(this.widgetFormSelect.columns, this.currentCheck[0]) + 1, 0, { prop, label, width, parent: this.currentCheck[0] })
-      }
-      this.updateWidgetFormRowColumn('add-column', { prop, label, width })
-      this.showAddColumn = false
-      this.updateWidgetFormTable()
-    },
-    removeColumn(label, index) {
-      this.widgetFormSelect.columns.splice(index, 1)
-      const aimArr = this.getChildrenNodeArra(this.widgetFormSelect.columns, [label])
-      for (let i = this.widgetFormSelect.columns.length - 1; i >= 0; i--) {
-        if (aimArr.indexOf(this.widgetFormSelect.columns[i].label) !== -1) {
-          this.widgetFormSelect.columns.splice(i, 1)
-        }
-      }
-      this.updateWidgetFormRowColumn('remove-column', label)
-      this.updateWidgetFormTable()
-    },
     addRow() {
       if (this.widgetFormSelect.columns.length > 0) {
-        this.widgetFormSelect.rows.push({})
-        this.updateWidgetFormRowColumn('add-row')
+        const props = []
+        this.widgetFormSelect.columns.forEach(item => {
+            props.push(item.prop)
+        })
+        this.$refs['widgetConfig'].saveTableRow(props)
       }
-    },
-    removeRow() {
-      this.updateWidgetFormRowColumn('remove-row')
     },
     dragend() {
       this.updateWidgetFormRowColumn('drage-column')
@@ -1008,7 +984,7 @@ export default {
     },
     handleDataChange (field, value, data) {
       console.log(field, value, data)
-    },
+    }
   },
   watch: {
     widgetForm: {

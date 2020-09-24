@@ -182,8 +182,8 @@
     <template v-if="element.type === 'table'">
       <el-table
           v-if="changeShowTableTag"
-          ref="editTable1"
-          :key="'widgetFormItemTable_' + index + '_1'"
+          key="widgetFormItemTable_1"
+          ref="widgetFormItemTable_1"
           :data="element.rows"
           :span-method="objectSpanMethod(arguments, element.mergeRule)"
           :height="element.options.height"
@@ -194,15 +194,20 @@
           :highlight-current-row="element.options.highlightCurrentRow"
           :show-summary="element.options.showSummary"
           style="width: 100%">
-        <template v-for="column in element.structColumns">
-          <table-column v-if="column.children && column.children.length" :key="column.id" :prop="column.prop" :label="column.label" :width="column.width" :coloumn-header="column"></table-column>
-          <el-table-column v-else :key="column.id" :prop="column.prop" :label="column.label" :width="column.width"></el-table-column>
+
+        <template v-for="column in element.columns">
+          <el-table-column
+              :key="column.label"
+              :prop="column.prop"
+              :label="column.label"
+              :width="column.width">
+          </el-table-column>
         </template>
       </el-table>
       <el-table
         v-else
-        ref="editTable2"
-        :key="'widgetFormItemTable_' + index + '_2'"
+        key="widgetFormItemTable_2"
+        ref="widgetFormItemTable_2"
         :data="element.rows"
         :span-method="objectSpanMethod(arguments, element.mergeRule)"
         :height="element.options.height"
@@ -213,9 +218,13 @@
         :highlight-current-row="element.options.highlightCurrentRow"
         :show-summary="element.options.showSummary"
         style="width: 100%">
-        <template v-for="column in element.structColumns">
-          <table-column v-if="column.children && column.children.length" :key="column.id" :prop="column.prop" :label="column.label" :width="column.width" :coloumn-header="column"></table-column>
-          <el-table-column v-else :key="column.id" :prop="column.prop" :label="column.label" :width="column.width"></el-table-column>
+        <template v-for="column in element.columns">
+          <el-table-column
+            :key="column.label"
+            :prop="column.prop"
+            :label="column.label"
+            :width="column.width">
+          </el-table-column>
         </template>
       </el-table>
     </template>
@@ -261,11 +270,14 @@
               :highlight-current-row="element.options.highlightCurrentRow"
               :show-summary="element.options.showSummary"
               style="width: 100%">
-        <template v-for="column in element.structColumns">
-          <table-column v-if="column.children && column.children.length" :key="column.id" :prop="column.prop" :label="column.label" :width="column.width" :coloumn-header="column" :show-edit="true"></table-column>
-          <el-table-column v-else :key="column.id" :prop="column.prop" :label="column.label" :width="column.width">
+        <template v-for="column in element.columns">
+          <el-table-column
+                  :key="column.label"
+                  :prop="column.prop"
+                  :label="column.label"
+                  :width="column.width">
             <template slot-scope="{row}">
-              <el-input v-model="row[column.prop]" placeholder="请输入" size="small" @change="change1(arguments, row)" />
+              <el-input v-model="row[column.prop]" placeholder="请输入" size="small" />
             </template>
           </el-table-column>
         </template>
@@ -278,14 +290,12 @@
 <script>
 import FmUpload from './Upload'
 import JizuComponent from '@/components/JizuComponent';
-import TableColumn from '@/components/TableColumn';
 
 export default {
   props: ['element', 'select', 'index', 'data', 'changeshowtt'],
   components: {
     JizuComponent,
     FmUpload,
-    TableColumn,
   },
   data() {
     return {
@@ -300,34 +310,18 @@ export default {
     this.cloneDeep = require('lodash').cloneDeep
   },
   methods: {
-    transferConfigcolToCol(formW) {
-      if (formW.configColumns) {
-        formW.columns = formW.configColumns
-        delete formW.configColumns
-      }
-      return formW
-    },
-    updateSelectWidget(index) {
-      if (this.data.list[index].type === 'table') {
-        const selectWidget_ = this.cloneDeep(this.data.list[index])
-        selectWidget_.columns = this.cloneDeep(this.data.list[index]).configColumns
-        this.selectWidget = selectWidget_
-      } else {
-        this.selectWidget = this.data.list[index]
-      }
-    },
     handleSelectWidget(index) {
-      this.updateSelectWidget(index)
+      this.selectWidget = this.data.list[index]
     },
     handleWidgetDelete(index) {
       if (this.data.list.length - 1 === index) {
         if (index === 0) {
           this.selectWidget = {}
         } else {
-          this.updateSelectWidget(index - 1)
+          this.selectWidget = this.data.list[index - 1]
         }
       } else {
-        this.updateSelectWidget(index + 1)
+        this.selectWidget = this.data.list[index + 1]
       }
 
       this.$nextTick(() => {
@@ -337,7 +331,6 @@ export default {
 
     handleEditTable(index, tableData) {
       // this.$message('表格编辑', index);
-      this.currentIndex = index
       this.dialogEidtableTableVisible = true
     },
     handleWidgetClone(index) {
@@ -367,7 +360,7 @@ export default {
       this.data.list.splice(index, 0, cloneData)
 
       this.$nextTick(() => {
-        this.updateSelectWidget(index + 1)
+        this.selectWidget = this.data.list[index + 1]
       })
     },
     change1(arg, row) {
