@@ -77,6 +77,7 @@ export default {
     return {
       selectWidget: this.select,
       changeShowTableTag: true,
+      cloneDeep: null,
     }
   },
   mounted () {
@@ -87,6 +88,7 @@ export default {
         event.stopPropagation()
       }
     }
+    this.cloneDeep = require('lodash').cloneDeep
   },
   methods: {
     updateSelectWidget(index) {
@@ -116,7 +118,7 @@ export default {
         newIndexObj = this.data.list[newIndex]
       }
       this.$set(this.data.list, newIndex, {
-        ...this.data.list[newIndex],
+        ...newIndexObj,
         options: {
           ...this.data.list[newIndex].options,
           remoteFunc: 'func_' + key

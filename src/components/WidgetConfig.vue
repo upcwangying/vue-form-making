@@ -361,6 +361,7 @@
           <draggable tag="ul" :list="data.rows"
                      v-bind="{group:{ name:'options'}, ghostClass: 'ghost',handle: '.drag-item'}"
                      handle=".drag-item"
+                     @end="endevent"
           >
             <li v-for="(item, index) in data.rows" :key="index">
               <i class="drag-item" style="font-size: 16px;margin: 0 5px;cursor: move;"><i
@@ -676,7 +677,14 @@ export default {
       this.$emit('update:currcheck', val)
     },
     handleMergeClick() {
-      this.$emit('merge-cell', this.currrentCheckOfMergeCell)
+      if (this.currrentCheckOfMergeCell.length === 1) {
+        this.$emit('merge-cell', this.currrentCheckOfMergeCell[0])
+      } else {
+        this.$message({
+          message: '请选择1条合并规则',
+          type: 'warning'
+        })
+      }
     },
     handleCancelMergeClick() {},
   },
