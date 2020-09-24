@@ -185,6 +185,7 @@
           key="widgetFormItemTable_1"
           ref="widgetFormItemTable_1"
           :data="element.rows"
+          :span-method="objectSpanMethod(arguments, element.mergeRule)"
           :height="element.options.height"
           :border="element.options.border"
           :stripe="element.options.stripe"
@@ -208,6 +209,7 @@
         key="widgetFormItemTable_2"
         ref="widgetFormItemTable_2"
         :data="element.rows"
+        :span-method="objectSpanMethod(arguments, element.mergeRule)"
         :height="element.options.height"
         :border="element.options.border"
         :stripe="element.options.stripe"
@@ -259,6 +261,7 @@
       <el-table
               v-if="dialogEidtableTableVisible"
               :data="element.rows"
+              :span-method="objectSpanMethod(arguments, element.mergeRule)"
               :height="element.options.height"
               :border="element.options.border"
               :stripe="element.options.stripe"
@@ -299,11 +302,12 @@ export default {
       selectWidget: this.select,
       changeShowTableTag: true,
       editableTableData: [],
-      dialogEidtableTableVisible: false
+      dialogEidtableTableVisible: false,
+      cloneDeep: null,
     }
   },
   mounted() {
-
+    this.cloneDeep = require('lodash').cloneDeep
   },
   methods: {
     handleSelectWidget(index) {
@@ -358,6 +362,31 @@ export default {
       this.$nextTick(() => {
         this.selectWidget = this.data.list[index + 1]
       })
+    },
+    change1(arg, row) {
+      console.log('arg1 : ', arg);
+      console.log('row1 : ', row);
+    },
+    objectSpanMethod({ row, column, rowIndex, columnIndex }) {
+      let mergeRule = this.element.mergeRule
+      let result = false
+      console.log('row : ', row)
+      console.log('column : ', column)
+      console.log('rowIndex : ', rowIndex)
+      console.log('columnIndex : ', columnIndex)
+      console.log('mergeRule : ', mergeRule)
+      for (let mergeRule_index = 0; mergeRule_index < mergeRule.length; mergeRule_index++) {
+        const item = mergeRule[mergeRule_index]
+        console.log('item : ', item)
+        if (typeof(item.mergeFunction) === 'function') {
+          result = result || item.mergeFunction({ row, column, rowIndex, columnIndex }, { startRow: item.startRow, endRow: item.endRow, startColumn: item.startColumn, endColumn: item.endColumn })
+          console.log('result : ', result)
+        }
+        if (result) {
+          console.log('break : ', result)
+          return result
+        }
+      }
     },
   },
   watch: {

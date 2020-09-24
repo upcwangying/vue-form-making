@@ -361,6 +361,7 @@
           <draggable tag="ul" :list="data.rows"
                      v-bind="{group:{ name:'options'}, ghostClass: 'ghost',handle: '.drag-item'}"
                      handle=".drag-item"
+                     @end="endevent"
           >
             <li v-for="(item, index) in data.rows" :key="index">
               <i class="drag-item" style="font-size: 16px;margin: 0 5px;cursor: move;"><i
@@ -534,9 +535,7 @@ export default {
       return this.data && Object.keys(this.data).length > 0;
     }
   },
-  mounted() {
-    const saveTableHeaderColumn = this.saveTableHeaderColumn.bind(this)
-  },
+  mounted() {},
   methods: {
     handleOptionsRemove(index) {
       if (this.data.type === 'grid') {
@@ -546,9 +545,6 @@ export default {
       } else {
         this.data.options.options.splice(index, 1)
       }
-    },
-    handleOptionsRemoveColumn(index) {
-      this.data.columns.splice(index, 1)
     },
     handleAddOption() {
       if (this.data.options.showLabel) {
@@ -682,6 +678,19 @@ export default {
     },
     endevent(evt) {
       this.$emit('draggableend', evt)
+    },
+    checkBoxChange(val) {
+      this.$emit('update:currcheck', val)
+    },
+    handleMergeClick() {
+      if (this.currrentCheckOfMergeCell.length === 1) {
+        this.$emit('merge-cell', this.currrentCheckOfMergeCell[0])
+      } else {
+        this.$message({
+          message: '请选择1条合并规则',
+          type: 'warning'
+        })
+      }
     },
   },
   watch: {

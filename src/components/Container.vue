@@ -92,7 +92,7 @@
               <el-main class="config-content">
                 <header-config v-show="configTab ==='header'" :data="headerFormSelect"></header-config>
                 <zhi-biao-config v-show="configTab ==='zhibiao'" :data="zhiBiaoSelect" :zbattribute="zbAttribute" ></zhi-biao-config>
-                <widget-config ref="widgetConfig" v-show="configTab ==='widget'" :data="widgetFormSelect" @showAddColumn="addColumn" @showAddRow="addRow" @draggableend="dragend"></widget-config>
+                <widget-config ref="widgetConfig" v-show="configTab ==='widget'" :data="widgetFormSelect" :currcheck.sync="currentCheck" @show-add-column="addColumn" @show-add-row="addRow" @drag-end="dragend" @remove-column="removeColumn" @remove-row="removeRow" @merge-cell="mergeCell"></widget-config>
                 <form-config v-show="configTab ==='form'" :data="widgetForm.config"></form-config>
               </el-main>
             </el-container>
@@ -296,10 +296,13 @@ export default {
       zbflSelectDataForjb: [],
       syorjbParam: 'sy',  //默认实验报表
       zbAttribute: null,
-      selectTreeNode: null
+      selectTreeNode: null,
+      cloneDeep: null,
+      currentCheck: [],
     }
   },
   mounted() {
+    this.cloneDeep = require('lodash').cloneDeep
     this.query_bbfl();
     this.query_zb();
   },
@@ -621,6 +624,173 @@ export default {
         }
       })
     },
+    updateWidgetFormTable() {
+      this.$nextTick(() => {
+        (this.$refs.widgetForm) && (this.$refs.widgetForm.changeTag())
+      })
+    },
+    getIndex(columns, label) {
+      let index = -1
+      for (let i = 0; i < columns.length; i++) {
+        if (columns[i].label === label) {
+          index = i
+        }
+      }
+      return index
+    },
+    getLastIndex(columns, label) { // 获取列数组中 特定-label的最后一个子节点下标
+      let index = this.getIndex(columns, label)
+      for (let i = this.getIndex(columns, label) + 1;i < columns.length; i++) {
+        if (columns[i].parent && columns[i].parent === label) {
+          index = i
+        }
+      }
+      return index
+    },
+    columnHasChildren(columns, label) { // 列数组中 特定-label 是否有孩子节点
+      for (let i = 0; i < columns.length; i++) {
+        if (columns[i].label === label) {
+          return !!(columns[i].children)
+        } else if (columns[i].children) {
+          return this.columnHasChildren(columns[i].children, label)
+        }
+      }
+    },
+    structColumnsAddColumn(columns, label, column) { // 组织带结构的 '列'对象
+      columns.forEach(item => {
+        if (item.label === label) {
+          if (!item.children) {
+            item.children = []
+          }
+          item.children.push(column)
+        } else if (item.children) {
+          item.children = this.structColumnsAddColumn(item.children, label, column)
+        }
+      })
+      return columns
+    },
+    getChildrenNodeArra(columns, labelArr) { // 找特定-[label]的所有子元素,返回一个[子元素label]的合集 (广度优先)
+      let result = []
+      if (labelArr.length > 0) {
+        columns.forEach(item => {
+          if (labelArr.indexOf(item.parent) !== -1) {
+            result.push(item.label)
+          }
+        })
+        result.push( ...this.getChildrenNodeArra(columns, result) )
+      }
+      return result
+    },
+    removeTheLabelColumn(columns, label) { //非递归遍历 会破坏structColumns对象的结构 (弃用)
+      if (!columns) {
+        return;
+      }
+      var stack = [];
+      stack.push( ...columns );
+      var tmpNode;
+      while (stack.length > 0) {
+        tmpNode = stack.pop();
+        console.log('tmpNode : ', tmpNode);
+        if (tmpNode.label === label) {}
+        if (tmpNode.children && tmpNode.children.length > 0) {
+          var i = tmpNode.children.length - 1;
+          for (i = tmpNode.children.length - 1; i >= 0; i--) {
+            stack.push(tmpNode.children[i]);
+          }
+        }
+      }
+    },
+    updateWidgetFormRowColumn(tag, param) { // 将 widgetFormSelect 中的数据 处理(删除非叶子节点)后 同步到 widgetForm 中,并根据tag做不同处理
+      this.widgetForm.list.forEach(item => {
+        if (item.key === this.widgetFormSelect.key) {
+          const columns_ = this.cloneDeep(this.widgetFormSelect.columns)
+          // const rows_ = this.cloneDeep(this.widgetFormSelect.rows)
+          if (tag === 'add-column') { // 新增行逻辑 : param => 新增 column
+            if (this.currentCheck.length === 0) {
+              if (!item.structColumns) {
+                item.structColumns = []
+              }
+              item.structColumns.push(param)
+            } else if (this.currentCheck.length === 1) {
+              item.structColumns = this.structColumnsAddColumn(item.structColumns, this.currentCheck[0], param)
+            }
+          }
+          if (tag === 'remove-column' && item.structColumns.length > 0) { // 删除行逻辑 : param => 删除 label
+            const temp = [item.structColumns]
+            let i = 0
+            // 非递归的遍历 不破坏structColumns结构
+            let isBreak = false
+            while(i >= 0) {
+              let j = 0
+              for (j; j < temp[i].length; j++) {
+                if (!isBreak && temp[i][j].label === param) {
+                  temp[i].splice(j, 1)
+                  isBreak = true
+                  break
+                } else if (!isBreak && temp[i][j].children){
+                  temp.push(temp[i][j].children)
+                }
+              }
+              if (isBreak) {
+                break
+              }
+              if (!temp[i++]) {
+                new Error('删除列出现错误,请重新创建table;如多次创建无效请联系管理员')
+                break
+              }
+            }
+          }
+          if (tag === 'drage-column') {
+            // todo : 实现表头的拖动变化
+          }
+          if (tag === 'merge-cell') { // 合并单元格操作
+            // mergeRule = { startRow: 2, startColumn: 2, endRow: 3, endColumn: 3, mergeFunction: (self)=>{} }
+            const mergeFunction_ = function ({ row, column, rowIndex, columnIndex }, mergeRule) {
+              let rowArea = []
+              let columnArea = []
+              if (mergeRule.startRow < mergeRule.endRow) {
+                for (let i = mergeRule.startRow; i <= mergeRule.endRow; i++) {
+                  rowArea.push(i)
+                }
+              } else if (mergeRule.startRow === mergeRule.endRow) {
+                rowArea.push(mergeRule.startRow)
+              } else {
+                for (let i = mergeRule.endRow; i <= mergeRule.startRow; i++) {
+                  rowArea.push(i)
+                }
+              }
+              if (mergeRule.startColumn < mergeRule.endColumn) {
+                for (let i = mergeRule.startColumn; i <= mergeRule.endColumn; i++) {
+                  columnArea.push(i)
+                }
+              } else if (mergeRule.startColumn === mergeRule.endColumn) {
+                columnArea.push(mergeRule.startColumn)
+              } else {
+                for (let i = mergeRule.endColumn; i <= mergeRule.startColumn; i++) {
+                  columnArea.push(i)
+                }
+              }
+              if (rowArea.indexOf(rowIndex) === 0 && columnArea.indexOf(columnIndex) === 0) {
+                return [columnArea.length, rowArea.length]
+              } else if (rowArea.indexOf(rowIndex) !== -1 && columnArea.indexOf(columnIndex) !== -1) {
+                return [0, 0]
+              }
+            }
+            this.widgetFormSelect.mergeRule[param].mergeFunction = mergeFunction_
+          }
+          for (let i = 0; i < columns_.length; i++) {
+            if (this.columnHasChildren(item.structColumns, columns_[i].label)) {
+              columns_.splice(i, 1)
+              i--
+            }
+          }
+          item.configColumns = this.cloneDeep(this.widgetFormSelect.columns)
+          item.columns = columns_
+          item.rows = this.widgetFormSelect.rows
+          item.mergeRule = this.widgetFormSelect.mergeRule
+        }
+      })
+    },
     addColumn() {
       this.showAddColumn = true
     },
@@ -634,13 +804,12 @@ export default {
       }
     },
     dragend() {
-      this.$nextTick(() => {
-        (this.$refs.widgetForm) && (this.$refs.widgetForm.changeTag())
-      })
+      this.updateWidgetFormRowColumn('drage-column')
+      this.updateWidgetFormTable()
     },
-    submitColumnInfo(label, prop, width) {
-      this.$refs['widgetConfig'].saveTableHeaderColumn(label, prop, width)
-      this.showAddColumn = false
+    mergeCell(label) {
+      this.updateWidgetFormRowColumn('merge-cell', label.substring(label.length - 1))
+      this.widgetFormSelect.mergeRule.push({})
     },
     handleGoGithub () {
       window.location.href = 'https://github.com/upcwangying/vue-form-making'

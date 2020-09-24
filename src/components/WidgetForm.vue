@@ -77,6 +77,7 @@ export default {
     return {
       selectWidget: this.select,
       changeShowTableTag: true,
+      cloneDeep: null,
     }
   },
   mounted () {
@@ -87,6 +88,7 @@ export default {
         event.stopPropagation()
       }
     }
+    this.cloneDeep = require('lodash').cloneDeep
   },
   methods: {
     handleMoveEnd ({newIndex, oldIndex}) {
@@ -102,7 +104,7 @@ export default {
       //为拖拽到容器的元素添加唯一 key
       const key = Date.parse(new Date()) + '_' + Math.ceil(Math.random() * 99999)
       this.$set(this.data.list, newIndex, {
-        ...this.data.list[newIndex],
+        ...newIndexObj,
         options: {
           ...this.data.list[newIndex].options,
           remoteFunc: 'func_' + key
