@@ -378,46 +378,31 @@
           </div>
         </el-form-item>
         <el-form-item :label="$t('fm.config.widget.columnOption')">
-          <el-checkbox-group v-model="currentCheck" :max="1" @change="checkBoxChange">
-            <draggable tag="ul" :list="data.columns"
-                       v-bind="{group:{ name:'options'}, ghostClass: 'ghost',handle: '.drag-item'}"
-                       handle=".drag-item"
-                       @end="endevent"
-            >
-              <li v-for="(item, index) in data.columns" :key="index">
-                <i class="drag-item" style="font-size: 16px;margin: 0 5px;cursor: move;"><i class="iconfont icon-icon_bars"></i></i>
-                <el-checkbox :label="item.label" :key="item.label" class="edit-table-column-radio"></el-checkbox>
-                <el-input :placeholder="$t('fm.config.widget.span')" v-model="item.label" size="mini" style="width: 100px;" readonly></el-input>
-                <el-button @click="handleRemoveTableColumn(item.label, index)" circle plain type="danger" size="mini"
-                           icon="el-icon-minus"
-                           style="padding: 4px;margin-left: 5px;"></el-button>
+          <draggable tag="ul" :list="data.columns"
+                     v-bind="{group:{ name:'options'}, ghostClass: 'ghost',handle: '.drag-item'}"
+                     handle=".drag-item"
+                     @end="endevent"
+          >
+            <li v-for="(item, index) in data.columns" :key="index">
+              <i class="drag-item" style="font-size: 16px;margin: 0 5px;cursor: move;"><i
+                  class="iconfont icon-icon_bars"></i></i>
+              <el-input :placeholder="$t('fm.config.widget.span')" size="mini" style="width: 100px;" readonly
+                        v-model="item.label"></el-input>
 
-              </li>
-            </draggable>
-          </el-checkbox-group>
+              <el-button @click="handleOptionsRemoveColumn(index)" circle plain type="danger" size="mini"
+                         icon="el-icon-minus"
+                         style="padding: 4px;margin-left: 5px;"></el-button>
+
+            </li>
+          </draggable>
           <div style="margin-left: 22px;">
             <el-button type="text" @click="handleAddTableColumn">{{ $t('fm.actions.addColumn') }}</el-button>
           </div>
         </el-form-item>
         <el-form-item label="列表样式">
-          <el-row>
-            <el-checkbox-group v-model="currrentCheckOfMergeCell" :max="1">
-              <li v-for="(item, index) in data.mergeRule" :key="index + '_li'">
-                <el-checkbox :label="'merge_item_' + index" :key="index + '_check'" class="edit-table-column-radio"></el-checkbox>
-                <el-input v-model="item.startRow" size="mini" style="width: 40px;" ></el-input>
-                <div class="merge-rule-item">行</div>
-                <el-input v-model="item.startColumn" size="mini" style="width: 40px;" ></el-input>
-                <div class="merge-rule-item">列 ——</div>
-                <el-input v-model="item.endRow" size="mini" style="width: 40px;" ></el-input>
-                <div class="merge-rule-item">行</div>
-                <el-input v-model="item.endColumn" size="mini" style="width: 40px;" ></el-input>
-                <div class="merge-rule-item">列</div>
-              </li>
-            </el-checkbox-group>
-          </el-row>
           <el-row type="flex" justify="space-around">
-            <el-button @click="handleMergeClick">合并</el-button>
-            <el-button @click="handleCancelMergeClick">取消合并</el-button>
+            <el-button>合并</el-button>
+            <el-button>取消合并</el-button>
           </el-row>
         </el-form-item>
         <el-form-item label="单元格属性">
@@ -532,7 +517,7 @@ export default {
     Draggable,
     AddColumn,
   },
-  props: ['data', 'currcheck'],
+  props: ['data'],
   data() {
     return {
       validator: {
@@ -540,10 +525,8 @@ export default {
         required: null,
         pattern: null,
         range: null,
-        length: null,
-      },
-      currentCheck: this.currcheck,
-      currrentCheckOfMergeCell: [],
+        length: null
+      }
     }
   },
   computed: {
@@ -560,7 +543,6 @@ export default {
         this.data.columns.splice(index, 1)
       } else if (this.data.type === 'table') {
         this.data.rows.splice(index, 1)
-        this.$emit('remove-row', index)
       } else {
         this.data.options.options.splice(index, 1)
       }
@@ -587,13 +569,42 @@ export default {
       })
     },
     handleAddTableColumn() {
-      this.$emit('show-add-column')
+      this.$emit('showAddColumn')
+      // this.$prompt('请输入表头', '提示', {
+      //   confirmButtonText: '确定',
+      //   cancelButtonText: '取消',
+      //   inputValidator: (value) => {
+      //     return !!value
+      //   },
+      //   inputErrorMessage: '请输入表头',
+      // }).then(({ value }) => {
+      //   this.data.columns.push({
+      //     prop: 'address',
+      //     label: value,
+      //   })
+      // }).catch(() => {
+      //   this.$message({
+      //     type: 'info',
+      //     message: '取消输入'
+      //   });
+      // });
     },
-    handleRemoveTableColumn(label, index) {
-      this.$emit('remove-column', label, index)
+    saveTableHeaderColumn(label, prop, width) {
+      this.data.columns.push({
+        prop,
+        label,
+        width,
+      })
     },
     handleAddTableRow() {
-      this.$emit('show-add-row')
+        this.$emit('showAddRow')
+    },
+    saveTableRow(props) {
+        const rowMode = {}
+        props.forEach(item => {
+            rowMode[item] = ''
+        })
+        this.data.rows.push(rowMode )
     },
     generateRule() {
       this.data.rules = []
@@ -670,15 +681,8 @@ export default {
       this.generateRule()
     },
     endevent(evt) {
-      this.$emit('drag-end', evt)
+      this.$emit('draggableend', evt)
     },
-    checkBoxChange(val) {
-      this.$emit('update:currcheck', val)
-    },
-    handleMergeClick() {
-      this.$emit('merge-cell', this.currrentCheckOfMergeCell)
-    },
-    handleCancelMergeClick() {},
   },
   watch: {
     'data.options.isRange': function (val) {
@@ -708,10 +712,7 @@ export default {
         this.validateDataType(this.data.options.dataType)
         this.valiatePattern(this.data.options.pattern)
       }
-    },
-    currcheck(val) {
-      this.currentCheck = val
-    },
-  },
+    }
+  }
 }
 </script>

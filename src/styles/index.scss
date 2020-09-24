@@ -749,18 +749,4 @@ $primary-background-color: #ecf5ff;
   .widget-empty{
     background-position: 50%;
   }
-
-  .edit-table-column-radio {
-    margin-right: 5px;
-    .el-checkbox__label {
-      display: none;
-    }
-  }
-  .el-checkbox-group {
-    .merge-rule-item {
-      display: inline-block;
-      font-size: 12px;
-      padding: 0 3px;
-    }
-  }
 }
