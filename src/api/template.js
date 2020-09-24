@@ -14,7 +14,7 @@ export function postTemplate(dbid, werks, bukrs, name, code, data, tempjb, flid,
   console.log(dbid, tempjb, flid)
   return request({
     url: '/tpridmp/process/dmp_report?method=save',
-    method: 'get',
+    method: 'post',
     params: {
       dbid,
       werks,
@@ -43,7 +43,7 @@ export function deleteTemplate(dbid) {
 export function publishTemplate(dbid, published_dw, json, version) {
   return request({
     url: '/tpridmp/process/dmp_report?method=publish',
-    method: 'get',
+    method: 'post',
     params: {
       dbid,
       published_dw,
