@@ -778,7 +778,6 @@ export default {
             }
             this.widgetFormSelect.mergeRule[param].mergeFunction = mergeFunction_
           }
-          // if (tag === '') {}
           for (let i = 0; i < columns_.length; i++) {
             if (this.columnHasChildren(item.structColumns, columns_[i].label)) {
               columns_.splice(i, 1)
@@ -835,10 +834,6 @@ export default {
     mergeCell(label) {
       this.updateWidgetFormRowColumn('merge-cell', label.substring(label.length - 1))
       this.widgetFormSelect.mergeRule.push({})
-    },
-    submitColumnInfo(label, prop, width) {
-      this.$refs['widgetConfig'].saveTableHeaderColumn(label, prop, width)
-      this.showAddColumn = false
     },
     handleGoGithub () {
       window.location.href = 'https://github.com/upcwangying/vue-form-making'

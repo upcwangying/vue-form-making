@@ -552,9 +552,7 @@ export default {
       return this.data && Object.keys(this.data).length > 0;
     }
   },
-  mounted() {
-    const saveTableHeaderColumn = this.saveTableHeaderColumn.bind(this)
-  },
+  mounted() {},
   methods: {
     handleOptionsRemove(index) {
       if (this.data.type === 'grid') {
@@ -565,9 +563,6 @@ export default {
       } else {
         this.data.options.options.splice(index, 1)
       }
-    },
-    handleOptionsRemoveColumn(index) {
-      this.data.columns.splice(index, 1)
     },
     handleAddOption() {
       if (this.data.options.showLabel) {
