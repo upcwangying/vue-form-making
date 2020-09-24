@@ -1,9 +1,9 @@
 <template>
   <div v-if="show">
     <el-form label-position="top">
-<!--      <el-form-item :label="$t('fm.config.widget.model')" v-if="data.type!=='grid'">-->
-<!--        <el-input v-model="data.model"></el-input>-->
-<!--      </el-form-item>-->
+      <!--      <el-form-item :label="$t('fm.config.widget.model')" v-if="data.type!=='grid'">-->
+      <!--        <el-input v-model="data.model"></el-input>-->
+      <!--      </el-form-item>-->
       <el-form-item :label="$t('fm.config.widget.name')" v-if="data.type!=='grid'">
         <el-input v-model="data.name"></el-input>
       </el-form-item>
@@ -61,19 +61,19 @@
       </el-form-item>
       <el-form-item :label="$t('fm.config.widget.allowHalf')" v-if="Object.keys(data.options).indexOf('allowHalf')>=0">
         <el-switch
-            v-model="data.options.allowHalf"
+          v-model="data.options.allowHalf"
         >
         </el-switch>
       </el-form-item>
       <el-form-item :label="$t('fm.config.widget.showAlpha')" v-if="Object.keys(data.options).indexOf('showAlpha')>=0">
         <el-switch
-            v-model="data.options.showAlpha"
+          v-model="data.options.showAlpha"
         >
         </el-switch>
       </el-form-item>
       <el-form-item :label="$t('fm.config.widget.showLabel')" v-if="Object.keys(data.options).indexOf('showLabel')>=0">
         <el-switch
-            v-model="data.options.showLabel"
+          v-model="data.options.showLabel"
         >
         </el-switch>
       </el-form-item>
@@ -104,8 +104,8 @@
               >
                 <li v-for="(item, index) in data.options.options" :key="index">
                   <el-radio
-                      :label="item.value"
-                      style="margin-right: 5px;"
+                    :label="item.value"
+                    style="margin-right: 5px;"
                   >
                     <el-input :style="{'width': data.options.showLabel? '90px': '180px' }" size="mini"
                               v-model="item.value"></el-input>
@@ -114,7 +114,7 @@
                     <!-- <input v-model="item.value"/> -->
                   </el-radio>
                   <i class="drag-item" style="font-size: 16px;margin: 0 5px;cursor: move;"><i
-                      class="iconfont icon-icon_bars"></i></i>
+                    class="iconfont icon-icon_bars"></i></i>
                   <el-button @click="handleOptionsRemove(index)" circle plain type="danger" size="mini"
                              icon="el-icon-minus" style="padding: 4px;margin-left: 5px;"></el-button>
 
@@ -133,8 +133,8 @@
               >
                 <li v-for="(item, index) in data.options.options" :key="index">
                   <el-checkbox
-                      :label="item.value"
-                      style="margin-right: 5px;"
+                    :label="item.value"
+                    style="margin-right: 5px;"
                   >
                     <el-input :style="{'width': data.options.showLabel? '90px': '180px' }" size="mini"
                               v-model="item.value"></el-input>
@@ -142,7 +142,7 @@
                               v-model="item.label"></el-input>
                   </el-checkbox>
                   <i class="drag-item" style="font-size: 16px;margin: 0 5px;cursor: move;"><i
-                      class="iconfont icon-icon_bars"></i></i>
+                    class="iconfont icon-icon_bars"></i></i>
                   <el-button @click="handleOptionsRemove(index)" circle plain type="danger" size="mini"
                              icon="el-icon-minus" style="padding: 4px;margin-left: 5px;"></el-button>
 
@@ -187,9 +187,9 @@
                    @click="data.options.defaultValue=0">{{ $t('fm.actions.clear') }}
         </el-button>
         <el-color-picker
-            v-if="data.type === 'color'"
-            v-model="data.options.defaultValue"
-            :show-alpha="data.options.showAlpha"
+          v-if="data.type === 'color'"
+          v-model="data.options.defaultValue"
+          :show-alpha="data.options.showAlpha"
         ></el-color-picker>
         <el-switch v-if="data.type==='switch'" v-model="data.options.defaultValue"></el-switch>
       </el-form-item>
@@ -209,13 +209,13 @@
         </el-form-item>
         <el-form-item :label="$t('fm.config.widget.isRange')" v-if="data.type === 'time'">
           <el-switch
-              v-model="data.options.isRange"
+            v-model="data.options.isRange"
           >
           </el-switch>
         </el-form-item>
         <el-form-item :label="$t('fm.config.widget.isTimestamp')" v-if="data.type === 'date'">
           <el-switch
-              v-model="data.options.timestamp"
+            v-model="data.options.timestamp"
           >
           </el-switch>
         </el-form-item>
@@ -238,22 +238,22 @@
                       v-if="data.type==='time' && Object.keys(data.options).indexOf('isRange')>=0">
           <el-time-picker
 
-              key="1"
-              style="width: 100%;"
-              v-if="!data.options.isRange"
-              v-model="data.options.defaultValue"
-              :arrowControl="data.options.arrowControl"
-              :value-format="data.options.format"
+            key="1"
+            style="width: 100%;"
+            v-if="!data.options.isRange"
+            v-model="data.options.defaultValue"
+            :arrowControl="data.options.arrowControl"
+            :value-format="data.options.format"
           >
           </el-time-picker>
           <el-time-picker
-              key="2"
-              v-if="data.options.isRange"
-              style="width: 100%;"
-              v-model="data.options.defaultValue"
-              is-range
-              :arrowControl="data.options.arrowControl"
-              :value-format="data.options.format"
+            key="2"
+            v-if="data.options.isRange"
+            style="width: 100%;"
+            v-model="data.options.defaultValue"
+            is-range
+            :arrowControl="data.options.arrowControl"
+            :value-format="data.options.format"
           >
           </el-time-picker>
         </el-form-item>
@@ -303,7 +303,7 @@
           >
             <li v-for="(item, index) in data.columns" :key="index">
               <i class="drag-item" style="font-size: 16px;margin: 0 5px;cursor: move;"><i
-                  class="iconfont icon-icon_bars"></i></i>
+                class="iconfont icon-icon_bars"></i></i>
               <el-input :placeholder="$t('fm.config.widget.span')" size="mini" style="width: 100px;" type="number"
                         v-model.number="item.span"></el-input>
 
@@ -365,7 +365,7 @@
           >
             <li v-for="(item, index) in data.rows" :key="index">
               <i class="drag-item" style="font-size: 16px;margin: 0 5px;cursor: move;"><i
-                  class="iconfont icon-icon_bars"></i></i>
+                class="iconfont icon-icon_bars"></i></i>
               <el-input :placeholder="$t('fm.config.widget.span')" size="mini" style="width: 100px;" type="number"
                         v-model.number="item.span"></el-input>
 
@@ -379,31 +379,46 @@
           </div>
         </el-form-item>
         <el-form-item :label="$t('fm.config.widget.columnOption')">
-          <draggable tag="ul" :list="data.columns"
-                     v-bind="{group:{ name:'options'}, ghostClass: 'ghost',handle: '.drag-item'}"
-                     handle=".drag-item"
-                     @end="endevent"
-          >
-            <li v-for="(item, index) in data.columns" :key="index">
-              <i class="drag-item" style="font-size: 16px;margin: 0 5px;cursor: move;"><i
-                  class="iconfont icon-icon_bars"></i></i>
-              <el-input :placeholder="$t('fm.config.widget.span')" size="mini" style="width: 100px;" readonly
-                        v-model="item.label"></el-input>
+          <el-checkbox-group v-model="currentCheck" :max="1" @change="checkBoxChange">
+            <draggable tag="ul" :list="data.columns"
+                       v-bind="{group:{ name:'options'}, ghostClass: 'ghost',handle: '.drag-item'}"
+                       handle=".drag-item"
+                       @end="endevent"
+            >
+              <li v-for="(item, index) in data.columns" :key="index">
+                <i class="drag-item" style="font-size: 16px;margin: 0 5px;cursor: move;"><i class="iconfont icon-icon_bars"></i></i>
+                <el-checkbox :label="item.label" :key="item.label" class="edit-table-column-radio"></el-checkbox>
+                <el-input :placeholder="$t('fm.config.widget.span')" v-model="item.label" size="mini" style="width: 100px;" readonly></el-input>
+                <el-button @click="handleRemoveTableColumn(item.label, index)" circle plain type="danger" size="mini"
+                           icon="el-icon-minus"
+                           style="padding: 4px;margin-left: 5px;"></el-button>
 
-              <el-button @click="handleOptionsRemoveColumn(index)" circle plain type="danger" size="mini"
-                         icon="el-icon-minus"
-                         style="padding: 4px;margin-left: 5px;"></el-button>
-
-            </li>
-          </draggable>
+              </li>
+            </draggable>
+          </el-checkbox-group>
           <div style="margin-left: 22px;">
             <el-button type="text" @click="handleAddTableColumn">{{ $t('fm.actions.addColumn') }}</el-button>
           </div>
         </el-form-item>
         <el-form-item label="列表样式">
+          <el-row>
+            <el-checkbox-group v-model="currrentCheckOfMergeCell" :max="1">
+              <li v-for="(item, index) in data.mergeRule" :key="index + '_li'">
+                <el-checkbox :label="'merge_item_' + index" :key="index + '_check'" class="edit-table-column-radio"></el-checkbox>
+                <el-input v-model="item.startRow" size="mini" style="width: 40px;" ></el-input>
+                <div class="merge-rule-item">行</div>
+                <el-input v-model="item.startColumn" size="mini" style="width: 40px;" ></el-input>
+                <div class="merge-rule-item">列 ——</div>
+                <el-input v-model="item.endRow" size="mini" style="width: 40px;" ></el-input>
+                <div class="merge-rule-item">行</div>
+                <el-input v-model="item.endColumn" size="mini" style="width: 40px;" ></el-input>
+                <div class="merge-rule-item">列</div>
+              </li>
+            </el-checkbox-group>
+          </el-row>
           <el-row type="flex" justify="space-around">
-            <el-button>合并</el-button>
-            <el-button>取消合并</el-button>
+            <el-button @click="handleMergeClick">合并</el-button>
+            <el-button @click="handleCancelMergeClick">取消合并</el-button>
           </el-row>
         </el-form-item>
         <el-form-item label="单元格属性">
@@ -510,218 +525,196 @@
 </template>
 
 <script>
-import Draggable from 'vuedraggable'
-import AddColumn from '@/components/AddColumn';
+  import Draggable from 'vuedraggable'
+  import AddColumn from '@/components/AddColumn';
 
-export default {
-  components: {
-    Draggable,
-    AddColumn,
-  },
-  props: ['data'],
-  data() {
-    return {
-      validator: {
-        type: null,
-        required: null,
-        pattern: null,
-        range: null,
-        length: null
-      }
-    }
-  },
-  computed: {
-    show() {
-      return this.data && Object.keys(this.data).length > 0;
-    }
-  },
-  mounted() {},
-  methods: {
-    handleOptionsRemove(index) {
-      if (this.data.type === 'grid') {
-        this.data.columns.splice(index, 1)
-      } else if (this.data.type === 'table') {
-        this.data.rows.splice(index, 1)
-      } else {
-        this.data.options.options.splice(index, 1)
+  export default {
+    components: {
+      Draggable,
+      AddColumn,
+    },
+    props: ['data', 'currcheck'],
+    data() {
+      return {
+        validator: {
+          type: null,
+          required: null,
+          pattern: null,
+          range: null,
+          length: null,
+        },
+        currentCheck: this.currcheck,
+        currrentCheckOfMergeCell: [],
       }
     },
-    handleAddOption() {
-      if (this.data.options.showLabel) {
-        this.data.options.options.push({
-          value: this.$t('fm.config.widget.newOption'),
-          label: this.$t('fm.config.widget.newOption')
-        })
-      } else {
-        this.data.options.options.push({
-          value: this.$t('fm.config.widget.newOption')
-        })
+    computed: {
+      show() {
+        return this.data && Object.keys(this.data).length > 0;
       }
     },
-    handleAddColumn() {
-      this.data.columns.push({
-        span: '',
-        list: []
-      })
-    },
-    handleAddTableColumn() {
-      this.$emit('showAddColumn')
-      // this.$prompt('请输入表头', '提示', {
-      //   confirmButtonText: '确定',
-      //   cancelButtonText: '取消',
-      //   inputValidator: (value) => {
-      //     return !!value
-      //   },
-      //   inputErrorMessage: '请输入表头',
-      // }).then(({ value }) => {
-      //   this.data.columns.push({
-      //     prop: 'address',
-      //     label: value,
-      //   })
-      // }).catch(() => {
-      //   this.$message({
-      //     type: 'info',
-      //     message: '取消输入'
-      //   });
-      // });
-    },
-    saveTableHeaderColumn(label, prop, width) {
-      this.data.columns.push({
-        prop,
-        label,
-        width,
-      })
-    },
-    handleAddTableRow() {
-        this.$emit('showAddRow')
-    },
-    saveTableRow(props) {
-        const rowMode = {}
-        props.forEach(item => {
-            rowMode[item] = ''
+    mounted() {},
+    methods: {
+      handleOptionsRemove(index) {
+        if (this.data.type === 'grid') {
+          this.data.columns.splice(index, 1)
+        } else if (this.data.type === 'table') {
+          this.data.rows.splice(index, 1)
+          this.$emit('remove-row', index)
+        } else {
+          this.data.options.options.splice(index, 1)
+        }
+      },
+      handleAddOption() {
+        if (this.data.options.showLabel) {
+          this.data.options.options.push({
+            value: this.$t('fm.config.widget.newOption'),
+            label: this.$t('fm.config.widget.newOption')
+          })
+        } else {
+          this.data.options.options.push({
+            value: this.$t('fm.config.widget.newOption')
+          })
+        }
+      },
+      handleAddColumn() {
+        this.data.columns.push({
+          span: '',
+          list: []
         })
-        this.data.rows.push(rowMode )
-    },
-    generateRule() {
-      this.data.rules = []
-      Object.keys(this.validator)
+      },
+      handleAddTableColumn() {
+        this.$emit('show-add-column')
+      },
+      handleRemoveTableColumn(label, index) {
+        this.$emit('remove-column', label, index)
+      },
+      handleAddTableRow() {
+        this.$emit('show-add-row')
+      },
+      generateRule() {
+        this.data.rules = []
+        Object.keys(this.validator)
           .forEach(key => {
             if (this.validator[key]) {
               this.data.rules.push(this.validator[key])
             }
           })
-    },
-    handleSelectMuliple(value) {
-      if (value) {
-        if (this.data.options.defaultValue) {
-          this.data.options.defaultValue = [this.data.options.defaultValue]
+      },
+      handleSelectMuliple(value) {
+        if (value) {
+          if (this.data.options.defaultValue) {
+            this.data.options.defaultValue = [this.data.options.defaultValue]
+          } else {
+            this.data.options.defaultValue = []
+          }
+
         } else {
-          this.data.options.defaultValue = []
-        }
-
-      } else {
-        if (this.data.options.defaultValue.length > 0) {
-          this.data.options.defaultValue = this.data.options.defaultValue[0]
-        } else {
-          this.data.options.defaultValue = ''
-        }
-
-      }
-    },
-
-    validateRequired(val) {
-      if (val) {
-        this.validator.required = {
-          required: true,
-          message: `${this.data.name}${this.$t('fm.config.widget.validatorRequired')}`
-        }
-      } else {
-        this.validator.required = null
-      }
-
-      this.$nextTick(() => {
-        this.generateRule()
-      })
-    },
-
-    validateDataType(val) {
-      if (!this.show) {
-        return false
-      }
-
-      if (val) {
-        this.validator.type = {
-          type: val,
-          message: this.data.name + this.$t('fm.config.widget.validatorType')
-        }
-      } else {
-        this.validator.type = null
-      }
-
-      this.generateRule()
-    },
-    valiatePattern(val) {
-      if (!this.show) {
-        return false
-      }
-
-      if (val) {
-        this.validator.pattern = {
-          pattern: val,
-          message: this.data.name + this.$t('fm.config.widget.validatorPattern')
-        }
-      } else {
-        this.validator.pattern = null
-      }
-
-      this.generateRule()
-    },
-    endevent(evt) {
-      this.$emit('draggableend', evt)
-    },
-    checkBoxChange(val) {
-      this.$emit('update:currcheck', val)
-    },
-    handleMergeClick() {
-      if (this.currrentCheckOfMergeCell.length === 1) {
-        this.$emit('merge-cell', this.currrentCheckOfMergeCell[0])
-      } else {
-        this.$message({
-          message: '请选择1条合并规则',
-          type: 'warning'
-        })
-      }
-    },
-  },
-  watch: {
-    'data.options.isRange': function (val) {
-      if (typeof val !== 'undefined') {
-        if (val) {
-          this.data.options.defaultValue = null
-        } else {
-          if (Object.keys(this.data.options)
-              .indexOf('defaultValue') >= 0) {
+          if (this.data.options.defaultValue.length > 0) {
+            this.data.options.defaultValue = this.data.options.defaultValue[0]
+          } else {
             this.data.options.defaultValue = ''
           }
+
         }
-      }
+      },
+
+      validateRequired(val) {
+        if (val) {
+          this.validator.required = {
+            required: true,
+            message: `${this.data.name}${this.$t('fm.config.widget.validatorRequired')}`
+          }
+        } else {
+          this.validator.required = null
+        }
+
+        this.$nextTick(() => {
+          this.generateRule()
+        })
+      },
+
+      validateDataType(val) {
+        if (!this.show) {
+          return false
+        }
+
+        if (val) {
+          this.validator.type = {
+            type: val,
+            message: this.data.name + this.$t('fm.config.widget.validatorType')
+          }
+        } else {
+          this.validator.type = null
+        }
+
+        this.generateRule()
+      },
+      valiatePattern(val) {
+        if (!this.show) {
+          return false
+        }
+
+        if (val) {
+          this.validator.pattern = {
+            pattern: val,
+            message: this.data.name + this.$t('fm.config.widget.validatorPattern')
+          }
+        } else {
+          this.validator.pattern = null
+        }
+
+        this.generateRule()
+      },
+      endevent(evt) {
+        this.$emit('drag-end', evt)
+      },
+      checkBoxChange(val) {
+        this.$emit('update:currcheck', val)
+      },
+      handleMergeClick() {
+        if (this.currrentCheckOfMergeCell.length === 1) {
+          this.$emit('merge-cell', this.currrentCheckOfMergeCell[0])
+        } else {
+          this.$message({
+            message: '请选择1条合并规则',
+            type: 'warning'
+          })
+        }
+      },
+      handleCancelMergeClick() {},
     },
-    'data.options.required': function (val) {
-      this.validateRequired(val)
+    watch: {
+      'data.options.isRange': function (val) {
+        if (typeof val !== 'undefined') {
+          if (val) {
+            this.data.options.defaultValue = null
+          } else {
+            if (Object.keys(this.data.options)
+              .indexOf('defaultValue') >= 0) {
+              this.data.options.defaultValue = ''
+            }
+          }
+        }
+      },
+      'data.options.required': function (val) {
+        this.validateRequired(val)
+      },
+      'data.options.dataType': function (val) {
+        this.validateDataType(val)
+      },
+      'data.options.pattern': function (val) {
+        this.valiatePattern(val)
+      },
+      'data.name': function (val) {
+        if (this.data.options) {
+          this.validateRequired(this.data.options.required)
+          this.validateDataType(this.data.options.dataType)
+          this.valiatePattern(this.data.options.pattern)
+        }
+      },
+      currcheck(val) {
+        this.currentCheck = val
+      },
     },
-    'data.options.dataType': function (val) {
-      this.validateDataType(val)
-    },
-    'data.options.pattern': function (val) {
-      this.valiatePattern(val)
-    },
-    'data.name': function (val) {
-      if (this.data.options) {
-        this.validateRequired(this.data.options.required)
-        this.validateDataType(this.data.options.dataType)
-        this.valiatePattern(this.data.options.pattern)
-      }
-    }
   }
-}
 </script>

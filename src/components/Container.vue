@@ -5,8 +5,8 @@
       <el-header height="45">
         <el-row class="btn-container">
 <!--          <el-button @click="saveReportJSON">保存报表数据</el-button>-->
-<!--          <el-button @click="queryReportData">获取报表数据</el-button>-->
-<!--          <el-button @click="queryData">获取数据</el-button>-->
+          <!--          <el-button @click="queryReportData">获取报表数据</el-button>-->
+          <!--          <el-button @click="queryData">获取数据</el-button>-->
           <el-button @click="createTemplate">创建</el-button>
           <el-button @click="saveTemplate">保存</el-button>
           <el-button @click="deleteTemplate">删除</el-button>
@@ -66,17 +66,17 @@
               </el-main>
             </el-container>
           </el-aside>
+
           <el-container class="center-container" direction="vertical">
 <!--            <el-header class="btn-bar" style="height: 45px;">-->
-<!--              <slot name="action">-->
-<!--              </slot>-->
-<!--              <el-button v-if="upload" type="text" size="medium" icon="el-icon-upload2" @click="handleUpload">{{$t('fm.actions.import')}}</el-button>-->
-<!--              <el-button v-if="clearable" type="text" size="medium" icon="el-icon-delete" @click="handleClear">{{$t('fm.actions.clear')}}</el-button>-->
-<!--              <el-button v-if="generateJson" type="text" size="medium" icon="el-icon-tickets" @click="handleGenerateJson">{{$t('fm.actions.json')}}</el-button>-->
-<!--              <el-button v-if="generateCode" type="text" size="medium" icon="el-icon-document" @click="handleGenerateCode">{{$t('fm.actions.code')}}</el-button>-->
-<!--            </el-header>-->
+            <!--              <slot name="action">-->
+            <!--              </slot>-->
+            <!--              <el-button v-if="upload" type="text" size="medium" icon="el-icon-upload2" @click="handleUpload">{{$t('fm.actions.import')}}</el-button>-->
+            <!--              <el-button v-if="clearable" type="text" size="medium" icon="el-icon-delete" @click="handleClear">{{$t('fm.actions.clear')}}</el-button>-->
+            <!--              <el-button v-if="generateJson" type="text" size="medium" icon="el-icon-tickets" @click="handleGenerateJson">{{$t('fm.actions.json')}}</el-button>-->
+            <!--              <el-button v-if="generateCode" type="text" size="medium" icon="el-icon-document" @click="handleGenerateCode">{{$t('fm.actions.code')}}</el-button>-->
+            <!--            </el-header>-->
             <el-main :class="{'widget-empty': widgetForm.list.length === 0}">
-
               <widget-form v-if="!resetJson"  ref="widgetForm" :data="widgetForm" :select.sync="widgetFormSelect"></widget-form>
             </el-main>
           </el-container>
@@ -179,652 +179,213 @@
 </template>
 
 <script>
-import HeaderConfig from './HeaderConfig'
-import TableConfig from './TableConfig'
-import WidgetConfig from './WidgetConfig'
-import FormConfig from './FormConfig'
-import WidgetForm from './WidgetForm'
-import CusDialog from './CusDialog'
-import GenerateForm from './GenerateForm'
-import Clipboard from 'clipboard'
-import generateCode from './generateCode.js'
-import TemplateTree from '@/components/TemplateTree';
-import QuotaTable from '@/components/QuotaTable';
-import JianDuReportClassify from '@/components/JianDuReportClassify';
-import JianDuIndexClassify from '@/components/JianDuIndexClassify';
-import ZhiBiaoConfig from '@/components/ZhiBiaoConfig';
-import AddColumn from '@/components/AddColumn';
-import TableEditable from '@/components/TableEditable';
-import templateInitialData from '@/components/templateInitialData';
-import templateJson from '../mock/template.json';
-import reportJson from '../mock/report.json';
-import { getTemplate, postTemplate, deleteTemplate, enableTemplate, publishTemplate } from '@/api/template';
-import { getReport, postReport, getBbfl } from '@/api/report';
-import { getZb, getZbDetal } from '@/api/jsjdQuery';
+  import HeaderConfig from './HeaderConfig'
+  import TableConfig from './TableConfig'
+  import WidgetConfig from './WidgetConfig'
+  import FormConfig from './FormConfig'
+  import WidgetForm from './WidgetForm'
+  import CusDialog from './CusDialog'
+  import GenerateForm from './GenerateForm'
+  import Clipboard from 'clipboard'
+  import generateCode from './generateCode.js'
+  import TemplateTree from '@/components/TemplateTree';
+  import QuotaTable from '@/components/QuotaTable';
+  import JianDuReportClassify from '@/components/JianDuReportClassify';
+  import JianDuIndexClassify from '@/components/JianDuIndexClassify';
+  import ZhiBiaoConfig from '@/components/ZhiBiaoConfig';
+  import AddColumn from '@/components/AddColumn';
+  import TableEditable from '@/components/TableEditable';
+  import templateInitialData from '@/components/templateInitialData';
+  import templateJson from '../mock/template.json';
+  import reportJson from '../mock/report.json';
+  import { getTemplate, postTemplate, deleteTemplate, enableTemplate, publishTemplate } from '@/api/template';
+  import { getReport, postReport, getBbfl } from '@/api/report';
+  import { getZb, getZbDetal } from '@/api/jsjdQuery';
 
-export default {
-  name: 'fm-making-form',
-  components: {
-    TableEditable,
-    AddColumn,
-    ZhiBiaoConfig,
-    JianDuIndexClassify,
-    JianDuReportClassify,
-    QuotaTable,
-    TemplateTree,
-    HeaderConfig,
-    TableConfig,
-    WidgetConfig,
-    FormConfig,
-    WidgetForm,
-    CusDialog,
-    GenerateForm
-  },
-  props: {
-    generateCode: {
-      type: Boolean,
-      default: false
+  export default {
+    name: 'fm-making-form',
+    components: {
+      TableEditable,
+      AddColumn,
+      ZhiBiaoConfig,
+      JianDuIndexClassify,
+      JianDuReportClassify,
+      QuotaTable,
+      TemplateTree,
+      HeaderConfig,
+      TableConfig,
+      WidgetConfig,
+      FormConfig,
+      WidgetForm,
+      CusDialog,
+      GenerateForm
     },
-    generateJson: {
-      type: Boolean,
-      default: false
-    },
-    upload: {
-      type: Boolean,
-      default: false
-    },
-    clearable: {
-      type: Boolean,
-      default: false
-    },
-  },
-  data () {
-    return {
-      resetJson: false,
-      showAddColumn:false,
-      widgetForm: JSON.parse(JSON.stringify(templateInitialData)),
-      zhiBiaoSelect: {
-        config: {}
+    props: {
+      generateCode: {
+        type: Boolean,
+        default: false
       },
-      leftConfigTab: 'shiyan',
-      configTab: 'header',
-      headerFormSelect: null,
-      widgetFormSelect: null,
-      previewVisible: false,
-      jsonVisible: false,
-      codeVisible: false,
-      uploadVisible: false,
-      remoteFuncs: {
-        func_test (resolve) {
-          setTimeout(() => {
-            const options = [
-              {id: '1', name: '1111'},
-              {id: '2', name: '2222'},
-              {id: '3', name: '3333'}
-            ]
-
-            resolve(options)
-          }, 2000)
-        },
-        funcGetToken (resolve) {
-          request.get('http://tools-server.xiaoyaoji.cn/api/uptoken').then(res => {
-            resolve(res.uptoken)
-          })
-        },
-        upload_callback (response, file, fileList) {
-          console.log('callback', response, file, fileList)
-        }
+      generateJson: {
+        type: Boolean,
+        default: false
       },
-      widgetModels: {},
-      blank: '',
-      htmlTemplate: '',
-      vueTemplate: '',
-      jsonTemplate: '',
-      uploadEditor: null,
-      reportEditor: null,
-      jsonCopyValue: '',
-      jsonClipboard: null,
-      jsonTemplateEg: templateJson,
-      jsonReportEg: reportJson,
-      codeActiveName: 'vue',
-      dataActiveName: 'template',
-      bbflTreeData: [],
-      bbflTreeDataForsy: [],
-      bbflTreeDataForjb: [],
-      zbflSelectData: [],
-      zbflSelectDataForsy: [],
-      zbflSelectDataForjb: [],
-      syorjbParam: 'sy',  //默认实验报表
-      zbAttribute: null,
-      selectTreeNode: null,
-      cloneDeep: null,
-      currentCheck: [],
-    }
-  },
-  mounted() {
-    this.cloneDeep = require('lodash').cloneDeep
-    this.query_bbfl();
-    this.query_zb();
-  },
-  methods: {
-    transIdLabel(datas) {
-      datas.forEach(item => {
-        item.id = item.dbid;
-        item.label = item.name;
-        (item.children) && (item.children = this.transIdLabel(item.children));
-      })
-      return datas
+      upload: {
+        type: Boolean,
+        default: false
+      },
+      clearable: {
+        type: Boolean,
+        default: false
+      },
     },
-    setSybbTreeDataForBB(val) {
-      this['bbflTreeDataFor' + this.syorjbParam] = val
-    },
-    setSybbTreeDataForZB(val) {
-      this['zbflSelectDataFor' + this.syorjbParam] = val
-    },
-    query_bbfl() {  // 报表查询 方法
-      if (this['bbflTreeDataFor' + this.syorjbParam].length < 1) {
-        getBbfl(this.syorjbParam).then(res => {
-          if (res.success) {
-            const sybbTreeData_ = [ ...res.dataset.datas[0].children ]
-            this.bbflTreeData = this.transIdLabel(sybbTreeData_)
-            this.setSybbTreeDataForBB(this.bbflTreeData)
+    data () {
+      return {
+        resetJson: false,
+        showAddColumn:false,
+        widgetForm: JSON.parse(JSON.stringify(templateInitialData)),
+        zhiBiaoSelect: {
+          config: {}
+        },
+        leftConfigTab: 'shiyan',
+        configTab: 'header',
+        headerFormSelect: null,
+        widgetFormSelect: null,
+        previewVisible: false,
+        jsonVisible: false,
+        codeVisible: false,
+        uploadVisible: false,
+        remoteFuncs: {
+          func_test (resolve) {
+            setTimeout(() => {
+              const options = [
+                {id: '1', name: '1111'},
+                {id: '2', name: '2222'},
+                {id: '3', name: '3333'}
+              ]
+
+              resolve(options)
+            }, 2000)
+          },
+          funcGetToken (resolve) {
+            request.get('http://tools-server.xiaoyaoji.cn/api/uptoken').then(res => {
+              resolve(res.uptoken)
+            })
+          },
+          upload_callback (response, file, fileList) {
+            console.log('callback', response, file, fileList)
           }
-        }).catch(err => { err; })
-      } else {
-        this.bbflTreeData = this['bbflTreeDataFor' + this.syorjbParam]
+        },
+        widgetModels: {},
+        blank: '',
+        htmlTemplate: '',
+        vueTemplate: '',
+        jsonTemplate: '',
+        uploadEditor: null,
+        reportEditor: null,
+        jsonCopyValue: '',
+        jsonClipboard: null,
+        jsonTemplateEg: templateJson,
+        jsonReportEg: reportJson,
+        codeActiveName: 'vue',
+        dataActiveName: 'template',
+        bbflTreeData: [],
+        bbflTreeDataForsy: [],
+        bbflTreeDataForjb: [],
+        zbflSelectData: [],
+        zbflSelectDataForsy: [],
+        zbflSelectDataForjb: [],
+        syorjbParam: 'sy',  //默认实验报表
+        zbAttribute: null,
+        selectTreeNode: null,
+        cloneDeep: null,
+        currentCheck: [],
       }
     },
-    query_zb() {
-      if (this['zbflSelectDataFor' + this.syorjbParam].length < 1) {
-        getZb(this.syorjbParam).then(res => {
-          if (res.success) {
-            this.zbflSelectData = [ ...res.dataset.datas ]
-            this.setSybbTreeDataForZB(this.zbflSelectData)
-          }
-        }).catch(err => { err; })
-      } else {
-        this.zbflSelectData = this['zbflSelectDataFor' + this.syorjbParam]
-      }
-    },
-    handleExpNode(obj, node, dom) {
-      // request({
-      //   url: '/dev-api/tpridmp/process/dmp_report?method=query',
-      //   method: 'get',
-      //   params: {
-      //     syorjb: this.syorjbParam,
-      //     flid: this.syorjbParam
-      //   }
-      // }).then(res => {}).catch(err => { err; })
-    },
-    selectTree(isCheck, obj) {
-      if (isCheck) {
-        this.selectTreeNode = obj
-        const { dbid, is_temp } = this.selectTreeNode
-        is_temp === '1' && this.queryTemplateData(dbid)
-        is_temp === '0' && this.handleClear()
-      } else {
-        this.selectTreeNode = null
-        this.handleClear()
-      }
-    },
-    zbSelChange(val) {
-      getZbDetal(val.dbid).then(res => {
-        if (res.success) {
-          const zbAttribute_ = res.dataset.datas[0]
-          zbAttribute_.zbdw = zbAttribute_.zbuint // 规划字段名 指标单位
-          zbAttribute_.zbsjlx = zbAttribute_.datatype // 规划字段名 指标类型
-          zbAttribute_.zbsjy = zbAttribute_.attribute1 // 规划字段名 指标数据源
-          zbAttribute_.zbshux = zbAttribute_.attribute2 // 规划字段名 指标属性
-          zbAttribute_.zbbzz = zbAttribute_.bzvalue // 规划字段名 指标标准值
-          zbAttribute_.zbqwz = zbAttribute_.qwvalue // 规划字段名 指标期望值
-          zbAttribute_.zbshangx = zbAttribute_.uplimit // 规划字段名 指标上限
-          zbAttribute_.zbxx = zbAttribute_.lowlimit // 规划字段名 指标下限
-          zbAttribute_.zbgx = val.jsgs
-          this.zbAttribute = zbAttribute_
-        }
-      }).catch(err => { err; })
-
-    },
-    saveReportJSON() {
-      const { list } = this.widgetForm
-
-      let dataList = []
-      const listFunc = (data) => {
-        for (let item of data) {
-          if (!item || (item instanceof Array && item.length === 0)) continue
-
-          if (item instanceof Array) {
-            item = item[0]
-          }
-
-          if (item.type === 'table') {
-            let data = Object.create(null)
-            data['type'] = item.type
-            data['rows'] = item.rows
-            data['key'] = item.model
-            dataList.push(data)
-          } else if (item.type === 'grid') {
-            const { columns } = item
-            if (columns) {
-              const gridData = []
-              for (const column of columns) {
-                gridData.push(column.list)
-              }
-              gridData && listFunc(gridData)
-            }
-          } else {
-            let OtherData = Object.create(null)
-            OtherData['type'] = item.type
-            OtherData['key'] = item.model
-            OtherData['value'] = item.options.defaultValue
-            OtherData['datasource'] = item.options.datasource
-            OtherData['table'] = item.options.table
-            OtherData['field'] = item.options.field
-            OtherData['otherfields'] = "werks,bukrs,create_by,create_time,update_by,update_time,is_del"
-            dataList.push(OtherData)
-          }
-        }
-      }
-
-      listFunc(list)
-      this.jsonVisible = true
-      this.jsonTemplate = dataList
-      this.$nextTick(() => {
-
-        const editor = ace.edit('jsoneditor')
-        editor.session.setMode("ace/mode/json")
-
-        if (!this.jsonClipboard) {
-          this.jsonClipboard = new Clipboard('.json-btn')
-          this.jsonClipboard.on('success', (e) => {
-            this.$message.success(this.$t('fm.message.copySuccess'))
-          })
-        }
-        this.jsonCopyValue = JSON.stringify(dataList)
-      })
-      // postReport(dataList)
-    },
-    queryReportData() {
-      getReport('1013114899288600576', 0, '14').then(({ success, fromData }) => {
-        if (fromData) {
-          const { bukrs, datas, werks, type } = JSON.parse(fromData);
-          console.log(bukrs, datas, werks, type)
-        }
-      })
-    },
-    queryData() {
-      Promise.all([getTemplate('1013114899288600576'), getReport('1013114899288600576', 0, '14')])
-        .then(([{ success: templateSuccess, dataset }, { success, fromData }]) => {
-          // console.log(templateSuccess, dataset, success, fromData)
-          const { json } = dataset.datas[0]
-          const { bukrs, datas, werks, type } = JSON.parse(fromData);
-          console.log(json, datas)
-          this.setJSON(JSON.parse(json), datas)
-      })
-    },
-    createTemplate() {
-      if (!this.selectTreeNode) {
-        this.$alert('未选中报表分类', '提示')
-        return
-      }
-      const { dbid, is_temp } = this.selectTreeNode
-      if (is_temp !== '0') { // 分类节点
-        this.$alert('选中的报表分类非分类节点', '提示')
-        return
-      }
-      this.saveTemplateJSON('', dbid)
-    },
-    saveTemplate() {
-      if (!this.selectTreeNode) {
-        this.$alert('未选中报表分类', '提示')
-        return
-      }
-      const { dbid, is_temp, parentid } = this.selectTreeNode
-      if (is_temp !== '1') { // 分类节点
-        this.$alert('选中的报表分类非模板节点', '提示')
-        return
-      }
-      this.saveTemplateJSON(dbid, parentid)
-    },
-    deleteTemplate() {
-      if (!this.selectTreeNode) {
-        this.$alert('未选中报表分类', '提示')
-        return
-      }
-      const { dbid, is_temp } = this.selectTreeNode
-      if (is_temp !== '1') { // 分类节点
-        this.$alert('选中的报表分类非模板节点', '提示')
-        return
-      }
-      deleteTemplate(dbid).then(result => {
-        if (result.success) {
-          this.$alert('删除成功', '提示')
-        }
-      })
-    },
-    copyTemplate() {
-      // todo
-    },
-    saveTemplateJSON(dbid, flid) {
-      const { list, config: { werks, bukrs, templateName, templateCode, templateGrade } } = this.widgetForm
-
-      if (!werks) {
-        this.$alert('工厂编码不允许为空', '提示')
-        return
-      }
-
-      if (!bukrs) {
-        this.$alert('公司编码不允许为空', '提示')
-        return
-      }
-
-      if (!templateName) {
-        this.$alert('模板名称不允许为空', '提示')
-        return
-      }
-
-      if (!templateCode) {
-        this.$alert('模板编码不允许为空', '提示')
-        return
-      }
-
-      if (!templateGrade) {
-        this.$alert('模板级别不允许为空', '提示')
-        return
-      }
-
-      let tables = []
-      const listFunc = (data) => {
-        for (let item of data) {
-          if (!item || (item instanceof Array && item.length === 0)) continue
-
-          if (item instanceof Array) {
-            item = item[0]
-          }
-
-          if (item.type === 'table') {
-            let tableData = Object.create(null)
-            tableData['type'] = item.type
-            tableData['key'] = item.model
-            tableData['datasource'] = item.options.datasource
-            tableData['table'] = item.options.table
-            tableData['dataTransformRules'] = item.options.dataTransformRules
-            // tableData['field'] = item.options.field
-            tables.push(tableData)
-          } else if (item.type === 'grid') {
-            const { columns } = item
-            if (columns) {
-              const gridData = []
-              for (const column of columns) {
-                gridData.push(column.list)
-              }
-              gridData && listFunc(gridData)
-            }
-          } else {
-            let OtherData = Object.create(null)
-            OtherData['type'] = item.type
-            OtherData['key'] = item.model
-            OtherData['datasource'] = item.options.datasource
-            OtherData['table'] = item.options.table
-            OtherData['field'] = item.options.field
-            tables.push(OtherData)
-          }
-        }
-      }
-
-      listFunc(list)
-      postTemplate(dbid, werks, bukrs, templateName, templateCode, this.widgetForm, templateGrade, flid, tables)
-      .then(result => {
-        if (result.success) {
-          this.query_bbfl()
-          this.$alert('操作成功', '提示')
-        }
-      })
-    },
-    queryTemplateData(dbid) {
-      getTemplate(dbid).then(result => {
-        const { json } = result.dataset.datas[0]
-        this.setJSON(JSON.parse(json), null)
-      })
-    },
-    handlePreview() {
-      this.previewVisible = true
-    },
-    publish() {
-      // todo
-      if (!this.selectTreeNode) {
-        this.$alert('未选中报表分类', '提示')
-        return
-      }
-      const { dbid, is_temp, json, version } = this.selectTreeNode
-      if (is_temp !== '1') { // 分类节点
-        this.$alert('选中的报表分类非模板节点', '提示')
-        return
-      }
-
-      publishTemplate(dbid, null, json, version).then(result => {
-        if (result.success) {
-          this.$alert('启用成功', '提示')
-        }
-      })
-    },
-    enable() {
-      if (!this.selectTreeNode) {
-        this.$alert('未选中报表分类', '提示')
-        return
-      }
-      const { dbid, is_temp } = this.selectTreeNode
-      if (is_temp !== '1') { // 分类节点
-        this.$alert('选中的报表分类非模板节点', '提示')
-        return
-      }
-      enableTemplate(dbid).then(result => {
-        if (result.success) {
-          this.$alert('启用成功', '提示')
-        }
-      })
-    },
-    updateWidgetFormTable() {
-      this.$nextTick(() => {
-        (this.$refs.widgetForm) && (this.$refs.widgetForm.changeTag())
-      })
-    },
-    getIndex(columns, label) {
-      let index = -1
-      for (let i = 0; i < columns.length; i++) {
-        if (columns[i].label === label) {
-          index = i
-        }
-      }
-      return index
-    },
-    getLastIndex(columns, label) { // 获取列数组中 特定-label的最后一个子节点下标
-      let index = this.getIndex(columns, label)
-      for (let i = this.getIndex(columns, label) + 1;i < columns.length; i++) {
-        if (columns[i].parent && columns[i].parent === label) {
-          index = i
-        }
-      }
-      return index
-    },
-    columnHasChildren(columns, label) { // 列数组中 特定-label 是否有孩子节点
-      for (let i = 0; i < columns.length; i++) {
-        if (columns[i].label === label) {
-          return !!(columns[i].children)
-        } else if (columns[i].children) {
-          return this.columnHasChildren(columns[i].children, label)
-        }
-      }
-    },
-    structColumnsAddColumn(columns, label, column) { // 组织带结构的 '列'对象
-      columns.forEach(item => {
-        if (item.label === label) {
-          if (!item.children) {
-            item.children = []
-          }
-          item.children.push(column)
-        } else if (item.children) {
-          item.children = this.structColumnsAddColumn(item.children, label, column)
-        }
-      })
-      return columns
-    },
-    getChildrenNodeArra(columns, labelArr) { // 找特定-[label]的所有子元素,返回一个[子元素label]的合集 (广度优先)
-      let result = []
-      if (labelArr.length > 0) {
-        columns.forEach(item => {
-          if (labelArr.indexOf(item.parent) !== -1) {
-            result.push(item.label)
-          }
-        })
-        result.push( ...this.getChildrenNodeArra(columns, result) )
-      }
-      return result
-    },
-    removeTheLabelColumn(columns, label) { //非递归遍历 会破坏structColumns对象的结构 (弃用)
-      if (!columns) {
-        return;
-      }
-      var stack = [];
-      stack.push( ...columns );
-      var tmpNode;
-      while (stack.length > 0) {
-        tmpNode = stack.pop();
-        console.log('tmpNode : ', tmpNode);
-        if (tmpNode.label === label) {}
-        if (tmpNode.children && tmpNode.children.length > 0) {
-          var i = tmpNode.children.length - 1;
-          for (i = tmpNode.children.length - 1; i >= 0; i--) {
-            stack.push(tmpNode.children[i]);
-          }
-        }
-      }
-    },
-    updateWidgetFormRowColumn(tag, param) { // 将 widgetFormSelect 中的数据 处理(删除非叶子节点)后 同步到 widgetForm 中,并根据tag做不同处理
-      this.widgetForm.list.forEach(item => {
-        if (item.key === this.widgetFormSelect.key) {
-          const columns_ = this.cloneDeep(this.widgetFormSelect.columns)
-          // const rows_ = this.cloneDeep(this.widgetFormSelect.rows)
-          if (tag === 'add-column') { // 新增行逻辑 : param => 新增 column
-            if (this.currentCheck.length === 0) {
-              if (!item.structColumns) {
-                item.structColumns = []
-              }
-              item.structColumns.push(param)
-            } else if (this.currentCheck.length === 1) {
-              item.structColumns = this.structColumnsAddColumn(item.structColumns, this.currentCheck[0], param)
-            }
-          }
-          if (tag === 'remove-column' && item.structColumns.length > 0) { // 删除行逻辑 : param => 删除 label
-            const temp = [item.structColumns]
-            let i = 0
-            // 非递归的遍历 不破坏structColumns结构
-            let isBreak = false
-            while(i >= 0) {
-              let j = 0
-              for (j; j < temp[i].length; j++) {
-                if (!isBreak && temp[i][j].label === param) {
-                  temp[i].splice(j, 1)
-                  isBreak = true
-                  break
-                } else if (!isBreak && temp[i][j].children){
-                  temp.push(temp[i][j].children)
-                }
-              }
-              if (isBreak) {
-                break
-              }
-              if (!temp[i++]) {
-                new Error('删除列出现错误,请重新创建table;如多次创建无效请联系管理员')
-                break
-              }
-            }
-          }
-          if (tag === 'drage-column') {
-            // todo : 实现表头的拖动变化
-          }
-          if (tag === 'merge-cell') { // 合并单元格操作
-            // mergeRule = { startRow: 2, startColumn: 2, endRow: 3, endColumn: 3, mergeFunction: (self)=>{} }
-            const mergeFunction_ = function ({ row, column, rowIndex, columnIndex }, mergeRule) {
-              let rowArea = []
-              let columnArea = []
-              if (mergeRule.startRow < mergeRule.endRow) {
-                for (let i = mergeRule.startRow; i <= mergeRule.endRow; i++) {
-                  rowArea.push(i)
-                }
-              } else if (mergeRule.startRow === mergeRule.endRow) {
-                rowArea.push(mergeRule.startRow)
-              } else {
-                for (let i = mergeRule.endRow; i <= mergeRule.startRow; i++) {
-                  rowArea.push(i)
-                }
-              }
-              if (mergeRule.startColumn < mergeRule.endColumn) {
-                for (let i = mergeRule.startColumn; i <= mergeRule.endColumn; i++) {
-                  columnArea.push(i)
-                }
-              } else if (mergeRule.startColumn === mergeRule.endColumn) {
-                columnArea.push(mergeRule.startColumn)
-              } else {
-                for (let i = mergeRule.endColumn; i <= mergeRule.startColumn; i++) {
-                  columnArea.push(i)
-                }
-              }
-              if (rowArea.indexOf(rowIndex) === 0 && columnArea.indexOf(columnIndex) === 0) {
-                return [columnArea.length, rowArea.length]
-              } else if (rowArea.indexOf(rowIndex) !== -1 && columnArea.indexOf(columnIndex) !== -1) {
-                return [0, 0]
-              }
-            }
-            this.widgetFormSelect.mergeRule[param].mergeFunction = mergeFunction_
-          }
-          for (let i = 0; i < columns_.length; i++) {
-            if (this.columnHasChildren(item.structColumns, columns_[i].label)) {
-              columns_.splice(i, 1)
-              i--
-            }
-          }
-          item.configColumns = this.cloneDeep(this.widgetFormSelect.columns)
-          item.columns = columns_
-          item.rows = this.widgetFormSelect.rows
-          item.mergeRule = this.widgetFormSelect.mergeRule
-        }
-      })
-    },
-    addColumn() {
-      this.showAddColumn = true
-    },
-    addRow() {
-      if (this.widgetFormSelect.columns.length > 0) {
-        const props = []
-        this.widgetFormSelect.columns.forEach(item => {
-            props.push(item.prop)
-        })
-        this.$refs['widgetConfig'].saveTableRow(props)
-      }
-    },
-    dragend() {
-      this.updateWidgetFormRowColumn('drage-column')
-      this.updateWidgetFormTable()
-    },
-    mergeCell(label) {
-      this.updateWidgetFormRowColumn('merge-cell', label.substring(label.length - 1))
-      this.widgetFormSelect.mergeRule.push({})
-    },
-    handleGoGithub () {
-      window.location.href = 'https://github.com/upcwangying/vue-form-making'
-    },
-    handleLeftConfigSelect (value) {
-      this.leftConfigTab = value
-      this.syorjbParam = ( value === 'shiyan') ? 'sy' : 'jb' // 设置查询参数 syorjb - 实验or监督
-      this.query_bbfl() // 做查询
+    mounted() {
+      this.cloneDeep = require('lodash').cloneDeep
+      this.query_bbfl();
       this.query_zb();
     },
-    handleConfigSelect (value) {
-      this.configTab = value
-    },
-    handleTest () {
-      this.$refs.generateForm.getData().then(result => {
+    methods: {
+      transIdLabel(datas) {
+        datas.forEach(item => {
+          item.id = item.dbid;
+          item.label = item.name;
+          (item.children) && (item.children = this.transIdLabel(item.children));
+        })
+        return datas
+      },
+      setSybbTreeDataForBB(val) {
+        this['bbflTreeDataFor' + this.syorjbParam] = val
+      },
+      setSybbTreeDataForZB(val) {
+        this['zbflSelectDataFor' + this.syorjbParam] = val
+      },
+      query_bbfl() {  // 报表查询 方法
+        if (this['bbflTreeDataFor' + this.syorjbParam].length < 1) {
+          getBbfl(this.syorjbParam).then(res => {
+            if (res.success) {
+              const sybbTreeData_ = [ ...res.dataset.datas[0].children ]
+              this.bbflTreeData = this.transIdLabel(sybbTreeData_)
+              this.setSybbTreeDataForBB(this.bbflTreeData)
+            }
+          }).catch(err => { err; })
+        } else {
+          this.bbflTreeData = this['bbflTreeDataFor' + this.syorjbParam]
+        }
+      },
+      query_zb() {
+        if (this['zbflSelectDataFor' + this.syorjbParam].length < 1) {
+          getZb(this.syorjbParam).then(res => {
+            if (res.success) {
+              this.zbflSelectData = [ ...res.dataset.datas ]
+              this.setSybbTreeDataForZB(this.zbflSelectData)
+            }
+          }).catch(err => { err; })
+        } else {
+          this.zbflSelectData = this['zbflSelectDataFor' + this.syorjbParam]
+        }
+      },
+      handleExpNode(obj, node, dom) {
+        // request({
+        //   url: '/dev-api/tpridmp/process/dmp_report?method=query',
+        //   method: 'get',
+        //   params: {
+        //     syorjb: this.syorjbParam,
+        //     flid: this.syorjbParam
+        //   }
+        // }).then(res => {}).catch(err => { err; })
+      },
+      selectTree(isCheck, obj) {
+        if (isCheck) {
+          this.selectTreeNode = obj
+          const { dbid, is_temp } = this.selectTreeNode
+          is_temp === '1' && this.queryTemplateData(dbid)
+          is_temp === '0' && this.handleClear()
+        } else {
+          this.selectTreeNode = null
+          this.handleClear()
+        }
+      },
+      zbSelChange(val) {
+        getZbDetal(val.dbid).then(res => {
+          if (res.success) {
+            const zbAttribute_ = res.dataset.datas[0]
+            zbAttribute_.zbdw = zbAttribute_.zbuint // 规划字段名 指标单位
+            zbAttribute_.zbsjlx = zbAttribute_.datatype // 规划字段名 指标类型
+            zbAttribute_.zbsjy = zbAttribute_.attribute1 // 规划字段名 指标数据源
+            zbAttribute_.zbshux = zbAttribute_.attribute2 // 规划字段名 指标属性
+            zbAttribute_.zbbzz = zbAttribute_.bzvalue // 规划字段名 指标标准值
+            zbAttribute_.zbqwz = zbAttribute_.qwvalue // 规划字段名 指标期望值
+            zbAttribute_.zbshangx = zbAttribute_.uplimit // 规划字段名 指标上限
+            zbAttribute_.zbxx = zbAttribute_.lowlimit // 规划字段名 指标下限
+            zbAttribute_.zbgx = val.jsgs
+            this.zbAttribute = zbAttribute_
+          }
+        }).catch(err => { err; })
+
+      },
+      saveReportJSON() {
         const { list } = this.widgetForm
 
         let dataList = []
@@ -841,10 +402,6 @@ export default {
               data['type'] = item.type
               data['rows'] = item.rows
               data['key'] = item.model
-              data['datasource'] = item.options.datasource
-              data['table'] = item.options.table
-              data['dataTransformRules'] = item.options.dataTransformRules
-              data['otherfields'] = "werks,bukrs,create_by,create_time,update_by,update_time,is_del"
               dataList.push(data)
             } else if (item.type === 'grid') {
               const { columns } = item
@@ -870,151 +427,618 @@ export default {
         }
 
         listFunc(list)
-        for (const listElement of dataList) {
-          if (Object.keys(result).includes(listElement['key'])) {
-            if (listElement['type'] === 'table') {
-              listElement['rows'] = result[listElement['key']]
+        this.jsonVisible = true
+        this.jsonTemplate = dataList
+        this.$nextTick(() => {
+
+          const editor = ace.edit('jsoneditor')
+          editor.session.setMode("ace/mode/json")
+
+          if (!this.jsonClipboard) {
+            this.jsonClipboard = new Clipboard('.json-btn')
+            this.jsonClipboard.on('success', (e) => {
+              this.$message.success(this.$t('fm.message.copySuccess'))
+            })
+          }
+          this.jsonCopyValue = JSON.stringify(dataList)
+        })
+        // postReport(dataList)
+      },
+      queryReportData() {
+        getReport('1013114899288600576', 0, '14').then(({ success, fromData }) => {
+          if (fromData) {
+            const { bukrs, datas, werks, type } = JSON.parse(fromData);
+            console.log(bukrs, datas, werks, type)
+          }
+        })
+      },
+      queryData() {
+        Promise.all([getTemplate('1013114899288600576'), getReport('1013114899288600576', 0, '14')])
+          .then(([{ success: templateSuccess, dataset }, { success, fromData }]) => {
+            // console.log(templateSuccess, dataset, success, fromData)
+            const { json } = dataset.datas[0]
+            const { bukrs, datas, werks, type } = JSON.parse(fromData);
+            console.log(json, datas)
+            this.setJSON(JSON.parse(json), datas)
+          })
+      },
+      createTemplate() {
+        if (!this.selectTreeNode) {
+          this.$alert('未选中报表分类', '提示')
+          return
+        }
+        const { dbid, is_temp } = this.selectTreeNode
+        if (is_temp !== '0') { // 分类节点
+          this.$alert('选中的报表分类非分类节点', '提示')
+          return
+        }
+        this.saveTemplateJSON('', dbid)
+      },
+      saveTemplate() {
+        if (!this.selectTreeNode) {
+          this.$alert('未选中报表分类', '提示')
+          return
+        }
+        const { dbid, is_temp, parentid } = this.selectTreeNode
+        if (is_temp !== '1') { // 分类节点
+          this.$alert('选中的报表分类非模板节点', '提示')
+          return
+        }
+        this.saveTemplateJSON(dbid, parentid)
+      },
+      deleteTemplate() {
+        if (!this.selectTreeNode) {
+          this.$alert('未选中报表分类', '提示')
+          return
+        }
+        const { dbid, is_temp } = this.selectTreeNode
+        if (is_temp !== '1') { // 分类节点
+          this.$alert('选中的报表分类非模板节点', '提示')
+          return
+        }
+        deleteTemplate(dbid).then(result => {
+          if (result.success) {
+            this.$alert('删除成功', '提示')
+          }
+        })
+      },
+      copyTemplate() {
+        // todo
+      },
+      saveTemplateJSON(dbid, flid) {
+        const { list, config: { werks, bukrs, templateName, templateCode, templateGrade } } = this.widgetForm
+
+        if (!werks) {
+          this.$alert('工厂编码不允许为空', '提示')
+          return
+        }
+
+        if (!bukrs) {
+          this.$alert('公司编码不允许为空', '提示')
+          return
+        }
+
+        if (!templateName) {
+          this.$alert('模板名称不允许为空', '提示')
+          return
+        }
+
+        if (!templateCode) {
+          this.$alert('模板编码不允许为空', '提示')
+          return
+        }
+
+        if (!templateGrade) {
+          this.$alert('模板级别不允许为空', '提示')
+          return
+        }
+
+        let tables = []
+        const listFunc = (data) => {
+          for (let item of data) {
+            if (!item || (item instanceof Array && item.length === 0)) continue
+
+            if (item instanceof Array) {
+              item = item[0]
+            }
+
+            if (item.type === 'table') {
+              let tableData = Object.create(null)
+              tableData['type'] = item.type
+              tableData['key'] = item.model
+              tableData['datasource'] = item.options.datasource
+              tableData['table'] = item.options.table
+              tableData['dataTransformRules'] = item.options.dataTransformRules
+              // tableData['field'] = item.options.field
+              tables.push(tableData)
+            } else if (item.type === 'grid') {
+              const { columns } = item
+              if (columns) {
+                const gridData = []
+                for (const column of columns) {
+                  gridData.push(column.list)
+                }
+                gridData && listFunc(gridData)
+              }
             } else {
-              listElement['value'] = result[listElement['key']]
+              let OtherData = Object.create(null)
+              OtherData['type'] = item.type
+              OtherData['key'] = item.model
+              OtherData['datasource'] = item.options.datasource
+              OtherData['table'] = item.options.table
+              OtherData['field'] = item.options.field
+              tables.push(OtherData)
             }
           }
         }
-        this.$alert(dataList, '').catch(e=>{})
-        this.$refs.widgetPreview.end()
-      }).catch(e => {
-        this.$refs.widgetPreview.end()
-      })
-    },
-    handleReset () {
-      this.$refs.generateForm.reset()
-    },
-    handleGenerateJson () {
-      this.jsonVisible = true
-      this.jsonTemplate = this.widgetForm
-      // console.log(JSON.stringify(this.widgetForm))
-      this.$nextTick(() => {
 
-        const editor = ace.edit('jsoneditor')
-        editor.session.setMode("ace/mode/json")
-
-        if (!this.jsonClipboard) {
-          this.jsonClipboard = new Clipboard('.json-btn')
-          this.jsonClipboard.on('success', (e) => {
-            this.$message.success(this.$t('fm.message.copySuccess'))
+        listFunc(list)
+        postTemplate(dbid, werks, bukrs, templateName, templateCode, this.widgetForm, templateGrade, flid, tables)
+          .then(result => {
+            if (result.success) {
+              this.query_bbfl()
+              this.$alert('操作成功', '提示')
+            }
           })
+      },
+      queryTemplateData(dbid) {
+        getTemplate(dbid).then(result => {
+          const { json } = result.dataset.datas[0]
+          this.setJSON(JSON.parse(json), null)
+        })
+      },
+      handlePreview() {
+        this.previewVisible = true
+      },
+      publish() {
+        // todo
+        if (!this.selectTreeNode) {
+          this.$alert('未选中报表分类', '提示')
+          return
         }
-        this.jsonCopyValue = JSON.stringify(this.widgetForm)
-      })
-      // post(this.widgetForm)
-    },
-    handleGenerateCode () {
-      this.codeVisible = true
-      this.htmlTemplate = generateCode(JSON.stringify(this.widgetForm), 'html')
-      this.vueTemplate = generateCode(JSON.stringify(this.widgetForm), 'vue')
-      this.$nextTick(() => {
-        const editor = ace.edit('codeeditor')
-        editor.session.setMode("ace/mode/html")
+        const { dbid, is_temp, json, version } = this.selectTreeNode
+        if (is_temp !== '1') { // 分类节点
+          this.$alert('选中的报表分类非模板节点', '提示')
+          return
+        }
 
-        const vueeditor = ace.edit('vuecodeeditor')
-        vueeditor.session.setMode("ace/mode/html")
-      })
-    },
-    handleUpload () {
-      this.uploadVisible = true
-      this.$nextTick(() => {
-        this.uploadEditor = ace.edit('uploadeditor')
-        this.reportEditor = ace.edit('reporteditor')
-        this.uploadEditor.session.setMode("ace/mode/json")
-        this.reportEditor.session.setMode("ace/mode/json")
-      })
-    },
-    handleUploadJson () {
-      try {
-        this.setJSON(JSON.parse(this.uploadEditor.getValue()), JSON.parse(this.reportEditor.getValue()))
-        this.uploadVisible = false
-      } catch (e) {
-        this.$message.error(e.message)
-        this.$refs.uploadJson.end()
-      }
-    },
-    handleClear () {
-      this.widgetForm = JSON.parse(JSON.stringify(templateInitialData))
-
-      this.widgetFormSelect = {}
-    },
-    clear () {
-      this.handleClear()
-    },
-    getJSON () {
-      return this.widgetForm
-    },
-    getHtml () {
-      return generateCode(JSON.stringify(this.widgetForm))
-    },
-    setJSON (templateJson, reportJson) {
-      const { list } = templateJson
-      if (list) {
-        for (const listElement of list) {
-          const { type, model } = listElement
-          if (type !== 'table') {
-            if (reportJson) {
-              for (const reportJsonElement of reportJson) {
-                if (reportJsonElement.type === type && reportJsonElement.key === model) {
-                  listElement.options.defaultValue = reportJsonElement.value
-                  listElement.options.datasource = reportJsonElement.datasource
-                  listElement.options.table = reportJsonElement.table
-                  listElement.options.field = reportJsonElement.field
+        publishTemplate(dbid, null, json, version).then(result => {
+          if (result.success) {
+            this.$alert('启用成功', '提示')
+          }
+        })
+      },
+      enable() {
+        if (!this.selectTreeNode) {
+          this.$alert('未选中报表分类', '提示')
+          return
+        }
+        const { dbid, is_temp } = this.selectTreeNode
+        if (is_temp !== '1') { // 分类节点
+          this.$alert('选中的报表分类非模板节点', '提示')
+          return
+        }
+        enableTemplate(dbid).then(result => {
+          if (result.success) {
+            this.$alert('启用成功', '提示')
+          }
+        })
+      },
+      updateWidgetFormTable() {
+        this.$nextTick(() => {
+          (this.$refs.widgetForm) && (this.$refs.widgetForm.changeTag())
+        })
+      },
+      getIndex(columns, label) {
+        let index = -1
+        for (let i = 0; i < columns.length; i++) {
+          if (columns[i].label === label) {
+            index = i
+          }
+        }
+        return index
+      },
+      getLastIndex(columns, label) { // 获取列数组中 特定-label的最后一个子节点下标
+        let index = this.getIndex(columns, label)
+        for (let i = this.getIndex(columns, label) + 1;i < columns.length; i++) {
+          if (columns[i].parent && columns[i].parent === label) {
+            index = i
+          }
+        }
+        return index
+      },
+      columnHasChildren(columns, label) { // 列数组中 特定-label 是否有孩子节点
+        for (let i = 0; i < columns.length; i++) {
+          if (columns[i].label === label) {
+            return !!(columns[i].children)
+          } else if (columns[i].children) {
+            return this.columnHasChildren(columns[i].children, label)
+          }
+        }
+      },
+      structColumnsAddColumn(columns, label, column) { // 组织带结构的 '列'对象
+        columns.forEach(item => {
+          if (item.label === label) {
+            if (!item.children) {
+              item.children = []
+            }
+            item.children.push(column)
+          } else if (item.children) {
+            item.children = this.structColumnsAddColumn(item.children, label, column)
+          }
+        })
+        return columns
+      },
+      getChildrenNodeArra(columns, labelArr) { // 找特定-[label]的所有子元素,返回一个[子元素label]的合集 (广度优先)
+        let result = []
+        if (labelArr.length > 0) {
+          columns.forEach(item => {
+            if (labelArr.indexOf(item.parent) !== -1) {
+              result.push(item.label)
+            }
+          })
+          result.push( ...this.getChildrenNodeArra(columns, result) )
+        }
+        return result
+      },
+      removeTheLabelColumn(columns, label) { //非递归遍历 会破坏structColumns对象的结构 (弃用)
+        if (!columns) {
+          return;
+        }
+        var stack = [];
+        stack.push( ...columns );
+        var tmpNode;
+        while (stack.length > 0) {
+          tmpNode = stack.pop();
+          console.log('tmpNode : ', tmpNode);
+          if (tmpNode.label === label) {}
+          if (tmpNode.children && tmpNode.children.length > 0) {
+            var i = tmpNode.children.length - 1;
+            for (i = tmpNode.children.length - 1; i >= 0; i--) {
+              stack.push(tmpNode.children[i]);
+            }
+          }
+        }
+      },
+      updateWidgetFormRowColumn(tag, param) { // 将 widgetFormSelect 中的数据 处理(删除非叶子节点)后 同步到 widgetForm 中,并根据tag做不同处理
+        this.widgetForm.list.forEach(item => {
+          if (item.key === this.widgetFormSelect.key) {
+            const columns_ = this.cloneDeep(this.widgetFormSelect.columns)
+            // const rows_ = this.cloneDeep(this.widgetFormSelect.rows)
+            if (tag === 'add-column') { // 新增行逻辑 : param => 新增 column
+              if (this.currentCheck.length === 0) {
+                if (!item.structColumns) {
+                  item.structColumns = []
+                }
+                item.structColumns.push(param)
+              } else if (this.currentCheck.length === 1) {
+                item.structColumns = this.structColumnsAddColumn(item.structColumns, this.currentCheck[0], param)
+              }
+            }
+            if (tag === 'remove-column' && item.structColumns.length > 0) { // 删除行逻辑 : param => 删除 label
+              const temp = [item.structColumns]
+              let i = 0
+              // 非递归的遍历 不破坏structColumns结构
+              let isBreak = false
+              while(i >= 0) {
+                let j = 0
+                for (j; j < temp[i].length; j++) {
+                  if (!isBreak && temp[i][j].label === param) {
+                    temp[i].splice(j, 1)
+                    isBreak = true
+                    break
+                  } else if (!isBreak && temp[i][j].children){
+                    temp.push(temp[i][j].children)
+                  }
+                }
+                if (isBreak) {
+                  break
+                }
+                if (!temp[i++]) {
+                  new Error('删除列出现错误,请重新创建table;如多次创建无效请联系管理员')
+                  break
                 }
               }
             }
-          } else if (type === 'table') {
-            // todo
+            if (tag === 'drage-column') {
+              // todo : 实现表头的拖动变化
+            }
+            if (tag === 'merge-cell') { // 合并单元格操作
+              // mergeRule = { startRow: 2, startColumn: 2, endRow: 3, endColumn: 3, mergeFunction: (self)=>{} }
+              const mergeFunction_ = function ({ row, column, rowIndex, columnIndex }, mergeRule) {
+                let rowArea = []
+                let columnArea = []
+                if (mergeRule.startRow < mergeRule.endRow) {
+                  for (let i = mergeRule.startRow; i <= mergeRule.endRow; i++) {
+                    rowArea.push(i)
+                  }
+                } else if (mergeRule.startRow === mergeRule.endRow) {
+                  rowArea.push(mergeRule.startRow)
+                } else {
+                  for (let i = mergeRule.endRow; i <= mergeRule.startRow; i++) {
+                    rowArea.push(i)
+                  }
+                }
+                if (mergeRule.startColumn < mergeRule.endColumn) {
+                  for (let i = mergeRule.startColumn; i <= mergeRule.endColumn; i++) {
+                    columnArea.push(i)
+                  }
+                } else if (mergeRule.startColumn === mergeRule.endColumn) {
+                  columnArea.push(mergeRule.startColumn)
+                } else {
+                  for (let i = mergeRule.endColumn; i <= mergeRule.startColumn; i++) {
+                    columnArea.push(i)
+                  }
+                }
+                if (rowArea.indexOf(rowIndex) === 0 && columnArea.indexOf(columnIndex) === 0) {
+                  return [columnArea.length, rowArea.length]
+                } else if (rowArea.indexOf(rowIndex) !== -1 && columnArea.indexOf(columnIndex) !== -1) {
+                  return [0, 0]
+                }
+              }
+              this.widgetFormSelect.mergeRule[param].mergeFunction = mergeFunction_
+            }
+            for (let i = 0; i < columns_.length; i++) {
+              if (this.columnHasChildren(item.structColumns, columns_[i].label)) {
+                columns_.splice(i, 1)
+                i--
+              }
+            }
+            item.configColumns = this.cloneDeep(this.widgetFormSelect.columns)
+            item.columns = columns_
+            item.rows = this.widgetFormSelect.rows
+            item.mergeRule = this.widgetFormSelect.mergeRule
+          }
+        })
+      },
+      addColumn() {
+        this.showAddColumn = true
+      },
+      submitColumnInfo(label, prop, width) {
+        const label_ = label
+        const prop_ = prop
+        const width_ = width
+        if (this.currentCheck.length === 0) {
+          this.widgetFormSelect.columns.push({ prop, label, width })
+        } else if (this.currentCheck.length === 1) {
+          this.widgetFormSelect.columns.splice(this.getLastIndex(this.widgetFormSelect.columns, this.currentCheck[0]) + 1, 0, { prop, label, width, parent: this.currentCheck[0] })
+        }
+        this.updateWidgetFormRowColumn('add-column', { prop, label, width })
+        this.showAddColumn = false
+        this.updateWidgetFormTable()
+      },
+      removeColumn(label, index) {
+        this.widgetFormSelect.columns.splice(index, 1)
+        const aimArr = this.getChildrenNodeArra(this.widgetFormSelect.columns, [label])
+        for (let i = this.widgetFormSelect.columns.length - 1; i >= 0; i--) {
+          if (aimArr.indexOf(this.widgetFormSelect.columns[i].label) !== -1) {
+            this.widgetFormSelect.columns.splice(i, 1)
           }
         }
-      }
+        this.updateWidgetFormRowColumn('remove-column', label)
+        this.updateWidgetFormTable()
+      },
+      addRow() {
+        if (this.widgetFormSelect.columns.length > 0) {
+          this.widgetFormSelect.rows.push({})
+          this.updateWidgetFormRowColumn('add-row')
+        }
+      },
+      removeRow() {
+        this.updateWidgetFormRowColumn('remove-row')
+      },
+      dragend() {
+        this.updateWidgetFormRowColumn('drage-column')
+        this.updateWidgetFormTable()
+      },
+      mergeCell(label) {
+        this.updateWidgetFormRowColumn('merge-cell', label.substring(label.length - 1))
+        this.widgetFormSelect.mergeRule.push({})
+      },
+      handleGoGithub () {
+        window.location.href = 'https://github.com/upcwangying/vue-form-making'
+      },
+      handleLeftConfigSelect (value) {
+        this.leftConfigTab = value
+        this.syorjbParam = ( value === 'shiyan') ? 'sy' : 'jb' // 设置查询参数 syorjb - 实验or监督
+        this.query_bbfl() // 做查询
+        this.query_zb();
+      },
+      handleConfigSelect (value) {
+        this.configTab = value
+      },
+      handleTest () {
+        this.$refs.generateForm.getData().then(result => {
+          const { list } = this.widgetForm
 
-      this.widgetForm = templateJson
+          let dataList = []
+          const listFunc = (data) => {
+            for (let item of data) {
+              if (!item || (item instanceof Array && item.length === 0)) continue
 
-      if (templateJson.list.length > 0) {
-        this.widgetFormSelect = templateJson.list[0]
+              if (item instanceof Array) {
+                item = item[0]
+              }
+
+              if (item.type === 'table') {
+                let data = Object.create(null)
+                data['type'] = item.type
+                data['rows'] = item.rows
+                data['key'] = item.model
+                data['datasource'] = item.options.datasource
+                data['table'] = item.options.table
+                data['dataTransformRules'] = item.options.dataTransformRules
+                data['otherfields'] = "werks,bukrs,create_by,create_time,update_by,update_time,is_del"
+                dataList.push(data)
+              } else if (item.type === 'grid') {
+                const { columns } = item
+                if (columns) {
+                  const gridData = []
+                  for (const column of columns) {
+                    gridData.push(column.list)
+                  }
+                  gridData && listFunc(gridData)
+                }
+              } else {
+                let OtherData = Object.create(null)
+                OtherData['type'] = item.type
+                OtherData['key'] = item.model
+                OtherData['value'] = item.options.defaultValue
+                OtherData['datasource'] = item.options.datasource
+                OtherData['table'] = item.options.table
+                OtherData['field'] = item.options.field
+                OtherData['otherfields'] = "werks,bukrs,create_by,create_time,update_by,update_time,is_del"
+                dataList.push(OtherData)
+              }
+            }
+          }
+
+          listFunc(list)
+          for (const listElement of dataList) {
+            if (Object.keys(result).includes(listElement['key'])) {
+              if (listElement['type'] === 'table') {
+                listElement['rows'] = result[listElement['key']]
+              } else {
+                listElement['value'] = result[listElement['key']]
+              }
+            }
+          }
+          this.$alert(dataList, '').catch(e=>{})
+          this.$refs.widgetPreview.end()
+        }).catch(e => {
+          this.$refs.widgetPreview.end()
+        })
+      },
+      handleReset () {
+        this.$refs.generateForm.reset()
+      },
+      handleGenerateJson () {
+        this.jsonVisible = true
+        this.jsonTemplate = this.widgetForm
+        // console.log(JSON.stringify(this.widgetForm))
+        this.$nextTick(() => {
+
+          const editor = ace.edit('jsoneditor')
+          editor.session.setMode("ace/mode/json")
+
+          if (!this.jsonClipboard) {
+            this.jsonClipboard = new Clipboard('.json-btn')
+            this.jsonClipboard.on('success', (e) => {
+              this.$message.success(this.$t('fm.message.copySuccess'))
+            })
+          }
+          this.jsonCopyValue = JSON.stringify(this.widgetForm)
+        })
+        // post(this.widgetForm)
+      },
+      handleGenerateCode () {
+        this.codeVisible = true
+        this.htmlTemplate = generateCode(JSON.stringify(this.widgetForm), 'html')
+        this.vueTemplate = generateCode(JSON.stringify(this.widgetForm), 'vue')
+        this.$nextTick(() => {
+          const editor = ace.edit('codeeditor')
+          editor.session.setMode("ace/mode/html")
+
+          const vueeditor = ace.edit('vuecodeeditor')
+          vueeditor.session.setMode("ace/mode/html")
+        })
+      },
+      handleUpload () {
+        this.uploadVisible = true
+        this.$nextTick(() => {
+          this.uploadEditor = ace.edit('uploadeditor')
+          this.reportEditor = ace.edit('reporteditor')
+          this.uploadEditor.session.setMode("ace/mode/json")
+          this.reportEditor.session.setMode("ace/mode/json")
+        })
+      },
+      handleUploadJson () {
+        try {
+          this.setJSON(JSON.parse(this.uploadEditor.getValue()), JSON.parse(this.reportEditor.getValue()))
+          this.uploadVisible = false
+        } catch (e) {
+          this.$message.error(e.message)
+          this.$refs.uploadJson.end()
+        }
+      },
+      handleClear () {
+        this.widgetForm = JSON.parse(JSON.stringify(templateInitialData))
+
+        this.widgetFormSelect = {}
+      },
+      clear () {
+        this.handleClear()
+      },
+      getJSON () {
+        return this.widgetForm
+      },
+      getHtml () {
+        return generateCode(JSON.stringify(this.widgetForm))
+      },
+      setJSON (templateJson, reportJson) {
+        const { list } = templateJson
+        if (list) {
+          for (const listElement of list) {
+            const { type, model } = listElement
+            if (type !== 'table') {
+              if (reportJson) {
+                for (const reportJsonElement of reportJson) {
+                  if (reportJsonElement.type === type && reportJsonElement.key === model) {
+                    listElement.options.defaultValue = reportJsonElement.value
+                    listElement.options.datasource = reportJsonElement.datasource
+                    listElement.options.table = reportJsonElement.table
+                    listElement.options.field = reportJsonElement.field
+                  }
+                }
+              }
+            } else if (type === 'table') {
+              // todo
+            }
+          }
+        }
+
+        this.widgetForm = templateJson
+
+        if (templateJson.list.length > 0) {
+          this.widgetFormSelect = templateJson.list[0]
+        }
+      },
+      handleInput (val) {
+        this.blank = val
+      },
+      handleDataChange (field, value, data) {
+        console.log(field, value, data)
+      },
+    },
+    watch: {
+      widgetForm: {
+        deep: true,
+        handler: function (val) {
+          console.log(this.$refs.widgetForm)
+        }
+      },
+      '$lang': function (val) {
+        this._loadComponents()
       }
-    },
-    handleInput (val) {
-      this.blank = val
-    },
-    handleDataChange (field, value, data) {
-      console.log(field, value, data)
-    }
-  },
-  watch: {
-    widgetForm: {
-      deep: true,
-      handler: function (val) {
-        console.log(this.$refs.widgetForm)
-      }
-    },
-    '$lang': function (val) {
-      this._loadComponents()
     }
   }
-}
 </script>
 
 <style lang="scss" scoped>
-.btn-container {
-  display: flex;
-  justify-content: flex-end;
-  padding-top: 4px;
-  padding-bottom: 4px;
-}
+  .btn-container {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 4px;
+    padding-bottom: 4px;
+  }
 
-.add-column-mask-container {
-  position: absolute;
-  left: 0;
-  top: 0;
-  z-index: 1000;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, .5);
-}
+  .add-column-mask-container {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 1000;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, .5);
+  }
 </style>
