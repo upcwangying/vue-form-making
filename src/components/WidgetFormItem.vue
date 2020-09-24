@@ -13,10 +13,10 @@
 
     <template v-if="element.type === 'input'">
       <el-input
-          v-model="element.options.defaultValue"
-          :style="{width: element.options.width}"
-          :placeholder="element.options.placeholder"
-          :disabled="element.options.disabled"
+        v-model="element.options.defaultValue"
+        :style="{width: element.options.width}"
+        :placeholder="element.options.placeholder"
+        :disabled="element.options.disabled"
       ></el-input>
     </template>
 
@@ -31,10 +31,10 @@
 
     <template v-if="element.type === 'number'">
       <el-input-number
-          v-model="element.options.defaultValue"
-          :disabled="element.options.disabled"
-          :controls-position="element.options.controlsPosition"
-          :style="{width: element.options.width}"
+        v-model="element.options.defaultValue"
+        :disabled="element.options.disabled"
+        :controls-position="element.options.controlsPosition"
+        :style="{width: element.options.width}"
       ></el-input-number>
     </template>
 
@@ -44,8 +44,8 @@
                       :disabled="element.options.disabled"
       >
         <el-radio
-            :style="{display: element.options.inline ? 'inline-block' : 'block'}"
-            :label="item.value" v-for="(item, index) in element.options.options" :key="item.value + index"
+          :style="{display: element.options.inline ? 'inline-block' : 'block'}"
+          :label="item.value" v-for="(item, index) in element.options.options" :key="item.value + index"
 
         >
           {{ element.options.showLabel ? item.label : item.value }}
@@ -59,8 +59,8 @@
                          :disabled="element.options.disabled"
       >
         <el-checkbox
-            :style="{display: element.options.inline ? 'inline-block' : 'block'}"
-            :label="item.value" v-for="(item, index) in element.options.options" :key="item.value + index"
+          :style="{display: element.options.inline ? 'inline-block' : 'block'}"
+          :label="item.value" v-for="(item, index) in element.options.options" :key="item.value + index"
         >
           {{ element.options.showLabel ? item.label : item.value }}
         </el-checkbox>
@@ -69,34 +69,34 @@
 
     <template v-if="element.type === 'time'">
       <el-time-picker
-          v-model="element.options.defaultValue"
-          :is-range="element.options.isRange"
-          :placeholder="element.options.placeholder"
-          :start-placeholder="element.options.startPlaceholder"
-          :end-placeholder="element.options.endPlaceholder"
-          :readonly="element.options.readonly"
-          :disabled="element.options.disabled"
-          :editable="element.options.editable"
-          :clearable="element.options.clearable"
-          :arrowControl="element.options.arrowControl"
-          :style="{width: element.options.width}"
+        v-model="element.options.defaultValue"
+        :is-range="element.options.isRange"
+        :placeholder="element.options.placeholder"
+        :start-placeholder="element.options.startPlaceholder"
+        :end-placeholder="element.options.endPlaceholder"
+        :readonly="element.options.readonly"
+        :disabled="element.options.disabled"
+        :editable="element.options.editable"
+        :clearable="element.options.clearable"
+        :arrowControl="element.options.arrowControl"
+        :style="{width: element.options.width}"
       >
       </el-time-picker>
     </template>
 
     <template v-if="element.type === 'date'">
       <el-date-picker
-          v-model="element.options.defaultValue"
-          :type="element.options.type"
-          :is-range="element.options.isRange"
-          :placeholder="element.options.placeholder"
-          :start-placeholder="element.options.startPlaceholder"
-          :end-placeholder="element.options.endPlaceholder"
-          :readonly="element.options.readonly"
-          :disabled="element.options.disabled"
-          :editable="element.options.editable"
-          :clearable="element.options.clearable"
-          :style="{width: element.options.width}"
+        v-model="element.options.defaultValue"
+        :type="element.options.type"
+        :is-range="element.options.isRange"
+        :placeholder="element.options.placeholder"
+        :start-placeholder="element.options.startPlaceholder"
+        :end-placeholder="element.options.endPlaceholder"
+        :readonly="element.options.readonly"
+        :disabled="element.options.disabled"
+        :editable="element.options.editable"
+        :clearable="element.options.clearable"
+        :style="{width: element.options.width}"
       >
       </el-date-picker>
     </template>
@@ -111,20 +111,20 @@
 
     <template v-if="element.type === 'color'">
       <el-color-picker
-          v-model="element.options.defaultValue"
-          :disabled="element.options.disabled"
-          :show-alpha="element.options.showAlpha"
+        v-model="element.options.defaultValue"
+        :disabled="element.options.disabled"
+        :show-alpha="element.options.showAlpha"
       ></el-color-picker>
     </template>
 
     <template v-if="element.type === 'select'">
       <el-select
-          v-model="element.options.defaultValue"
-          :disabled="element.options.disabled"
-          :multiple="element.options.multiple"
-          :clearable="element.options.clearable"
-          :placeholder="element.options.placeholder"
-          :style="{width: element.options.width}"
+        v-model="element.options.defaultValue"
+        :disabled="element.options.disabled"
+        :multiple="element.options.multiple"
+        :clearable="element.options.clearable"
+        :placeholder="element.options.placeholder"
+        :style="{width: element.options.width}"
       >
         <el-option v-for="item in element.options.options" :key="item.value" :value="item.value"
                    :label="element.options.showLabel?item.label:item.value"></el-option>
@@ -133,34 +133,34 @@
 
     <template v-if="element.type ==='switch'">
       <el-switch
-          v-model="element.options.defaultValue"
-          :disabled="element.options.disabled"
+        v-model="element.options.defaultValue"
+        :disabled="element.options.disabled"
       >
       </el-switch>
     </template>
 
     <template v-if="element.type ==='slider'">
       <el-slider
-          v-model="element.options.defaultValue"
-          :min="element.options.min"
-          :max="element.options.max"
-          :disabled="element.options.disabled"
-          :step="element.options.step"
-          :show-input="element.options.showInput"
-          :range="element.options.range"
-          :style="{width: element.options.width}"
+        v-model="element.options.defaultValue"
+        :min="element.options.min"
+        :max="element.options.max"
+        :disabled="element.options.disabled"
+        :step="element.options.step"
+        :show-input="element.options.showInput"
+        :range="element.options.range"
+        :style="{width: element.options.width}"
       ></el-slider>
     </template>
 
     <template v-if="element.type ==='imgupload'">
       <fm-upload
-          v-model="element.options.defaultValue"
-          :disabled="element.options.disabled"
-          :style="{'width': element.options.width}"
-          :width="element.options.size.width"
-          :height="element.options.size.height"
-          token="xxx"
-          domain="xxx"
+        v-model="element.options.defaultValue"
+        :disabled="element.options.disabled"
+        :style="{'width': element.options.width}"
+        :width="element.options.size.width"
+        :height="element.options.size.height"
+        token="xxx"
+        domain="xxx"
       >
 
       </fm-upload>
@@ -168,12 +168,12 @@
 
     <template v-if="element.type === 'cascader'">
       <el-cascader
-          v-model="element.options.defaultValue"
-          :disabled="element.options.disabled"
-          :clearable="element.options.clearable"
-          :placeholder="element.options.placeholder"
-          :style="{width: element.options.width}"
-          :options="element.options.remoteOptions"
+        v-model="element.options.defaultValue"
+        :disabled="element.options.disabled"
+        :clearable="element.options.clearable"
+        :placeholder="element.options.placeholder"
+        :style="{width: element.options.width}"
+        :options="element.options.remoteOptions"
       >
 
       </el-cascader>
@@ -181,33 +181,9 @@
 
     <template v-if="element.type === 'table'">
       <el-table
-          v-if="changeShowTableTag"
-          key="widgetFormItemTable_1"
-          ref="widgetFormItemTable_1"
-          :data="element.rows"
-          :span-method="objectSpanMethod(arguments, element.mergeRule)"
-          :height="element.options.height"
-          :border="element.options.border"
-          :stripe="element.options.stripe"
-          :fit="element.options.fit"
-          :show-header="element.options.showHeader"
-          :highlight-current-row="element.options.highlightCurrentRow"
-          :show-summary="element.options.showSummary"
-          style="width: 100%">
-
-        <template v-for="column in element.columns">
-          <el-table-column
-              :key="column.label"
-              :prop="column.prop"
-              :label="column.label"
-              :width="column.width">
-          </el-table-column>
-        </template>
-      </el-table>
-      <el-table
-        v-else
-        key="widgetFormItemTable_2"
-        ref="widgetFormItemTable_2"
+        v-if="changeShowTableTag"
+        ref="editTable1"
+        :key="'widgetFormItemTable_' + index + '_1'"
         :data="element.rows"
         :span-method="objectSpanMethod(arguments, element.mergeRule)"
         :height="element.options.height"
@@ -218,21 +194,36 @@
         :highlight-current-row="element.options.highlightCurrentRow"
         :show-summary="element.options.showSummary"
         style="width: 100%">
-        <template v-for="column in element.columns">
-          <el-table-column
-            :key="column.label"
-            :prop="column.prop"
-            :label="column.label"
-            :width="column.width">
-          </el-table-column>
+        <template v-for="column in element.structColumns">
+          <table-column v-if="column.children && column.children.length" :key="column.id" :prop="column.prop" :label="column.label" :width="column.width" :coloumn-header="column"></table-column>
+          <el-table-column v-else :key="column.id" :prop="column.prop" :label="column.label" :width="column.width"></el-table-column>
+        </template>
+      </el-table>
+      <el-table
+        v-else
+        ref="editTable2"
+        :key="'widgetFormItemTable_' + index + '_2'"
+        :data="element.rows"
+        :span-method="objectSpanMethod(arguments, element.mergeRule)"
+        :height="element.options.height"
+        :border="element.options.border"
+        :stripe="element.options.stripe"
+        :fit="element.options.fit"
+        :show-header="element.options.showHeader"
+        :highlight-current-row="element.options.highlightCurrentRow"
+        :show-summary="element.options.showSummary"
+        style="width: 100%">
+        <template v-for="column in element.structColumns">
+          <table-column v-if="column.children && column.children.length" :key="column.id" :prop="column.prop" :label="column.label" :width="column.width" :coloumn-header="column"></table-column>
+          <el-table-column v-else :key="column.id" :prop="column.prop" :label="column.label" :width="column.width"></el-table-column>
         </template>
       </el-table>
     </template>
 
     <template v-if="element.type === 'editor'">
       <vue-editor
-          v-model="element.options.defaultValue"
-          :style="{width: element.options.width}"
+        v-model="element.options.defaultValue"
+        :style="{width: element.options.width}"
       >
       </vue-editor>
     </template>
@@ -259,25 +250,22 @@
 
     <el-dialog title="表格编辑" :visible.sync="dialogEidtableTableVisible">
       <el-table
-              v-if="dialogEidtableTableVisible"
-              :data="element.rows"
-              :span-method="objectSpanMethod(arguments, element.mergeRule)"
-              :height="element.options.height"
-              :border="element.options.border"
-              :stripe="element.options.stripe"
-              :fit="element.options.fit"
-              :show-header="element.options.showHeader"
-              :highlight-current-row="element.options.highlightCurrentRow"
-              :show-summary="element.options.showSummary"
-              style="width: 100%">
-        <template v-for="column in element.columns">
-          <el-table-column
-                  :key="column.label"
-                  :prop="column.prop"
-                  :label="column.label"
-                  :width="column.width">
+        v-if="dialogEidtableTableVisible"
+        :data="element.rows"
+        :span-method="objectSpanMethod(arguments, element.mergeRule)"
+        :height="element.options.height"
+        :border="element.options.border"
+        :stripe="element.options.stripe"
+        :fit="element.options.fit"
+        :show-header="element.options.showHeader"
+        :highlight-current-row="element.options.highlightCurrentRow"
+        :show-summary="element.options.showSummary"
+        style="width: 100%">
+        <template v-for="column in element.structColumns">
+          <table-column v-if="column.children && column.children.length" :key="column.id" :prop="column.prop" :label="column.label" :width="column.width" :coloumn-header="column" :show-edit="true"></table-column>
+          <el-table-column v-else :key="column.id" :prop="column.prop" :label="column.label" :width="column.width">
             <template slot-scope="{row}">
-              <el-input v-model="row[column.prop]" placeholder="请输入" size="small" />
+              <el-input v-model="row[column.prop]" placeholder="请输入" size="small" @change="change1(arguments, row)" />
             </template>
           </el-table-column>
         </template>
@@ -288,120 +276,139 @@
 </template>
 
 <script>
-import FmUpload from './Upload'
-import JizuComponent from '@/components/JizuComponent';
+  import FmUpload from './Upload'
+  import JizuComponent from '@/components/JizuComponent';
+  import TableColumn from '@/components/TableColumn';
 
-export default {
-  props: ['element', 'select', 'index', 'data', 'changeshowtt'],
-  components: {
-    JizuComponent,
-    FmUpload,
-  },
-  data() {
-    return {
-      selectWidget: this.select,
-      changeShowTableTag: true,
-      editableTableData: [],
-      dialogEidtableTableVisible: false,
-      cloneDeep: null,
-    }
-  },
-  mounted() {
-    this.cloneDeep = require('lodash').cloneDeep
-  },
-  methods: {
-    handleSelectWidget(index) {
-      this.selectWidget = this.data.list[index]
+  export default {
+    props: ['element', 'select', 'index', 'data', 'changeshowtt'],
+    components: {
+      JizuComponent,
+      FmUpload,
+      TableColumn,
     },
-    handleWidgetDelete(index) {
-      if (this.data.list.length - 1 === index) {
-        if (index === 0) {
-          this.selectWidget = {}
-        } else {
-          this.selectWidget = this.data.list[index - 1]
+    data() {
+      return {
+        selectWidget: this.select,
+        changeShowTableTag: true,
+        editableTableData: [],
+        dialogEidtableTableVisible: false,
+        cloneDeep: null,
+      }
+    },
+    mounted() {
+      this.cloneDeep = require('lodash').cloneDeep
+    },
+    methods: {
+      transferConfigcolToCol(formW) {
+        if (formW.configColumns) {
+          formW.columns = formW.configColumns
+          delete formW.configColumns
         }
-      } else {
-        this.selectWidget = this.data.list[index + 1]
-      }
+        return formW
+      },
+      updateSelectWidget(index) {
+        if (this.data.list[index].type === 'table') {
+          const selectWidget_ = this.cloneDeep(this.data.list[index])
+          selectWidget_.columns = this.cloneDeep(this.data.list[index]).configColumns
+          this.selectWidget = selectWidget_
+        } else {
+          this.selectWidget = this.data.list[index]
+        }
+      },
+      handleSelectWidget(index) {
+        this.updateSelectWidget(index)
+      },
+      handleWidgetDelete(index) {
+        if (this.data.list.length - 1 === index) {
+          if (index === 0) {
+            this.selectWidget = {}
+          } else {
+            this.updateSelectWidget(index - 1)
+          }
+        } else {
+          this.updateSelectWidget(index + 1)
+        }
 
-      this.$nextTick(() => {
-        this.data.list.splice(index, 1)
-      })
-    },
+        this.$nextTick(() => {
+          this.data.list.splice(index, 1)
+        })
+      },
 
-    handleEditTable(index, tableData) {
-      // this.$message('表格编辑', index);
-      this.dialogEidtableTableVisible = true
-    },
-    handleWidgetClone(index) {
-      const key = Date.parse(new Date().toString()) + '_' + Math.ceil(Math.random() * 99999)
-      let cloneData = {
-        ...this.data.list[index],
-        options: {
-          ...this.data.list[index].options,
-          remoteFunc: 'func_' + key
-        },
-        key,
-        model: this.data.list[index].type + '_' + key,
-        rules: this.data.list[index].rules || []
-      }
-
-      if (this.data.list[index].type === 'radio' || this.data.list[index].type === 'checkbox' || this.data.list[index].type === 'select') {
-
-        cloneData = {
-          ...cloneData,
+      handleEditTable(index, tableData) {
+        // this.$message('表格编辑', index);
+        this.currentIndex = index
+        this.dialogEidtableTableVisible = true
+      },
+      handleWidgetClone(index) {
+        const key = Date.parse(new Date().toString()) + '_' + Math.ceil(Math.random() * 99999)
+        let cloneData = {
+          ...this.data.list[index],
           options: {
-            ...cloneData.options,
-            options: cloneData.options.options.map(item => ({ ...item }))
+            ...this.data.list[index].options,
+            remoteFunc: 'func_' + key
+          },
+          key,
+          model: this.data.list[index].type + '_' + key,
+          rules: this.data.list[index].rules || []
+        }
+
+        if (this.data.list[index].type === 'radio' || this.data.list[index].type === 'checkbox' || this.data.list[index].type === 'select') {
+
+          cloneData = {
+            ...cloneData,
+            options: {
+              ...cloneData.options,
+              options: cloneData.options.options.map(item => ({ ...item }))
+            }
           }
         }
-      }
 
-      this.data.list.splice(index, 0, cloneData)
+        this.data.list.splice(index, 0, cloneData)
 
-      this.$nextTick(() => {
-        this.selectWidget = this.data.list[index + 1]
-      })
-    },
-    change1(arg, row) {
-      console.log('arg1 : ', arg);
-      console.log('row1 : ', row);
-    },
-    objectSpanMethod({ row, column, rowIndex, columnIndex }) {
-      let mergeRule = this.element.mergeRule
-      let result = false
-      console.log('row : ', row)
-      console.log('column : ', column)
-      console.log('rowIndex : ', rowIndex)
-      console.log('columnIndex : ', columnIndex)
-      console.log('mergeRule : ', mergeRule)
-      for (let mergeRule_index = 0; mergeRule_index < mergeRule.length; mergeRule_index++) {
-        const item = mergeRule[mergeRule_index]
-        console.log('item : ', item)
-        if (typeof(item.mergeFunction) === 'function') {
-          result = result || item.mergeFunction({ row, column, rowIndex, columnIndex }, { startRow: item.startRow, endRow: item.endRow, startColumn: item.startColumn, endColumn: item.endColumn })
-          console.log('result : ', result)
-        }
-        if (result) {
-          console.log('break : ', result)
-          return result
-        }
-      }
-    },
-  },
-  watch: {
-    select(val) {
-      this.selectWidget = val
-    },
-    selectWidget: {
-      handler(val) {
-        this.$emit('update:select', val)
+        this.$nextTick(() => {
+          this.updateSelectWidget(index + 1)
+        })
       },
-      deep: true
+      change1(arg, row) {
+        console.log('arg1 : ', arg);
+        console.log('row1 : ', row);
+      },
+      objectSpanMethod({ row, column, rowIndex, columnIndex }) {
+        let mergeRule = this.element.mergeRule
+        let result = false
+        console.log('row : ', row)
+        console.log('column : ', column)
+        console.log('rowIndex : ', rowIndex)
+        console.log('columnIndex : ', columnIndex)
+        console.log('mergeRule : ', mergeRule)
+        for (let mergeRule_index = 0; mergeRule_index < mergeRule.length; mergeRule_index++) {
+          const item = mergeRule[mergeRule_index]
+          console.log('item : ', item)
+          if (typeof(item.mergeFunction) === 'function') {
+            result = result || item.mergeFunction({ row, column, rowIndex, columnIndex }, { startRow: item.startRow, endRow: item.endRow, startColumn: item.startColumn, endColumn: item.endColumn })
+            console.log('result : ', result)
+          }
+          if (result) {
+            console.log('break : ', result)
+            return result
+          }
+        }
+      },
     },
-    changeshowtt(val) {
-      this.changeShowTableTag = val
-    },
+    watch: {
+      select(val) {
+        this.selectWidget = val
+      },
+      selectWidget: {
+        handler(val) {
+          this.$emit('update:select', val)
+        },
+        deep: true
+      },
+      changeshowtt(val) {
+        this.changeShowTableTag = val
+      },
+    }
   }
-}
 </script>
