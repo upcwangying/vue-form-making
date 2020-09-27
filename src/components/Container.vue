@@ -17,7 +17,7 @@
         </el-row>
       </el-header>
       <el-main class="fm2-main">
-        <add-column class="add-column-container" v-if="showAddColumn" @submit="submitColumnInfo" @cancel="showAddColumn = false" />
+        <add-column class="add-column-container" v-if="showAddColumn" :zb-data="zbflSelectData" @submit="submitColumnInfo" @cancel="showAddColumn = false" />
         <el-container>
           <el-aside class="widget-config-container">
             <el-container>
@@ -40,7 +40,7 @@
                       <div class="config-tab all middle">指标分类</div>
                     </el-header>
                     <el-main>
-                      <quota-table :syorjb="syorjbParam" :zbfl-zb-data="zbflSelectData" @change="zbSelChange" />
+                      <quota-table :syorjb="syorjbParam" :zbfl-zb-data="zbflSelectData" @change="zbSelChange" @update-zbflzbdata="updateZbflSelectData" />
                     </el-main>
                   </el-container>
                 </div>
@@ -58,8 +58,7 @@
                       <div class="config-tab all middle">指标分类</div>
                     </el-header>
                     <el-main>
-                      <!--<jian-du-index-classify :syorjb="syorjbParam" :zbfl-zb-data="zbflSelectData" @change="zbSelChange" />-->
-                      <quota-table :syorjb="syorjbParam" :zbfl-zb-data="zbflSelectData" @change="zbSelChange" />
+                      <quota-table :syorjb="syorjbParam" :zbfl-zb-data="zbflSelectData" @change="zbSelChange" @update-zbflzbdata="updateZbflSelectData" />
                     </el-main>
                   </el-container>
                 </div>
@@ -92,7 +91,7 @@
               <el-main class="config-content">
                 <header-config v-show="configTab ==='header'" :data="headerFormSelect"></header-config>
                 <zhi-biao-config v-show="configTab ==='zhibiao'" :data="zhiBiaoSelect" :zbattribute="zbAttribute" ></zhi-biao-config>
-                <widget-config ref="widgetConfig" v-show="configTab ==='widget'" :data="widgetFormSelect" :currcheck.sync="currentCheck" @show-add-column="addColumn" @show-add-row="addRow" @drag-end="dragend" @remove-column="removeColumn" @remove-row="removeRow" @merge-cell="mergeCell"></widget-config>
+                <widget-config ref="widgetConfig" v-show="configTab ==='widget'" :data="widgetFormSelect" :currcheck.sync="currentCheck" @show-add-column="addColumn" @show-add-row="addRow" @drag-end="dragend" @remove-column="removeColumn" @remove-row="removeRow" @merge-cell="mergeCell" @update-row-check="updateRowCheck"></widget-config>
                 <form-config v-show="configTab ==='form'" :data="widgetForm.config"></form-config>
               </el-main>
             </el-container>
@@ -190,8 +189,6 @@
   import generateCode from './generateCode.js'
   import TemplateTree from '@/components/TemplateTree';
   import QuotaTable from '@/components/QuotaTable';
-  import JianDuReportClassify from '@/components/JianDuReportClassify';
-  import JianDuIndexClassify from '@/components/JianDuIndexClassify';
   import ZhiBiaoConfig from '@/components/ZhiBiaoConfig';
   import AddColumn from '@/components/AddColumn';
   import TableEditable from '@/components/TableEditable';
@@ -208,8 +205,6 @@
       TableEditable,
       AddColumn,
       ZhiBiaoConfig,
-      JianDuIndexClassify,
-      JianDuReportClassify,
       QuotaTable,
       TemplateTree,
       HeaderConfig,
@@ -340,6 +335,7 @@
             if (res.success) {
               this.zbflSelectData = [ ...res.dataset.datas ]
               this.setSybbTreeDataForZB(this.zbflSelectData)
+              console.log('query : ', this.zbflSelectData);
             }
           }).catch(err => { err; })
         } else {
@@ -368,22 +364,31 @@
         }
       },
       zbSelChange(val) {
-        getZbDetal(val.dbid).then(res => {
-          if (res.success) {
-            const zbAttribute_ = res.dataset.datas[0]
-            zbAttribute_.zbdw = zbAttribute_.zbuint // 规划字段名 指标单位
-            zbAttribute_.zbsjlx = zbAttribute_.datatype // 规划字段名 指标类型
-            zbAttribute_.zbsjy = zbAttribute_.attribute1 // 规划字段名 指标数据源
-            zbAttribute_.zbshux = zbAttribute_.attribute2 // 规划字段名 指标属性
-            zbAttribute_.zbbzz = zbAttribute_.bzvalue // 规划字段名 指标标准值
-            zbAttribute_.zbqwz = zbAttribute_.qwvalue // 规划字段名 指标期望值
-            zbAttribute_.zbshangx = zbAttribute_.uplimit // 规划字段名 指标上限
-            zbAttribute_.zbxx = zbAttribute_.lowlimit // 规划字段名 指标下限
-            zbAttribute_.zbgx = val.jsgs
-            this.zbAttribute = zbAttribute_
-          }
-        }).catch(err => { err; })
-
+        if (val.dbid === undefined || val.dbid === null || val.dbid === '') {
+          this.zbAttribute = {}
+          this.zbAttribute = val
+          this.zbAttribute.dbid = ''
+        } else {
+          getZbDetal(val.dbid).then(res => {
+            if (res.success) {
+              const zbAttribute_ = res.dataset.datas[0]
+              zbAttribute_.zbdw = zbAttribute_.zbuint // 规划字段名 指标单位
+              zbAttribute_.zbsjlx = zbAttribute_.datatype // 规划字段名 指标类型
+              zbAttribute_.zbsjy = zbAttribute_.attribute1 // 规划字段名 指标数据源
+              zbAttribute_.zbshux = zbAttribute_.attribute2 // 规划字段名 指标属性
+              zbAttribute_.zbbzz = zbAttribute_.bzvalue // 规划字段名 指标标准值
+              zbAttribute_.zbqwz = zbAttribute_.qwvalue // 规划字段名 指标期望值
+              zbAttribute_.zbshangx = zbAttribute_.uplimit // 规划字段名 指标上限
+              zbAttribute_.zbxx = zbAttribute_.lowlimit // 规划字段名 指标下限
+              zbAttribute_.zbgx = val.jsgs
+              this.zbAttribute = zbAttribute_
+            }
+          }).catch(err => { err; })
+        }
+      },
+      updateZbflSelectData(data) {
+        this.setSybbTreeDataForZB(data)
+        console.log('updateZbflSelectData : ', this.syorjbParam, this['zbflSelectDataFor' + this.syorjbParam]);
       },
       saveReportJSON() {
         const { list } = this.widgetForm
@@ -820,7 +825,7 @@
       },
       addRow() {
         if (this.widgetFormSelect.columns.length > 0) {
-          this.widgetFormSelect.rows.push({})
+          this.widgetFormSelect.rows.push({ isColumnHeader: false })
           this.updateWidgetFormRowColumn('add-row')
         }
       },
@@ -834,6 +839,22 @@
       mergeCell(label) {
         this.updateWidgetFormRowColumn('merge-cell', label.substring(label.length - 1))
         this.widgetFormSelect.mergeRule.push({})
+      },
+      updateRowCheck(checkArr) {
+        console.log('checkArr : ', checkArr);
+        for (let i in this.widgetFormSelect.rows) {
+          console.log('i : ', i, ' | result : ', checkArr.indexOf(i))
+          if (checkArr.indexOf(i) >= 0) {
+            this.widgetFormSelect.rows[i].isColumnHeader = true
+          } else {
+            this.widgetFormSelect.rows[i].isColumnHeader = false
+          }
+        }
+        this.widgetForm.list.forEach(item => {
+          if (item.key === this.widgetFormSelect.key) {
+            item.rows = this.widgetFormSelect.rows
+          }
+        })
       },
       handleGoGithub () {
         window.location.href = 'https://github.com/upcwangying/vue-form-making'
