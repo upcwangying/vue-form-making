@@ -358,28 +358,29 @@
                     v-model.number="Object.keys(data.rows.length > 0 ? data.rows[0] : {}).length"></el-input>
         </el-form-item>
         <el-form-item :label="$t('fm.config.widget.rowOption')">
-          <draggable tag="ul" :list="data.rows"
-                     v-bind="{group:{ name:'options'}, ghostClass: 'ghost',handle: '.drag-item'}"
-                     handle=".drag-item"
-                     @end="endevent"
-          >
-            <li v-for="(item, index) in data.rows" :key="index">
-              <i class="drag-item" style="font-size: 16px;margin: 0 5px;cursor: move;"><i
-                class="iconfont icon-icon_bars"></i></i>
-              <el-input :placeholder="$t('fm.config.widget.span')" size="mini" style="width: 100px;" type="number"
-                        v-model.number="item.span"></el-input>
-
-              <el-button @click="handleOptionsRemove(index)" circle plain type="danger" size="mini" icon="el-icon-minus"
-                         style="padding: 4px;margin-left: 5px;"></el-button>
-
-            </li>
-          </draggable>
+          <el-checkbox-group v-model="rowCurrentCheck" @change="rowCheckBoxChange">
+            <draggable tag="ul" :list="data.rows"
+                       v-bind="{group:{ name:'options'}, ghostClass: 'ghost',handle: '.drag-item'}"
+                       handle=".drag-item"
+                       @end="endevent"
+            >
+              <li v-for="(item, index) in data.rows" :key="index">
+                <i class="drag-item" style="font-size: 16px;margin: 0 5px;cursor: move;"><i
+                  class="iconfont icon-icon_bars"></i></i>
+                <el-checkbox :label="'row_check_box_' + index" :key="item.label" :checked="item.isColumnHeader" class="edit-table-column-radio"></el-checkbox>
+                <el-input :placeholder="$t('fm.config.widget.span')" size="mini" style="width: 100px;" type="number"
+                          v-model.number="item.span"></el-input>
+                <el-button @click="handleOptionsRemove(index)" circle plain type="danger" size="mini" icon="el-icon-minus"
+                           style="padding: 4px;margin-left: 5px;"></el-button>
+              </li>
+            </draggable>
+          </el-checkbox-group>
           <div style="margin-left: 22px;">
             <el-button type="text" @click="handleAddTableRow">{{ $t('fm.actions.addRow') }}</el-button>
           </div>
         </el-form-item>
         <el-form-item :label="$t('fm.config.widget.columnOption')">
-          <el-checkbox-group v-model="currentCheck" :max="1" @change="checkBoxChange">
+          <el-checkbox-group v-model="columnCurrentCheck" :max="1" @change="columnCheckBoxChange">
             <draggable tag="ul" :list="data.columns"
                        v-bind="{group:{ name:'options'}, ghostClass: 'ghost',handle: '.drag-item'}"
                        handle=".drag-item"
@@ -401,7 +402,7 @@
           </div>
         </el-form-item>
         <el-form-item label="列表样式">
-          <el-row>
+          <el-row type="flex" justify="space-around">
             <el-checkbox-group v-model="currrentCheckOfMergeCell" :max="1">
               <li v-for="(item, index) in data.mergeRule" :key="index + '_li'">
                 <el-checkbox :label="'merge_item_' + index" :key="index + '_check'" class="edit-table-column-radio"></el-checkbox>
@@ -422,7 +423,7 @@
           </el-row>
         </el-form-item>
         <el-form-item label="单元格属性">
-          <el-row type="flex" justify="space-around">
+          <el-row type="flex" justify="space-around" style="padding-bottom: 15px;">
             <el-col>
               <el-button>显示指标符号</el-button>
             </el-col>
@@ -430,8 +431,7 @@
               <el-button>显示指标单位</el-button>
             </el-col>
           </el-row>
-          <br>
-          <el-row type="flex" justify="space-around">
+          <el-row type="flex" justify="space-around" style="padding-bottom: 15px;">
             <el-col>
               <el-button>显示指标标准值</el-button>
             </el-col>
@@ -439,8 +439,7 @@
               <el-button>显示指标期望值</el-button>
             </el-col>
           </el-row>
-          <br>
-          <el-row type="flex" justify="space-around">
+          <el-row type="flex" justify="space-around" style="padding-bottom: 15px;">
             <el-col>
               <el-button>显示机组</el-button>
             </el-col>
@@ -543,7 +542,8 @@
           range: null,
           length: null,
         },
-        currentCheck: this.currcheck,
+        columnCurrentCheck: this.currcheck,
+        rowCurrentCheck: [],
         currrentCheckOfMergeCell: [],
       }
     },
@@ -617,7 +617,6 @@
 
         }
       },
-
       validateRequired(val) {
         if (val) {
           this.validator.required = {
@@ -632,7 +631,6 @@
           this.generateRule()
         })
       },
-
       validateDataType(val) {
         if (!this.show) {
           return false
@@ -668,8 +666,15 @@
       endevent(evt) {
         this.$emit('drag-end', evt)
       },
-      checkBoxChange(val) {
+      columnCheckBoxChange(val) {
         this.$emit('update:currcheck', val)
+      },
+      rowCheckBoxChange(val) {
+        const result = []
+        for (let i in val) {
+          result.push(val[i].substring(val[i].length - 1))
+        }
+        this.$emit('update-row-check', result)
       },
       handleMergeClick() {
         if (this.currrentCheckOfMergeCell.length === 1) {
@@ -713,7 +718,7 @@
         }
       },
       currcheck(val) {
-        this.currentCheck = val
+        this.columnCurrentCheck = val
       },
     },
   }
