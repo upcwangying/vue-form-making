@@ -89,7 +89,13 @@ export default {
             if (genList[i].type === 'blank') {
               this.$set(this.models, genList[i].model, genList[i].options.defaultType === 'String' ? '' : (genList[i].options.defaultType === 'Object' ? {} : []))
             } else if (genList[i].type === 'table') {
-              this.models[genList[i].model] = genList[i].rows
+              const originRows = JSON.parse(JSON.stringify(genList[i].rows))
+              for (const originRowsIndex in originRows) {
+                if (originRows[originRowsIndex]['isColumnHeader']) {
+                  delete originRows[originRowsIndex];
+                }
+              }
+              this.models[genList[i].model] = originRows.filter(obj => !!obj)
             } else {
               this.models[genList[i].model] = genList[i].options.defaultValue
             }

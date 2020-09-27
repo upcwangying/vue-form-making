@@ -885,7 +885,13 @@
                 let data = Object.create(null)
                 data['type'] = item.type
                 data['rows'] = item.rows
-                data['key'] = item.model
+                const originRows = JSON.parse(JSON.stringify(item.rows))
+                for (const originRowsIndex in originRows) {
+                  if (originRows[originRowsIndex]['isColumnHeader']) {
+                    delete originRows[originRowsIndex];
+                  }
+                }
+                data['key'] = originRows.filter(obj => !!obj)
                 data['datasource'] = item.options.datasource
                 data['table'] = item.options.table
                 data['dataTransformRules'] = item.options.dataTransformRules
