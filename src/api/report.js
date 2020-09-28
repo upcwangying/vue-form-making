@@ -16,7 +16,7 @@ export function postReport(rows) {
   return request({
     url: '/tpridmp/process/dmp_report?method=save_data',
     method: 'post',
-    params: {
+    data: {
       jsonStr: {
         type: "form",
         werks: 'W074',
