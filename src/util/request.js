@@ -3,7 +3,11 @@ import { getToken } from '@/util/auth'
 
 const request = axios.create({
   baseURL: process.env.VUE_APP_BASE_API,
-  withCredentials: false
+  withCredentials: true,
+  headers: {
+    "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+    "x-requested-with": "XMLHttpRequest"
+  },
 })
 
 request.interceptors.request.use(
