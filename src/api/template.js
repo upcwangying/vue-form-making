@@ -17,11 +17,11 @@ export function postTemplate(dbid, werks, bukrs, name, code, data, tempjb, flid,
     bukrs,
     name,
     code,
-    json: JSON.stringify(data),
+    json: data,
     version: 0,
     tempjb,
     flid,
-    tables: JSON.stringify(tables)
+    tables: tables
   })
 }
 
