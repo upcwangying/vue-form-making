@@ -13,16 +13,12 @@ export function getReport(temp_id, version, baobid) {
 }
 
 export function postReport(rows) {
-  return request({
-    url: '/tpridmp/process/dmp_report?method=save_data',
-    method: 'post',
-    data: {
-      jsonStr: {
-        type: "form",
-        werks: 'W074',
-        bukrs: 4010,
-        datas: rows
-      }
+  return request.post('/tpridmp/process/dmp_report?method=save_data',{
+    jsonStr: {
+      type: "form",
+      werks: 'W074',
+      bukrs: 4010,
+      datas: rows
     }
   })
 }
