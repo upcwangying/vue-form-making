@@ -17,11 +17,11 @@ export function postTemplate(dbid, werks, bukrs, name, code, data, tempjb, flid,
     bukrs,
     name,
     code,
-    json: data,
+    json: JSON.stringify(data),
     version: 0,
     tempjb,
     flid,
-    tables: tables
+    tables: JSON.stringify(tables)
   })
 }
 
@@ -39,7 +39,7 @@ export function publishTemplate(dbid, published_dw, json, version) {
   return request.post('/tpridmp/process/dmp_report?method=publish',{
     dbid,
     published_dw,
-    json,
+    json: JSON.stringify(json),
     version
   })
 }
