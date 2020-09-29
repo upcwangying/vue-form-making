@@ -20,6 +20,9 @@
       @node-click="handleClickNode"
       @check-change="handleCheckChange"
       >
+        <span class="el-tree-item-label_font-size" slot-scope="{ node, data }">
+          <span :class="{'el-tree-item-is_temp': node.data.is_temp === '1'}">{{ node.label }}</span>
+        </span>
   </el-tree>
 </div>
 </template>
@@ -88,14 +91,18 @@ export default {
 <style lang="scss" scoped>
 .template-tree-container {
   position: relative;
-
   .search-container {
     position: sticky;
     top: 0;
     left: 0;
     background-color: white;
     z-index: 999;
-
+  }
+  .el-tree-item-label_font-size{
+    font-size: 14px;
+    .el-tree-item-is_temp {
+      color: #409eff;
+    }
   }
 }
 </style>
