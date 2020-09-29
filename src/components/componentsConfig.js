@@ -374,7 +374,7 @@ export const layoutComponents = [
       table: 'TPRI_DMP_REPORT_DATA_TEST',
       dataTransformRules: {
         rows:{
-          "wd_jz": "jz",
+          "wd_jz": "jzid",
           "wd_sheb": "shebid"
         },
         columns:{
