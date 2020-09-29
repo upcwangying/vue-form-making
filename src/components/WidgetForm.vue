@@ -54,7 +54,9 @@
               </el-row>
             </template>
             <template v-else>
-              <widget-form-item v-if="element && element.key" :key="element.key" :element="element" :select.sync="selectWidget" :index="index" :data="data" :changeshowtt="changeShowTableTag"></widget-form-item>
+              <widget-form-item v-if="element && element.key" ref="widget_form_item_table" :key="element.key" :element="element"
+                                :select.sync="selectWidget" :celldom.sync="cellDomBlue" :areadom.sync="areaDomRed"
+                                :index="index" :data="data" :ui-select="uiselect" :changeshowtt="changeShowTableTag"></widget-form-item>
             </template>
           </template>
         </transition-group>
@@ -72,12 +74,15 @@
       Draggable,
       WidgetFormItem
     },
-    props: ['data', 'select'],
+    props: ['data', 'select', 'cellDom', 'areaDom', 'uiSelect'],
     data () {
       return {
         selectWidget: this.select,
         changeShowTableTag: true,
         cloneDeep: null,
+        cellDomBlue: this.cellDom,
+        areaDomRed: this.areaDom,
+        uiselect: this.uiSelect,
       }
     },
     mounted () {
@@ -217,12 +222,21 @@
       select (val) {
         this.selectWidget = val
       },
+      uiSelect (val) {
+        this.uiselect = val
+      },
+      cellDomBlue (val) {
+        this.$emit('update:cellDom', val)
+      },
+      areaDomRed (val) {
+        this.$emit('update:areaDom', val)
+      },
       selectWidget: {
         handler (val) {
           this.$emit('update:select', val)
         },
         deep: true
-      }
+      },
     }
   }
 </script>

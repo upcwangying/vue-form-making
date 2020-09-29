@@ -193,7 +193,9 @@
         :show-header="element.options.showHeader"
         :highlight-current-row="element.options.highlightCurrentRow"
         :show-summary="element.options.showSummary"
-        style="width: 100%">
+        :cell-class-name="editableCellClassName"
+        @cell-click="editablecellclick"
+        style="width: 100%; z-index: 9;">
         <template v-for="column in element.structColumns">
           <table-column v-if="column.children && column.children.length" :key="column.id" :prop="column.prop" :label="column.label" :width="column.width" :coloumn-header="column"></table-column>
           <el-table-column v-else :key="column.id" :prop="column.prop" :label="column.label" :width="column.width"></el-table-column>
@@ -212,7 +214,9 @@
         :show-header="element.options.showHeader"
         :highlight-current-row="element.options.highlightCurrentRow"
         :show-summary="element.options.showSummary"
-        style="width: 100%">
+        :cell-class-name="editableCellClassName"
+        @cell-click="editablecellclick"
+        style="width: 100%; z-index: 9;">
         <template v-for="column in element.structColumns">
           <table-column v-if="column.children && column.children.length" :key="column.id" :prop="column.prop" :label="column.label" :width="column.width" :coloumn-header="column"></table-column>
           <el-table-column v-else :key="column.id" :prop="column.prop" :label="column.label" :width="column.width"></el-table-column>
@@ -262,10 +266,11 @@
         :show-summary="element.options.showSummary"
         style="width: 100%">
         <template v-for="column in element.structColumns">
-          <table-column v-if="column.children && column.children.length" :key="column.id" :prop="column.prop" :label="column.label" :width="column.width" :coloumn-header="column" :show-edit="true"></table-column>
+          <table-column v-if="column.children && column.children.length" :key="column.id" :prop="column.prop" :label="column.label" :width="column.width" :coloumn-header="column" :show-edit="true" :ui-select="uiselect" />
           <el-table-column v-else :key="column.id" :prop="column.prop" :label="column.label" :width="column.width">
-            <template slot-scope="{row}">
-              <el-input v-model="row[column.prop]" placeholder="请输入" size="small" @change="change1(arguments, row)" />
+            <template slot-scope="{row, $index}">
+              <el-input v-if="isDefaultOrOtherUi(row, column) === 'default'" v-model="row[column.prop]" placeholder="请输入" size="small" @change="change1(arguments, row, column)" />
+              <jizu-component v-if="isDefaultOrOtherUi(row, column) === 'jz'" />
             </template>
           </el-table-column>
         </template>
@@ -277,11 +282,12 @@
 
 <script>
   import FmUpload from './Upload'
-  import JizuComponent from '@/components/JizuComponent';
+  import JizuComponent from '@/components/JizuComponent'
   import TableColumn from '@/components/TableColumn';
+  import { addClass, removeClass } from 'element-ui/src/utils/dom';
 
   export default {
-    props: ['element', 'select', 'index', 'data', 'changeshowtt'],
+    props: ['element', 'select', 'index', 'data', 'changeshowtt', 'celldom', 'areadom', 'uiSelect'],
     components: {
       JizuComponent,
       FmUpload,
@@ -294,12 +300,31 @@
         editableTableData: [],
         dialogEidtableTableVisible: false,
         cloneDeep: null,
+        isShift: false,
+        cellDom: null,
+        areaDom: null,
+        uiselect: this.uiSelect,
       }
     },
     mounted() {
       this.cloneDeep = require('lodash').cloneDeep
+      window.addEventListener('keydown', code => {
+        if (code.keyCode === 16 && code.shiftKey) {
+          this.isShift = true
+        }
+      })
+      window.addEventListener('keyup', code => {
+        if (code.keyCode === 16) {
+          this.isShift = false
+        }
+      })
     },
     methods: {
+      editableCellClassName({row, column, rowIndex, columnIndex}) {
+        row.rowIndex=rowIndex;
+        column.columnIndex=columnIndex;
+        return 'editable-row_' + rowIndex + '-column_' + columnIndex + '-cell'
+      },
       transferConfigcolToCol(formW) {
         if (formW.configColumns) {
           formW.columns = formW.configColumns
@@ -370,21 +395,22 @@
           this.updateSelectWidget(index + 1)
         })
       },
-      change1(arg, row) {
+      change1(arg, row, column) {
         console.log('arg1 : ', arg);
         console.log('row1 : ', row);
+        console.log('column1 : ', column);
       },
       objectSpanMethod({ row, column, rowIndex, columnIndex }) {
         let mergeRule = this.element.mergeRule
         let result = false
-        console.log('row : ', row)
-        console.log('column : ', column)
-        console.log('rowIndex : ', rowIndex)
-        console.log('columnIndex : ', columnIndex)
-        console.log('mergeRule : ', mergeRule)
+        // console.log('row : ', row)
+        // console.log('column : ', column)
+        // console.log('rowIndex : ', rowIndex)
+        // console.log('columnIndex : ', columnIndex)
+        // console.log('mergeRule : ', mergeRule)
         for (let mergeRule_index = 0; mergeRule_index < mergeRule.length; mergeRule_index++) {
           const item = mergeRule[mergeRule_index]
-          console.log('item : ', item)
+          // console.log('item : ', item)
           if (typeof(item.mergeFunction) === 'function') {
             result = result || item.mergeFunction({ row, column, rowIndex, columnIndex }, { startRow: item.startRow, endRow: item.endRow, startColumn: item.startColumn, endColumn: item.endColumn })
             console.log('result : ', result)
@@ -395,10 +421,49 @@
           }
         }
       },
+      editablecellclick(row, column, cell, event) {
+        const tableDom = this.$refs['editTable1'] || this.$refs['editTable2']
+        const cellDom = tableDom.$el.querySelector('.el-table ' + '.editable-row_' + row.rowIndex + '-column_' + column.columnIndex + '-cell')
+        if (this.isShift) {
+          if (this.areaDom) {
+            removeClass(this.areaDom, 'editable-red-tag')
+            this.areaDom = null
+          }
+          this.areaDom = cellDom
+          this.$emit('update:areadom', { row: row, column: column })
+          addClass(this.areaDom, 'editable-red-tag')
+        } else {
+          if (this.cellDom) {
+            removeClass(this.cellDom, 'editable-blue-tag')
+            this.cellDom = null
+          }
+          this.cellDom = cellDom
+          this.$emit('update:celldom', { row: row, column: column })
+          addClass(this.cellDom, 'editable-blue-tag')
+        }
+      },
+      isDefaultOrOtherUi(row, column) {
+        console.log('row : ', row);
+        console.log('column : ', column);
+        console.log('uiselect : ', this.uiselect);
+        if (this.uiselect.jz && this.uiselect.jz.length > 0) {
+          for (let i in this.uiselect.jz) {
+            if (this.uiselect.jz[i].rowIndex === row.rowIndex && this.uiselect.jz[i].prop === column.prop) {
+              return 'jz'
+            }
+          }
+        } else if (this.uiselect.sb && this.uiselect.sb.length > 0) {
+
+        }
+        return 'default'
+      },
     },
     watch: {
       select(val) {
         this.selectWidget = val
+      },
+      uiSelect(val) {
+        this.uiselect = val
       },
       selectWidget: {
         handler(val) {
@@ -412,3 +477,13 @@
     }
   }
 </script>
+<style lang="scss" scoped>
+  ::v-deep .el-table td{
+    &.editable-red-tag {
+      border: solid 1px #ff0000;
+    }
+    &.editable-blue-tag {
+      border: solid 1px #0000ff;
+    }
+  }
+</style>
