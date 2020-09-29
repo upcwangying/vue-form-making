@@ -28,7 +28,7 @@ export function getBbfl(syorjb) {
     url: '/tpridmp/process/dmp_report?method=query_fl',
     method: 'get',
     params: {
-      syorjb: syorjb
+      jb: syorjb.toUpperCase()
     }
   })
 }
