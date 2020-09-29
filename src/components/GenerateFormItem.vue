@@ -238,6 +238,10 @@
       </el-table>
     </template>
 
+    <template v-if="widget.type === 'sheet'">
+      <spread-sheet style="width: 100%" />
+    </template>
+
     <template v-if="widget.type == 'text'">
       <span>{{ dataModel }}</span>
     </template>
@@ -247,10 +251,12 @@
 <script>
 import FmUpload from './Upload'
 import JizuComponent from '@/components/JizuComponent';
+import SpreadSheet from '@/components/SpreadSheet';
 
 export default {
   props: ['widget', 'models', 'rules', 'remote'],
   components: {
+    SpreadSheet,
     FmUpload,
     JizuComponent
   },

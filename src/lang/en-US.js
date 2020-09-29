@@ -24,7 +24,8 @@ export default {
         grid: 'Grid',
         tabs: 'Tabs',
         divider: 'Divider',
-        jizu: 'Unit'
+        jizu: 'Unit',
+        sheet: 'SpreadSheet'
       },
       basic: {
         title: 'Basic Component',
