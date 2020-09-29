@@ -367,7 +367,9 @@
               <li v-for="(item, index) in data.rows" :key="index">
                 <i class="drag-item" style="font-size: 16px;margin: 0 5px;cursor: move;"><i
                   class="iconfont icon-icon_bars"></i></i>
-                <el-checkbox :label="'row_check_box_' + index" :key="item.label" :checked="item.isColumnHeader" class="edit-table-column-radio"></el-checkbox>
+                <el-tooltip content="勾选则当前行不作数据存储">
+                  <el-checkbox :label="'row_check_box_' + index" :key="item.label" :checked="item.isColumnHeader" class="edit-table-column-radio"></el-checkbox>
+                </el-tooltip>
                 <el-input :placeholder="$t('fm.config.widget.span')" size="mini" style="width: 100px;" type="number"
                           v-model.number="item.span"></el-input>
                 <el-button @click="handleOptionsRemove(index)" circle plain type="danger" size="mini" icon="el-icon-minus"
@@ -402,21 +404,21 @@
           </div>
         </el-form-item>
         <el-form-item label="列表样式">
-          <el-row type="flex" justify="space-around">
-            <el-checkbox-group v-model="currrentCheckOfMergeCell" :max="1">
-              <li v-for="(item, index) in data.mergeRule" :key="index + '_li'">
-                <el-checkbox :label="'merge_item_' + index" :key="index + '_check'" class="edit-table-column-radio"></el-checkbox>
-                <el-input v-model="item.startRow" size="mini" style="width: 40px;" ></el-input>
-                <div class="merge-rule-item">行</div>
-                <el-input v-model="item.startColumn" size="mini" style="width: 40px;" ></el-input>
-                <div class="merge-rule-item">列 ——</div>
-                <el-input v-model="item.endRow" size="mini" style="width: 40px;" ></el-input>
-                <div class="merge-rule-item">行</div>
-                <el-input v-model="item.endColumn" size="mini" style="width: 40px;" ></el-input>
-                <div class="merge-rule-item">列</div>
-              </li>
-            </el-checkbox-group>
-          </el-row>
+          <!--<el-row type="flex" justify="space-around">-->
+          <!--<el-checkbox-group v-model="currrentCheckOfMergeCell" :max="1">-->
+          <!--<li v-for="(item, index) in data.mergeRule" :key="index + '_li'">-->
+          <!--<el-checkbox :label="'merge_item_' + index" :key="index + '_check'" class="edit-table-column-radio"></el-checkbox>-->
+          <!--<el-input v-model="item.startRow" size="mini" style="width: 40px;" ></el-input>-->
+          <!--<div class="merge-rule-item">行</div>-->
+          <!--<el-input v-model="item.startColumn" size="mini" style="width: 40px;" ></el-input>-->
+          <!--<div class="merge-rule-item">列 ——</div>-->
+          <!--<el-input v-model="item.endRow" size="mini" style="width: 40px;" ></el-input>-->
+          <!--<div class="merge-rule-item">行</div>-->
+          <!--<el-input v-model="item.endColumn" size="mini" style="width: 40px;" ></el-input>-->
+          <!--<div class="merge-rule-item">列</div>-->
+          <!--</li>-->
+          <!--</el-checkbox-group>-->
+          <!--</el-row>-->
           <el-row type="flex" justify="space-around">
             <el-button @click="handleMergeClick">合并</el-button>
             <el-button @click="handleCancelMergeClick">取消合并</el-button>
@@ -441,7 +443,7 @@
           </el-row>
           <el-row type="flex" justify="space-around" style="padding-bottom: 15px;">
             <el-col>
-              <el-button>显示机组</el-button>
+              <el-button @click="showJz">显示机组</el-button>
             </el-col>
             <el-col>
               <el-button>重置</el-button>
@@ -544,7 +546,7 @@
         },
         columnCurrentCheck: this.currcheck,
         rowCurrentCheck: [],
-        currrentCheckOfMergeCell: [],
+        // currrentCheckOfMergeCell: [],
       }
     },
     computed: {
@@ -586,6 +588,10 @@
         this.$emit('show-add-column')
       },
       handleRemoveTableColumn(label, index) {
+        if (this.columnCurrentCheck[0] === label) {
+          this.columnCurrentCheck = []
+          this.$emit('update:currcheck', this.columnCurrentCheck)
+        }
         this.$emit('remove-column', label, index)
       },
       handleAddTableRow() {
@@ -677,16 +683,20 @@
         this.$emit('update-row-check', result)
       },
       handleMergeClick() {
-        if (this.currrentCheckOfMergeCell.length === 1) {
-          this.$emit('merge-cell', this.currrentCheckOfMergeCell[0])
-        } else {
-          this.$message({
-            message: '请选择1条合并规则',
-            type: 'warning'
-          })
-        }
+        this.$emit('merge-cell')
+        // if (this.currrentCheckOfMergeCell.length === 1) {
+        //   this.$emit('merge-cell', this.currrentCheckOfMergeCell[0])
+        // } else {
+        //   this.$message({
+        //     message: '请选择1条合并规则',
+        //     type: 'warning'
+        //   })
+        // }
       },
       handleCancelMergeClick() {},
+      showJz() {
+        this.$emit('show-jz')
+      },
     },
     watch: {
       'data.options.isRange': function (val) {

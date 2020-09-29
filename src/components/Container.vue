@@ -76,7 +76,7 @@
             <!--              <el-button v-if="generateCode" type="text" size="medium" icon="el-icon-document" @click="handleGenerateCode">{{$t('fm.actions.code')}}</el-button>-->
             <!--            </el-header>-->
             <el-main :class="{'widget-empty': widgetForm.list.length === 0}">
-              <widget-form v-if="!resetJson"  ref="widgetForm" :data="widgetForm" :select.sync="widgetFormSelect"></widget-form>
+              <widget-form v-if="!resetJson"  ref="widgetForm" :data="widgetForm" :select.sync="widgetFormSelect" :cell-dom.sync="cellDomBlue" :area-dom.sync="areaDomRed" :ui-select="uiSelect"></widget-form>
             </el-main>
           </el-container>
 
@@ -91,7 +91,7 @@
               <el-main class="config-content">
                 <header-config v-show="configTab ==='header'" :data="headerFormSelect"></header-config>
                 <zhi-biao-config v-show="configTab ==='zhibiao'" :data="zhiBiaoSelect" :zbattribute="zbAttribute" ></zhi-biao-config>
-                <widget-config ref="widgetConfig" v-show="configTab ==='widget'" :data="widgetFormSelect" :currcheck.sync="currentCheck" @show-add-column="addColumn" @show-add-row="addRow" @drag-end="dragend" @remove-column="removeColumn" @remove-row="removeRow" @merge-cell="mergeCell" @update-row-check="updateRowCheck"></widget-config>
+                <widget-config ref="widgetConfig" v-show="configTab ==='widget'" :data="widgetFormSelect" :currcheck.sync="currentCheck" @show-add-column="addColumn" @show-add-row="addRow" @drag-end="dragend" @remove-column="removeColumn" @remove-row="removeRow" @merge-cell="mergeCell" @update-row-check="updateRowCheck" @show-jz="widgetConShowJz"></widget-config>
                 <form-config v-show="configTab ==='form'" :data="widgetForm.config"></form-config>
               </el-main>
             </el-container>
@@ -294,6 +294,12 @@
         selectTreeNode: null,
         cloneDeep: null,
         currentCheck: [],
+        cellDomBlue: null,
+        areaDomRed: null,
+        uiSelect: {
+          jz: [],
+          sb: [],
+        },
       }
     },
     mounted() {
@@ -855,6 +861,13 @@
             item.rows = this.widgetFormSelect.rows
           }
         })
+      },
+      widgetConShowJz() { // 点击 '字段属性'—'显示机组' 按钮
+        // console.log('cellDomBlue : ', this.cellDomBlue)
+        // console.log('areaDomRed : ', this.areaDomRed)
+        // console.log('widgetForm : ', this.widgetForm)
+        // console.log('widgetFormSelect : ', this.widgetFormSelect)
+        this.uiSelect.jz.push({ rowIndex: this.cellDomBlue.row.rowIndex, prop: this.cellDomBlue.column.property })
       },
       handleGoGithub () {
         window.location.href = 'https://github.com/upcwangying/vue-form-making'
