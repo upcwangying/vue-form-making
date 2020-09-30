@@ -5,7 +5,7 @@
       <el-table-column v-else :key="column.id" :prop="column.prop" :label="column.label" :width="column.width">
         <template v-if="showEdit" slot-scope="{row}">
           <el-input v-if="isDefaultOrOtherUi(row, column) === 'default'" v-model="row[column.prop]" placeholder="请输入" size="small" @change="change3(arguments, row)" />
-          <jizu-component v-if="isDefaultOrOtherUi(row, column) === 'jz'" />
+          <jizu-component v-if="isDefaultOrOtherUi(row, column) === 'jz'" v-model="row[column.prop]" />
         </template>
       </el-table-column>
     </template>
@@ -13,7 +13,7 @@
   <el-table-column v-else :key="coloumnHeader.id" :prop="coloumnHeader.prop" :label="coloumnHeader.label" :width="coloumnHeader.width">
     <template v-if="showEdit" slot-scope="{row}">
       <el-input v-if="isDefaultOrOtherUi(row, column) === 'default'" v-model="row[column.prop]" placeholder="请输入" size="mini" @change="change2(arguments, row)" />
-      <jizu-component v-if="isDefaultOrOtherUi(row, column) === 'jz'" />
+      <jizu-component v-if="isDefaultOrOtherUi(row, column) === 'jz'" v-model="row[column.prop]" />
     </template>
   </el-table-column>
 </template>
