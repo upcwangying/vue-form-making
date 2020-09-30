@@ -270,7 +270,7 @@
           <el-table-column v-else :key="column.id" :prop="column.prop" :label="column.label" :width="column.width">
             <template slot-scope="{row, $index}">
               <el-input v-if="isDefaultOrOtherUi(row, column) === 'default'" v-model="row[column.prop]" placeholder="请输入" size="small" @change="change1(arguments, row, column)" />
-              <jizu-component v-if="isDefaultOrOtherUi(row, column) === 'jz'" />
+              <jizu-component v-if="isDefaultOrOtherUi(row, column) === 'jz'" v-model="row[column.prop]" />
             </template>
           </el-table-column>
         </template>
