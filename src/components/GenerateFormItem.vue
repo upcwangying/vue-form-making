@@ -1,6 +1,6 @@
 <template>
   <el-form-item :prop="widget.model"
-                :label="widget.type === 'table' ? '' : widget.name"
+                :label="widget.type === 'table' || widget.type === 'sheet' ? '' : widget.name"
                 :label-width="widget.type === 'table' ? '0px' : 'auto'"
   >
 

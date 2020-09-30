@@ -1,5 +1,7 @@
 <template>
-  <div ref="xspreadsheet" id="xapp" />
+  <div class="spreadsheet-container">
+    <div ref="xspreadsheet" id="xapp" />
+  </div>
 </template>
 
 <script>
@@ -17,6 +19,9 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style lang="scss" scoped>
+.spreadsheet-container {
+  width: auto;
+  overflow: hidden;
+}
 </style>

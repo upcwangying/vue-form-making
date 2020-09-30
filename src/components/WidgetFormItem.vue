@@ -2,7 +2,7 @@
   <el-form-item class="widget-view"
                 v-if="element && element.key"
                 :class="{active: selectWidget.key === element.key, 'is_req': element.options.required}"
-                :label="element.type === 'table' ? '' : element.name"
+                :label="element.type === 'table' || element.type === 'sheet' ? '' : element.name"
                 :label-width="element.type === 'table' ? '0px' : 'auto'"
                 @click.native.stop="handleSelectWidget(index)"
   >
