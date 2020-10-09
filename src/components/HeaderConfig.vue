@@ -122,7 +122,7 @@ export default {
     },
     layoutFields: {
       type: Array,
-      default: () => ['grid', 'table']
+      default: () => ['grid', 'table', 'sheet']
     }
   },
   data() {

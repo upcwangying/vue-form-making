@@ -2,7 +2,7 @@
   <el-form-item class="widget-view"
                 v-if="element && element.key"
                 :class="{active: selectWidget.key === element.key, 'is_req': element.options.required}"
-                :label="element.type === 'table' ? '' : element.name"
+                :label="element.type === 'table' || element.type === 'sheet' ? '' : element.name"
                 :label-width="element.type === 'table' ? '0px' : 'auto'"
                 @click.native.stop="handleSelectWidget(index)"
   >
@@ -224,6 +224,10 @@
       </el-table>
     </template>
 
+    <template v-if="element.type === 'sheet'">
+      <spread-sheet />
+    </template>
+
     <template v-if="element.type === 'editor'">
       <vue-editor
         v-model="element.options.defaultValue"
@@ -285,10 +289,12 @@
   import JizuComponent from '@/components/JizuComponent'
   import TableColumn from '@/components/TableColumn';
   import { addClass, removeClass } from 'element-ui/src/utils/dom';
+  import SpreadSheet from '@/components/SpreadSheet';
 
   export default {
     props: ['element', 'select', 'index', 'data', 'changeshowtt', 'celldom', 'areadom', 'uiSelect'],
     components: {
+      SpreadSheet,
       JizuComponent,
       FmUpload,
       TableColumn,
