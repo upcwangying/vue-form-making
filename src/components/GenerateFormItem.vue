@@ -223,14 +223,13 @@
           :show-header="widget.options.showHeader"
           :highlight-current-row="widget.options.highlightCurrentRow"
           :show-summary="widget.options.showSummary"
+          :span-method="objectSpanMethod(arguments, widget.mergeRule)"
           style="width: 100%">
-        <template v-for="column in widget.columns">
-          <el-table-column
-            :key="column.label"
-            :prop="column.prop"
-            :label="column.label"
-            :width="column.width">
-            <template slot-scope="{row}">
+
+        <template v-for="column in widget.structColumns">
+          <table-column v-if="column.children && column.children.length" :key="column.id" :prop="column.prop" :label="column.label" :width="column.width" :coloumn-header="column" :show-edit="true" />
+          <el-table-column v-else :key="column.id" :prop="column.prop" :label="column.label" :width="column.width">
+            <template slot-scope="{row, $index}">
               <el-input v-model="row[column.prop]" placeholder="请输入" size="small" />
             </template>
           </el-table-column>
@@ -247,16 +246,18 @@
 <script>
 import FmUpload from './Upload'
 import JizuComponent from '@/components/JizuComponent';
+import TableColumn from '@/components/TableColumn';
 
 export default {
   props: ['widget', 'models', 'rules', 'remote'],
   components: {
     FmUpload,
-    JizuComponent
+    JizuComponent,
+    TableColumn,
   },
   data() {
     return {
-      dataModel: this.models[this.widget.model]
+      dataModel: this.models[this.widget.model],
     }
   },
   created() {
@@ -278,7 +279,21 @@ export default {
       })
     }
   },
-  methods: {},
+  methods: {
+    objectSpanMethod({ row, column, rowIndex, columnIndex }) {
+      let mergeRule = this.widget.mergeRule
+      let result = false
+      for (let mergeRule_index = 0; mergeRule_index < mergeRule.length; mergeRule_index++) {
+        const item = mergeRule[mergeRule_index]
+        if (typeof(item.mergeFunction) === 'function') {
+          result = result || item.mergeFunction({ row, column, rowIndex, columnIndex }, { startRow: item.startRow, endRow: item.endRow, startColumn: item.startColumn, endColumn: item.endColumn })
+        }
+        if (result) {
+          return result
+        }
+      }
+    },
+  },
   watch: {
     dataModel: {
       deep: true,
@@ -296,7 +311,7 @@ export default {
       handler(val) {
         this.dataModel = val[this.widget.model]
       }
-    }
+    },
   }
 }
 </script>
