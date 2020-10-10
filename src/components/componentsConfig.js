@@ -390,5 +390,23 @@ export const layoutComponents = [
       highlightCurrentRow: false,
       showSummary: false
     }
+  },
+  {
+    type: 'sheet',
+    icon: 'icon-sheet',
+    options: {
+      datasource: 'TPRI_VUE',
+      table: 'TPRI_DMP_REPORT_DATA_TEST',
+      dataTransformRules: {
+        rows:{
+          "wd_jz": "jzid",
+          "wd_sheb": "shebid"
+        },
+        columns:{
+          key: "zbid1",
+          value: "value"
+        }
+      },
+    }
   }
 ]

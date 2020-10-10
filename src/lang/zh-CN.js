@@ -24,7 +24,8 @@ export default {
         grid: '栅格布局',
         tabs: '标签页',
         divider: '分割线',
-        jizu: '机组'
+        jizu: '机组',
+        sheet: '电子表格'
       },
       basic: {
         title: '基础字段',
