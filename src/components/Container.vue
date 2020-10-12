@@ -7,6 +7,7 @@
 <!--          <el-button @click="saveReportJSON">保存报表数据</el-button>-->
           <!--          <el-button @click="queryReportData">获取报表数据</el-button>-->
           <!--          <el-button @click="queryData">获取数据</el-button>-->
+          <el-button @click="querySpreadSheetData">获取电子表格数据(测试)</el-button>
           <el-button @click="createTemplate">创建</el-button>
           <el-button @click="saveTemplate">保存</el-button>
           <el-button @click="deleteTemplate">删除</el-button>
@@ -472,6 +473,24 @@
             console.log(json, datas)
             this.setJSON(JSON.parse(json), datas)
           })
+      },
+      querySpreadSheetData() {
+        const data = this.$refs.widgetForm && this.$refs.widgetForm.querySpreadSheetDataByWidgetForm()
+        this.jsonVisible = true
+        this.jsonTemplate = data
+        this.$nextTick(() => {
+
+          const editor = ace.edit('jsoneditor')
+          editor.session.setMode("ace/mode/json")
+
+          if (!this.jsonClipboard) {
+            this.jsonClipboard = new Clipboard('.json-btn')
+            this.jsonClipboard.on('success', (e) => {
+              this.$message.success(this.$t('fm.message.copySuccess'))
+            })
+          }
+          this.jsonCopyValue = JSON.stringify(data)
+        })
       },
       createTemplate() {
         if (!this.selectTreeNode) {

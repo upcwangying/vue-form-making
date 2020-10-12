@@ -225,7 +225,7 @@
     </template>
 
     <template v-if="element.type === 'sheet'">
-      <spread-sheet />
+      <spread-sheet ref="spreadsheet" />
     </template>
 
     <template v-if="element.type === 'editor'">
@@ -326,6 +326,9 @@
       })
     },
     methods: {
+      querySpreadSheetDataByWidgetFormItem() {
+        return this.$refs.spreadsheet && this.$refs.spreadsheet.getSpreadSheetData()
+      },
       editableCellClassName({row, column, rowIndex, columnIndex}) {
         row.rowIndex=rowIndex;
         column.columnIndex=columnIndex;

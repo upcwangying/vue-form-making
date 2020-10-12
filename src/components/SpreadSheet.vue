@@ -8,9 +8,14 @@
 import Spreadsheet from "x-data-spreadsheet";
 export default {
   name: 'SpreadSheet',
+  data() {
+    return {
+      spreadsheet: null
+    }
+  },
   mounted() {
     // const s = new Spreadsheet('#xapp')
-    const s = new Spreadsheet(this.$refs.xspreadsheet, {
+    this.spreadsheet = new Spreadsheet(this.$refs.xspreadsheet, {
       view: {
         height: () => document.documentElement.clientHeight,
         width: () => document.documentElement.clientWidth
@@ -30,6 +35,11 @@ export default {
       .change(data => {
         // save data to db
       });
+  },
+  methods: {
+    getSpreadSheetData() {
+      return this.spreadsheet && this.spreadsheet.getData()
+    }
   }
 }
 </script>
