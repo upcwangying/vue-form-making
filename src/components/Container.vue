@@ -50,7 +50,7 @@
                       <div class="config-tab all middle">报表分类</div>
                     </el-header>
                     <el-main>
-                      <template-tree :syorjb="syorjbParam" :tree-data="bbflTreeData" @node-expand="handleExpNode" />
+                      <template-tree :syorjb="syorjbParam" :tree-data="bbflTreeData" @node-expand="handleExpNode" @check-change="selectTree" />
                     </el-main>
                   </el-container>
                   <el-container style="height: 50% !important;">
@@ -326,7 +326,7 @@
         if (this['bbflTreeDataFor' + this.syorjbParam].length < 1) {
           getBbfl(this.syorjbParam).then(res => {
             if (res.success) {
-              const sybbTreeData_ = [ ...res.dataset.datas[0].children ]
+              const sybbTreeData_ = (this.syorjbParam === 'sy' ? [ ...res.dataset.datas[0].children ] : [ ...res.dataset.datas ])
               this.bbflTreeData = this.transIdLabel(sybbTreeData_)
               this.setSybbTreeDataForBB(this.bbflTreeData)
             }
