@@ -9,6 +9,7 @@
 
   <div class="table-container">
     <el-table
+      v-loading="listLoading"
       :data="tableData"
       stripe
       highlight-current-row
@@ -161,6 +162,10 @@ export default {
     syorjb: {
       type: String,
       default: ''
+    },
+    loading: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -172,6 +177,7 @@ export default {
       oldColumn: null,
       addZhibiaoShowDialog: false,
       zbAttribute: [],
+      listLoading: this.loading,
     }
   },
   watch: {
@@ -180,6 +186,9 @@ export default {
         this.tableData = val
       },
       deep: true
+    },
+    loading(val) {
+      this.listLoading = val
     },
     syorjb(val) {
       this.syorjbParam = val

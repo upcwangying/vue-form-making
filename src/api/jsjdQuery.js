@@ -1,11 +1,12 @@
 import request from '@/util/request'
 
-export function getZb(syorjb) {
+export function getZb(syorjb, jtzbfl) {
   return request({
     url: '/jsjd/process/aqsc_jsjd_sybg_zb?method=query',
     method: 'get',
     params: {
-      syorjb: syorjb
+      syorjb: syorjb,
+      jtzbfl: jtzbfl
     }
   })
 }
