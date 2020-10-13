@@ -40,7 +40,7 @@
                       <div class="config-tab all middle">指标分类</div>
                     </el-header>
                     <el-main>
-                      <quota-table :syorjb="syorjbParam" :zbfl-zb-data="zbflSelectData" @change="zbSelChange" @update-zbflzbdata="updateZbflSelectData" />
+                      <quota-table :syorjb="syorjbParam" :zbfl-zb-data="zbflSelectData" :loading="quateTableLoading" @change="zbSelChange" @update-zbflzbdata="updateZbflSelectData" />
                     </el-main>
                   </el-container>
                 </div>
@@ -58,7 +58,7 @@
                       <div class="config-tab all middle">指标分类</div>
                     </el-header>
                     <el-main>
-                      <quota-table :syorjb="syorjbParam" :zbfl-zb-data="zbflSelectData" @change="zbSelChange" @update-zbflzbdata="updateZbflSelectData" />
+                      <quota-table :syorjb="syorjbParam" :zbfl-zb-data="zbflSelectData" :loading="quateTableLoading" @change="zbSelChange" @update-zbflzbdata="updateZbflSelectData" />
                     </el-main>
                   </el-container>
                 </div>
@@ -287,8 +287,6 @@
         bbflTreeDataForsy: [],
         bbflTreeDataForjb: [],
         zbflSelectData: [],
-        zbflSelectDataForsy: [],
-        zbflSelectDataForjb: [],
         syorjbParam: 'sy',  //默认实验报表
         zbAttribute: null,
         selectTreeNode: null,
@@ -300,12 +298,12 @@
           jz: [],
           sb: [],
         },
+        quateTableLoading: false,
       }
     },
     mounted() {
       this.cloneDeep = require('lodash').cloneDeep
       this.query_bbfl();
-      this.query_zb();
     },
     methods: {
       transIdLabel(datas) {
@@ -335,18 +333,14 @@
           this.bbflTreeData = this['bbflTreeDataFor' + this.syorjbParam]
         }
       },
-      query_zb() {
-        if (this['zbflSelectDataFor' + this.syorjbParam].length < 1) {
-          getZb(this.syorjbParam).then(res => {
-            if (res.success) {
-              this.zbflSelectData = [ ...res.dataset.datas ]
-              this.setSybbTreeDataForZB(this.zbflSelectData)
-              console.log('query : ', this.zbflSelectData);
-            }
-          }).catch(err => { err; })
-        } else {
-          this.zbflSelectData = this['zbflSelectDataFor' + this.syorjbParam]
-        }
+      query_zb(jtzbfl) {
+        this.quateTableLoading = true
+        getZb(this.syorjbParam, jtzbfl).then(res => {
+          if (res.success) {
+            this.zbflSelectData = [ ...res.dataset.datas ]
+            this.quateTableLoading = false
+          }
+        }).catch(err => { err; })
       },
       handleExpNode(obj, node, dom) {
         // request({
@@ -364,6 +358,7 @@
           const { dbid, is_temp } = this.selectTreeNode
           is_temp === '1' && this.queryTemplateData(dbid)
           is_temp === '0' && this.handleClear()
+          is_temp === '0' && this.query_zb(dbid)
         } else {
           this.selectTreeNode = null
           this.handleClear()
@@ -876,7 +871,6 @@
         this.leftConfigTab = value
         this.syorjbParam = ( value === 'shiyan') ? 'sy' : 'jb' // 设置查询参数 syorjb - 实验or监督
         this.query_bbfl() // 做查询
-        this.query_zb();
       },
       handleConfigSelect (value) {
         this.configTab = value
