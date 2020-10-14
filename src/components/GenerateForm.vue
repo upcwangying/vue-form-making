@@ -95,7 +95,12 @@ export default {
                   delete originRows[originRowsIndex];
                 }
               }
-              this.models[genList[i].model] = originRows.filter(obj => !!obj)
+              const deletedRows = originRows.filter(obj => !!obj)
+              for (const deletedRow of deletedRows) {
+                delete deletedRow.rowIndex
+                delete deletedRow.isColumnHeader
+              }
+              this.models[genList[i].model] = deletedRows
             } else {
               this.models[genList[i].model] = genList[i].options.defaultValue
             }
