@@ -198,7 +198,7 @@
         style="width: 100%; z-index: 9;">
         <template v-for="column in element.structColumns">
           <table-column v-if="column.children && column.children.length" :key="column.id" :prop="column.prop" :label="column.label" :width="column.width" :coloumn-header="column"></table-column>
-          <el-table-column v-else :key="column.id" :prop="column.prop" :label="column.label" :width="column.width"></el-table-column>
+          <el-table-column v-else :key="column.id" :prop="column.prop" :label="column.label" :width="column.width" align="center"></el-table-column>
         </template>
       </el-table>
       <el-table
@@ -219,7 +219,7 @@
         style="width: 100%; z-index: 9;">
         <template v-for="column in element.structColumns">
           <table-column v-if="column.children && column.children.length" :key="column.id" :prop="column.prop" :label="column.label" :width="column.width" :coloumn-header="column"></table-column>
-          <el-table-column v-else :key="column.id" :prop="column.prop" :label="column.label" :width="column.width"></el-table-column>
+          <el-table-column v-else :key="column.id" :prop="column.prop" :label="column.label" :width="column.width" align="center"></el-table-column>
         </template>
       </el-table>
     </template>
@@ -271,7 +271,7 @@
         style="width: 100%">
         <template v-for="column in element.structColumns">
           <table-column v-if="column.children && column.children.length" :key="column.id" :prop="column.prop" :label="column.label" :width="column.width" :coloumn-header="column" :show-edit="true" :ui-select="uiselect" />
-          <el-table-column v-else :key="column.id" :prop="column.prop" :label="column.label" :width="column.width">
+          <el-table-column v-else :key="column.id" :prop="column.prop" :label="column.label" :width="column.width" align="center">
             <template slot-scope="{row, $index}">
               <el-input v-if="isDefaultOrOtherUi(row, column) === 'default'" v-model="row[column.prop]" placeholder="请输入" size="small" @change="change1(arguments, row, column)" />
               <jizu-component v-if="isDefaultOrOtherUi(row, column) === 'jz'" v-model="row[column.prop]" />

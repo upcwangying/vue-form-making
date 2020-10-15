@@ -1060,7 +1060,11 @@
         this.blank = val
       },
       handleDataChange (field, value, data) {
-        console.log(field, value, data)
+        // console.log(field, value, data)
+        if (data && field !== '') {
+          data[field] = value
+        }
+        this.widgetModels = data
       },
     },
     watch: {
