@@ -96,6 +96,9 @@
       this.cloneDeep = require('lodash').cloneDeep
     },
     methods: {
+      querySpreadSheetDataByWidgetForm() {
+        return this.$refs.widget_form_item_table && this.$refs.widget_form_item_table[0].querySpreadSheetDataByWidgetFormItem()
+      },
       updateSelectWidget(index) {
         if (this.data.list[index].type === 'table') {
           this.selectWidget = this.cloneDeep(this.data.list[index])  // 深拷贝(cloneDeep) 达到非双绑的效果
