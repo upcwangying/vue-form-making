@@ -5,6 +5,7 @@ export function getZb(syorjb, jtzbfl) {
     url: '/jsjd/process/aqsc_jsjd_sybg_zb?method=query',
     method: 'get',
     params: {
+      isfrozen: 0,
       syorjb: syorjb,
       jtzbfl: jtzbfl
     }

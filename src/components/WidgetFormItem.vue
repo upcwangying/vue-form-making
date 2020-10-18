@@ -7,6 +7,10 @@
                 @click.native.stop="handleSelectWidget(index)"
   >
 
+    <template v-if="element.type === 'staff'">
+      <staff-component />
+    </template>
+
     <template v-if="element.type === 'jizu'">
       <jizu-component />
     </template>
@@ -85,6 +89,59 @@
     </template>
 
     <template v-if="element.type === 'date'">
+      <el-date-picker
+        v-model="element.options.defaultValue"
+        :type="element.options.type"
+        :is-range="element.options.isRange"
+        :placeholder="element.options.placeholder"
+        :start-placeholder="element.options.startPlaceholder"
+        :end-placeholder="element.options.endPlaceholder"
+        :readonly="element.options.readonly"
+        :disabled="element.options.disabled"
+        :editable="element.options.editable"
+        :clearable="element.options.clearable"
+        :style="{width: element.options.width}"
+      >
+      </el-date-picker>
+    </template>
+
+    <template v-if="element.type === 'month'">
+      <el-date-picker
+        v-model="element.options.defaultValue"
+        :type="element.options.type"
+        :is-range="element.options.isRange"
+        :placeholder="element.options.placeholder"
+        :value-format="element.options.format"
+        :format="element.options.format"
+        :start-placeholder="element.options.startPlaceholder"
+        :end-placeholder="element.options.endPlaceholder"
+        :readonly="element.options.readonly"
+        :disabled="element.options.disabled"
+        :editable="element.options.editable"
+        :clearable="element.options.clearable"
+        :style="{width: element.options.width}"
+      >
+      </el-date-picker>
+    </template>
+
+    <template v-if="element.type === 'quarter'">
+      <el-date-picker
+        v-model="element.options.defaultValue"
+        :type="element.options.type"
+        :is-range="element.options.isRange"
+        :placeholder="element.options.placeholder"
+        :start-placeholder="element.options.startPlaceholder"
+        :end-placeholder="element.options.endPlaceholder"
+        :readonly="element.options.readonly"
+        :disabled="element.options.disabled"
+        :editable="element.options.editable"
+        :clearable="element.options.clearable"
+        :style="{width: element.options.width}"
+      >
+      </el-date-picker>
+    </template>
+
+    <template v-if="element.type === 'year'">
       <el-date-picker
         v-model="element.options.defaultValue"
         :type="element.options.type"
@@ -287,6 +344,7 @@
 <script>
   import FmUpload from './Upload'
   import JizuComponent from '@/components/JizuComponent'
+  import StaffComponent from '@/components/StaffComponent';
   import TableColumn from '@/components/TableColumn';
   import { addClass, removeClass } from 'element-ui/src/utils/dom';
   import SpreadSheet from '@/components/SpreadSheet';
@@ -296,6 +354,7 @@
     components: {
       SpreadSheet,
       JizuComponent,
+      StaffComponent,
       FmUpload,
       TableColumn,
     },

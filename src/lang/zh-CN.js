@@ -9,6 +9,9 @@ export default {
         checkbox: '多选框组',
         time: '时间选择器',
         date: '日期选择器',
+        month: '月度选择器',
+        year: '年度选择器',
+        quarter: '季度选择器',
         rate: '评分',
         color: '颜色选择器',
         select: '下拉选择框',
@@ -25,6 +28,7 @@ export default {
         tabs: '标签页',
         divider: '分割线',
         jizu: '机组',
+        staff: '人员',
         sheet: '电子表格'
       },
       basic: {
