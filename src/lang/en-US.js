@@ -9,6 +9,9 @@ export default {
         checkbox: 'Checkbox',
         time: 'Time',
         date: 'Date',
+        month: 'Month',
+        year: 'Year',
+        quarter: 'Quarter',
         rate: 'Rate',
         color: 'Color',
         select: 'Select',
@@ -25,6 +28,7 @@ export default {
         tabs: 'Tabs',
         divider: 'Divider',
         jizu: 'Unit',
+        staff: 'Person',
         sheet: 'SpreadSheet'
       },
       basic: {

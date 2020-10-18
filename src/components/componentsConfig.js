@@ -161,6 +161,72 @@ export const basicComponents = [
     }
   },
   {
+    type: 'month',
+    icon: 'icon-date',
+    options: {
+      defaultValue: new Date(),
+      readonly: false,
+      disabled: false,
+      editable: true,
+      clearable: true,
+      placeholder: '',
+      startPlaceholder: '',
+      endPlaceholder: '',
+      type: 'month',
+      format: 'MM',
+      timestamp: false,
+      required: false,
+      width: '',
+      datasource: 'TPRI_VUE',
+      table: 'TPRI_DMP_REPORT_DATA_TEST',
+      field: 'value'
+    }
+  },
+  {
+    type: 'quarter',
+    icon: 'icon-date',
+    options: {
+      defaultValue: new Date(),
+      readonly: false,
+      disabled: false,
+      editable: true,
+      clearable: true,
+      placeholder: '',
+      startPlaceholder: '',
+      endPlaceholder: '',
+      type: 'monthrange',
+      format: 'yyyy-MM',
+      timestamp: false,
+      required: false,
+      width: '',
+      datasource: 'TPRI_VUE',
+      table: 'TPRI_DMP_REPORT_DATA_TEST',
+      field: 'value'
+    }
+  },
+  {
+    type: 'year',
+    icon: 'icon-date',
+    options: {
+      defaultValue: new Date(),
+      readonly: false,
+      disabled: false,
+      editable: true,
+      clearable: true,
+      placeholder: '',
+      startPlaceholder: '',
+      endPlaceholder: '',
+      type: 'year',
+      format: 'yyyy',
+      timestamp: false,
+      required: false,
+      width: '',
+      datasource: 'TPRI_VUE',
+      table: 'TPRI_DMP_REPORT_DATA_TEST',
+      field: 'value'
+    }
+  },
+  {
     type: 'rate',
     icon: 'icon-pingfen1',
     options: {
@@ -271,7 +337,16 @@ export const basicComponents = [
       table: 'TPRI_DMP_REPORT_DATA_TEST',
       field: 'value'
     }
-  }
+  },
+  {
+    type: 'staff',
+    icon: '',
+    options: {
+      datasource: 'TPRI_VUE',
+      table: 'TPRI_DMP_REPORT_DATA_TEST',
+      field: 'value'
+    }
+  },
 ]
 
 export const advanceComponents = [
