@@ -11,7 +11,7 @@ export default {
   },
   props: {
     dpvalue: {
-      type: Array,
+      type: Array | String,
       default: () => {
         return []
       }

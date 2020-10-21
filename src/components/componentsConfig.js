@@ -186,7 +186,7 @@ export const basicComponents = [
     type: 'quarter',
     icon: 'icon-date',
     options: {
-      defaultValue: [],
+      defaultValue: getQuarterDefaultValue(),
       width: '',
       datasource: 'TPRI_VUE',
       table: 'TPRI_DMP_REPORT_DATA_TEST',
@@ -476,3 +476,47 @@ export const layoutComponents = [
     }
   }
 ]
+
+function getQuarterDefaultValue() {
+  let defaultValue = []
+  const month = (new Date().getMonth() + 1).toString()
+  switch (month) {
+    case "1":
+      defaultValue = [dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 0)), dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 2))];
+      break;
+    case "2":
+      defaultValue = [dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 0)), dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 2))];
+      break;
+    case "3":
+      defaultValue = [dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 0)), dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 2))];
+      break;
+    case "4":
+      defaultValue = [dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 3)), dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 5))];
+      break;
+    case "5":
+      defaultValue = [dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 3)), dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 5))];
+      break;
+    case "6":
+      defaultValue = [dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 3)), dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 5))];
+      break;
+    case "7":
+      defaultValue= [dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 6)), dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 8))];
+      break;
+    case "8":
+      defaultValue= [dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 6)), dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 8))];
+      break;
+    case "9":
+      defaultValue= [dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 6)), dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 8))];
+      break;
+    case "10":
+      defaultValue = [dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 9)), dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 11))];
+      break;
+    case "11":
+      defaultValue = [dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 9)), dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 11))];
+      break;
+    case "12":
+      defaultValue = [dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 9)), dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 11))];
+      break;
+  }
+  return defaultValue
+}
