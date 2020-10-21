@@ -9,14 +9,7 @@ export default {
     prop: 'dpvalue',
     event: 'change'
   },
-  props: {
-    dpvalue: {
-      type: Array | String,
-      default: () => {
-        return []
-      }
-    }
-  },
+  props: ['dpvalue'],
   data() {
     return {
       datePickerValue: this.dpvalue,
@@ -60,10 +53,9 @@ export default {
     }
   },
   watch: {
-    'datePickerValue': {
-      handler: function(val) {
+    dpvalue : {
+      handler: function (val) {
         if (!val) { return }
-        console.log(val[0].substring(val[0].length - 2, val[0].length))
         switch (val[0].substring(val[0].length - 2, val[0].length)) {
           case "01":
             this.displayValue = "一季度";
@@ -102,7 +94,52 @@ export default {
             this.displayValue = "四季度"
             break;
         }
-      }
+      },
+      deep: true
+    },
+    datePickerValue : {
+      handler: function (val) {
+        if (!val) { return }
+        switch (val[0].substring(val[0].length - 2, val[0].length)) {
+          case "01":
+            this.displayValue = "一季度";
+            break;
+          case "02":
+            this.displayValue = "一季度";
+            break;
+          case "03":
+            this.displayValue = "一季度";
+            break;
+          case "04":
+            this.displayValue = "二季度";
+            break;
+          case "05":
+            this.displayValue = "二季度";
+            break;
+          case "06":
+            this.displayValue = "二季度";
+            break;
+          case "07":
+            this.displayValue = "三季度";
+            break;
+          case "08":
+            this.displayValue = "三季度";
+            break;
+          case "09":
+            this.displayValue = "三季度";
+            break;
+          case "10":
+            this.displayValue = "四季度";
+            break;
+          case "11":
+            this.displayValue = "四季度";
+            break;
+          case "12":
+            this.displayValue = "四季度"
+            break;
+        }
+      },
+      deep: true
     }
   },
   mounted() {
