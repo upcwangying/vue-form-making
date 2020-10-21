@@ -5,11 +5,11 @@
   >
 
     <template v-if="widget.type === 'staff'">
-      <staff-component />
+      <staff-component :style="{width: widget.options.width}" />
     </template>
 
     <template v-if="widget.type === 'jizu'">
-      <jizu-component />
+      <jizu-component :style="{width: widget.options.width}" />
     </template>
 
     <template v-if="widget.type == 'input'">
@@ -142,26 +142,9 @@
     </template>
 
     <template v-if="widget.type=='quarter'">
-      <el-date-picker
+      <quarter-component
         v-model="dataModel"
-        :type="widget.options.type"
-        :value-format="widget.options.format"
-        :picker-options="pickerOptions"
-        :range-separator="displayJd"
-        popper-class="aqsc-report-demo-jidu-popper"
-        :placeholder="widget.options.placeholder"
-        :start-placeholder="widget.options.startPlaceholder"
-        :end-placeholder="widget.options.endPlaceholder"
-        :readonly="widget.options.readonly"
-        :disabled="widget.options.disabled"
-        :editable="widget.options.editable"
-        :clearable="widget.options.clearable"
-        :format="widget.options.format"
-        class="aqsc-report-demo-jidu-ui"
-        :style="{width: widget.options.width}"
-        @change="jiduChange"
-      >
-      </el-date-picker>
+        :style="{width: widget.options.width}" />
     </template>
 
     <template v-if="widget.type=='year'">
@@ -175,7 +158,7 @@
         :disabled="widget.options.disabled"
         :editable="widget.options.editable"
         :clearable="widget.options.clearable"
-        :value-format="widget.options.timestamp ? 'timestamp' : widget.options.format"
+        :value-format="widget.options.format"
         :format="widget.options.format"
         :style="{width: widget.options.width}"
       >
@@ -314,6 +297,7 @@
 import FmUpload from './Upload'
 import JizuComponent from '@/components/JizuComponent';
 import StaffComponent from '@/components/StaffComponent';
+import QuarterComponent from '@/components/QuarterComponent';
 import SpreadSheet from '@/components/SpreadSheet';
 import TableColumn from '@/components/TableColumn';
 
@@ -324,50 +308,12 @@ export default {
     FmUpload,
     JizuComponent,
     StaffComponent,
+    QuarterComponent,
     TableColumn,
   },
   data() {
     return {
       dataModel: this.models[this.widget.model],
-      displayJd: '',
-      displayStaff: '',
-      dialogFormVisibleStaff: false,
-      pickerOptions: {
-        shortcuts: [
-          {
-            text: '一季度',
-            onClick(picker) {
-              const start = new Date(new Date().getFullYear(), 0);
-              const end = new Date(new Date().getFullYear(), 2);
-              picker.$emit('pick', [start, end]);
-            }
-          },
-          {
-            text: '二季度',
-            onClick(picker) {
-              const start = new Date(new Date().getFullYear(), 3);
-              const end = new Date(new Date().getFullYear(), 5);
-              picker.$emit('pick', [start, end]);
-            }
-          },
-          {
-            text: '三季度',
-            onClick(picker) {
-              const start = new Date(new Date().getFullYear(), 6);
-              const end = new Date(new Date().getFullYear(), 8);
-              picker.$emit('pick', [start, end]);
-            }
-          },
-          {
-            text: '四季度',
-            onClick(picker) {
-              const start = new Date(new Date().getFullYear(), 9);
-              const end = new Date(new Date().getFullYear(), 11);
-              picker.$emit('pick', [start, end]);
-            }
-          }
-        ]
-      },
     }
   },
   created() {
@@ -389,65 +335,6 @@ export default {
       })
     }
   },
-  mounted() {
-    if (this.widget.type=='quarter') {
-      const month = (new Date().getMonth() + 1).toString()
-      const dateFtt = (fmt, date) => { // author: meizz
-        var o = {
-          "M+": date.getMonth() + 1, // 月份
-          "d+": date.getDate(), // 日
-          "h+": date.getHours(), // 小时
-          "m+": date.getMinutes(), // 分
-          "s+": date.getSeconds(), // 秒
-          "q+": Math.floor((date.getMonth() + 3) / 3), // 季度
-          "S": date.getMilliseconds() // 毫秒
-        };
-        if (/(y+)/.test(fmt)) { fmt = fmt.replace(RegExp.$1, (date.getFullYear() + "").substr(4 - RegExp.$1.length)); }
-        for (var k in o) {
-          if (new RegExp("(" + k + ")").test(fmt)) { fmt = fmt.replace(RegExp.$1, (RegExp.$1.length === 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length))); }
-        }
-        return fmt;
-      }
-      switch(month) {
-        case "1":
-          this.displayJd = "一季度", this.dataModel = [ dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 0)), dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 2))];
-          break;
-        case "2":
-          this.displayJd = "一季度", this.dataModel = [ dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 0)), dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 2))];
-          break;
-        case "3":
-          this.displayJd = "一季度", this.dataModel = [ dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 0)), dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 2))];
-          break;
-        case "4":
-          this.displayJd = "二季度", this.dataModel = [ dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 3)), dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 5))];
-          break;
-        case "5":
-          this.displayJd = "二季度", this.dataModel = [ dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 3)), dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 5))];
-          break;
-        case "6":
-          this.displayJd = "二季度", this.dataModel = [ dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 3)), dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 5))];
-          break;
-        case "7":
-          this.displayJd = "三季度", this.dataModel = [ dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 6)), dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 8))];
-          break;
-        case "8":
-          this.displayJd = "三季度", this.dataModel = [ dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 6)), dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 8))];
-          break;
-        case "9":
-          this.displayJd = "三季度", this.dataModel = [ dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 6)), dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 8))];
-          break;
-        case "10":
-          this.displayJd = "四季度", this.dataModel = [ dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 9)), dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 11))];
-          break;
-        case "11":
-          this.displayJd = "四季度", this.dataModel = [ dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 9)), dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 11))];
-          break;
-        case "12":
-          this.displayJd = "四季度", this.dataModel = [ dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 9)), dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 11))];
-          break;
-      }
-    }
-  },
   methods: {
     objectSpanMethod({ row, column, rowIndex, columnIndex }) {
       let mergeRule = this.widget.mergeRule
@@ -459,30 +346,6 @@ export default {
         }
         if (result) {
           return result
-        }
-      }
-    },
-    jiduChange(val) {
-      if (val === null) {
-        this.displayJd = ''
-      } else {
-        const tag = val[0].substring(val[0].length - 1)
-        switch (tag) {
-          case "1":
-            this.displayJd = "一季度";
-            break;
-          case "4":
-            this.displayJd = "二季度";
-            break;
-          case "7":
-            this.displayJd = "三季度";
-            break;
-          case "0":
-            this.displayJd = "四季度";
-            break;
-          default:
-            this.displayJd = "";
-            break;
         }
       }
     },
@@ -512,26 +375,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-  ::v-deep .aqsc-report-demo-jidu-ui {
-    input {
-      display: none;
-    }
-    span {
-      width: 100%;
-    }
-  }
-</style>
-<style lang="scss">
-  .aqsc-report-demo-jidu-popper {
-    width: 100px !important;
-    .el-picker-panel__sidebar {
-      height: 135px;
-      border: solid 1px #ddd;
-    }
-    .el-picker-panel__body {
-      display: none;
-    }
-  }
-</style>

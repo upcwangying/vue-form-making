@@ -1,6 +1,7 @@
 <template>
   <div class="fm-style">
     <el-form ref="generateForm"
+      v-loading='formLoading'
       label-suffix=":"
       :size="data.config.size"
       :model="models" :rules="rules" :label-position="data.config.labelPosition" :label-width="data.config.labelWidth + 'px'">
@@ -63,7 +64,7 @@ export default {
   components: {
     GenerateFormItem
   },
-  props: ['data', 'remote', 'value', 'insite'],
+  props: ['data', 'remote', 'value', 'insite', 'formLoading'],
   data () {
     return {
       models: {},

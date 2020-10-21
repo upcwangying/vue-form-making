@@ -8,11 +8,13 @@
   >
 
     <template v-if="element.type === 'staff'">
-      <staff-component />
+      <staff-component
+        :style="{width: element.options.width}" />
     </template>
 
     <template v-if="element.type === 'jizu'">
-      <jizu-component />
+      <jizu-component
+        :style="{width: element.options.width}" />
     </template>
 
     <template v-if="element.type === 'input'">
@@ -125,20 +127,8 @@
     </template>
 
     <template v-if="element.type === 'quarter'">
-      <el-date-picker
-        v-model="element.options.defaultValue"
-        :type="element.options.type"
-        :is-range="element.options.isRange"
-        :placeholder="element.options.placeholder"
-        :start-placeholder="element.options.startPlaceholder"
-        :end-placeholder="element.options.endPlaceholder"
-        :readonly="element.options.readonly"
-        :disabled="element.options.disabled"
-        :editable="element.options.editable"
-        :clearable="element.options.clearable"
-        :style="{width: element.options.width}"
-      >
-      </el-date-picker>
+      <quarter-component
+        :style="{width: element.options.width}" />
     </template>
 
     <template v-if="element.type === 'year'">
@@ -345,6 +335,7 @@
   import FmUpload from './Upload'
   import JizuComponent from '@/components/JizuComponent'
   import StaffComponent from '@/components/StaffComponent';
+  import QuarterComponent from '@/components/QuarterComponent';
   import TableColumn from '@/components/TableColumn';
   import { addClass, removeClass } from 'element-ui/src/utils/dom';
   import SpreadSheet from '@/components/SpreadSheet';
@@ -355,6 +346,7 @@
       SpreadSheet,
       JizuComponent,
       StaffComponent,
+      QuarterComponent,
       FmUpload,
       TableColumn,
     },
