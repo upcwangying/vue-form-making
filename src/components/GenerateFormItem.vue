@@ -5,11 +5,11 @@
   >
 
     <template v-if="widget.type === 'staff'">
-      <staff-component :style="{width: widget.options.width}" />
+      <staff-component v-model="dataModel" :style="{width: widget.options.width}" />
     </template>
 
     <template v-if="widget.type === 'jizu'">
-      <jizu-component :style="{width: widget.options.width}" />
+      <jizu-component v-model="dataModel" :style="{width: widget.options.width}" />
     </template>
 
     <template v-if="widget.type == 'input'">
@@ -348,10 +348,6 @@ export default {
           return result
         }
       }
-    },
-    staffRowDbClick(row) {
-      this.displayStaff = row.ltext;
-      this.dataModel = row.dbid;
     },
   },
   watch: {
