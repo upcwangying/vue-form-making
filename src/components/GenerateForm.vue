@@ -27,7 +27,7 @@
                   :remote="remote"
                   :rules="rules"
                   :widget="citem"
-                  :disabled="disabled_"
+                  :disabled="disabled"
                   @input-change="onInputChange">
                 </generate-form-item>
               </template>
@@ -48,7 +48,7 @@
             :rules="rules"
             :widget="item"
             :remote="remote"
-            :disabled="disabled_"
+            :disabled="disabled"
             @input-change="onInputChange">
           </generate-form-item>
         </template>
