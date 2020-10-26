@@ -27,6 +27,7 @@
                   :remote="remote"
                   :rules="rules"
                   :widget="citem"
+                  :disabled="disabled_"
                   @input-change="onInputChange">
                 </generate-form-item>
               </template>
@@ -46,8 +47,9 @@
             :models.sync="models"
             :rules="rules"
             :widget="item"
-            @input-change="onInputChange"
-            :remote="remote">
+            :remote="remote"
+            :disabled="disabled_"
+            @input-change="onInputChange">
           </generate-form-item>
         </template>
 
@@ -64,7 +66,7 @@ export default {
   components: {
     GenerateFormItem
   },
-  props: ['data', 'remote', 'value', 'insite', 'formLoading'],
+  props: ['data', 'remote', 'value', 'insite', 'formLoading', 'disabled'],
   data () {
     return {
       models: {},

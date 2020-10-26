@@ -5,11 +5,15 @@
   >
 
     <template v-if="widget.type === 'staff'">
-      <staff-component v-model="dataModel" :style="{width: widget.options.width}" />
+      <staff-component v-model="dataModel"
+           :disabled="disabled || widget.options.disabled"
+           :style="{width: widget.options.width}" />
     </template>
 
     <template v-if="widget.type === 'jizu'">
-      <jizu-component v-model="dataModel" :style="{width: widget.options.width}" />
+      <jizu-component v-model="dataModel"
+          :disabled="disabled || widget.options.disabled"
+          :style="{width: widget.options.width}" />
     </template>
 
     <template v-if="widget.type == 'input'">
@@ -19,13 +23,13 @@
           v-model.number="dataModel"
           :placeholder="widget.options.placeholder"
           :style="{width: widget.options.width}"
-          :disabled="widget.options.disabled"
+          :disabled="disabled || widget.options.disabled"
       ></el-input>
       <el-input
           v-else
           :type="widget.options.dataType"
           v-model="dataModel"
-          :disabled="widget.options.disabled"
+          :disabled="disabled || widget.options.disabled"
           :placeholder="widget.options.placeholder"
           :style="{width: widget.options.width}"
       ></el-input>
@@ -34,7 +38,7 @@
     <template v-if="widget.type == 'textarea'">
       <el-input type="textarea" :rows="5"
                 v-model="dataModel"
-                :disabled="widget.options.disabled"
+                :disabled="disabled || widget.options.disabled"
                 :placeholder="widget.options.placeholder"
                 :style="{width: widget.options.width}"
       ></el-input>
@@ -46,7 +50,7 @@
           :style="{width: widget.options.width}"
           :step="widget.options.step"
           controls-position="right"
-          :disabled="widget.options.disabled"
+          :disabled="disabled || widget.options.disabled"
           :min="widget.options.min"
           :max="widget.options.max"
       ></el-input-number>
@@ -55,7 +59,7 @@
     <template v-if="widget.type == 'radio'">
       <el-radio-group v-model="dataModel"
                       :style="{width: widget.options.width}"
-                      :disabled="widget.options.disabled"
+                      :disabled="disabled || widget.options.disabled"
       >
         <el-radio
             :style="{display: widget.options.inline ? 'inline-block' : 'block'}"
@@ -72,7 +76,7 @@
     <template v-if="widget.type == 'checkbox'">
       <el-checkbox-group v-model="dataModel"
                          :style="{width: widget.options.width}"
-                         :disabled="widget.options.disabled"
+                         :disabled="disabled || widget.options.disabled"
       >
         <el-checkbox
 
@@ -95,7 +99,7 @@
           :start-placeholder="widget.options.startPlaceholder"
           :end-placeholder="widget.options.endPlaceholder"
           :readonly="widget.options.readonly"
-          :disabled="widget.options.disabled"
+          :disabled="disabled || widget.options.disabled"
           :editable="widget.options.editable"
           :clearable="widget.options.clearable"
           :arrowControl="widget.options.arrowControl"
@@ -113,7 +117,7 @@
           :start-placeholder="widget.options.startPlaceholder"
           :end-placeholder="widget.options.endPlaceholder"
           :readonly="widget.options.readonly"
-          :disabled="widget.options.disabled"
+          :disabled="disabled || widget.options.disabled"
           :editable="widget.options.editable"
           :clearable="widget.options.clearable"
           :value-format="widget.options.timestamp ? 'timestamp' : widget.options.format"
@@ -131,7 +135,7 @@
         :start-placeholder="widget.options.startPlaceholder"
         :end-placeholder="widget.options.endPlaceholder"
         :readonly="widget.options.readonly"
-        :disabled="widget.options.disabled"
+        :disabled="disabled || widget.options.disabled"
         :editable="widget.options.editable"
         :clearable="widget.options.clearable"
         :value-format="widget.options.format"
@@ -144,6 +148,7 @@
     <template v-if="widget.type=='quarter'">
       <quarter-component
         v-model="dataModel"
+        :disabled="disabled || widget.options.disabled"
         :style="{width: widget.options.width}" />
     </template>
 
@@ -155,7 +160,7 @@
         :start-placeholder="widget.options.startPlaceholder"
         :end-placeholder="widget.options.endPlaceholder"
         :readonly="widget.options.readonly"
-        :disabled="widget.options.disabled"
+        :disabled="disabled || widget.options.disabled"
         :editable="widget.options.editable"
         :clearable="widget.options.clearable"
         :value-format="widget.options.format"
@@ -168,7 +173,7 @@
     <template v-if="widget.type =='rate'">
       <el-rate v-model="dataModel"
                :max="widget.options.max"
-               :disabled="widget.options.disabled"
+               :disabled="disabled || widget.options.disabled"
                :allow-half="widget.options.allowHalf"
       ></el-rate>
     </template>
@@ -176,7 +181,7 @@
     <template v-if="widget.type == 'color'">
       <el-color-picker
           v-model="dataModel"
-          :disabled="widget.options.disabled"
+          :disabled="disabled || widget.options.disabled"
           :show-alpha="widget.options.showAlpha"
       ></el-color-picker>
     </template>
@@ -184,7 +189,7 @@
     <template v-if="widget.type == 'select'">
       <el-select
           v-model="dataModel"
-          :disabled="widget.options.disabled"
+          :disabled="disabled || widget.options.disabled"
           :multiple="widget.options.multiple"
           :clearable="widget.options.clearable"
           :placeholder="widget.options.placeholder"
@@ -200,7 +205,7 @@
     <template v-if="widget.type=='switch'">
       <el-switch
           v-model="dataModel"
-          :disabled="widget.options.disabled"
+          :disabled="disabled || widget.options.disabled"
       >
       </el-switch>
     </template>
@@ -210,7 +215,7 @@
           v-model="dataModel"
           :min="widget.options.min"
           :max="widget.options.max"
-          :disabled="widget.options.disabled"
+          :disabled="disabled || widget.options.disabled"
           :step="widget.options.step"
           :show-input="widget.options.showInput"
           :range="widget.options.range"
@@ -221,7 +226,7 @@
     <template v-if="widget.type=='imgupload'">
       <fm-upload
           v-model="dataModel"
-          :disabled="widget.options.disabled"
+          :disabled="disabled || widget.options.disabled"
           :style="{'width': widget.options.width}"
           :width="widget.options.size.width"
           :height="widget.options.size.height"
@@ -241,6 +246,7 @@
     <template v-if="widget.type == 'editor'">
       <vue-editor
           v-model="dataModel"
+          :disabled="disabled || widget.options.disabled"
           :style="{width: widget.options.width}"
       >
       </vue-editor>
@@ -249,7 +255,7 @@
     <template v-if="widget.type == 'cascader'">
       <el-cascader
           v-model="dataModel"
-          :disabled="widget.options.disabled"
+          :disabled="disabled || widget.options.disabled"
           :clearable="widget.options.clearable"
           :placeholder="widget.options.placeholder"
           :style="{width: widget.options.width}"
@@ -273,10 +279,10 @@
           style="width: 100%">
 
         <template v-for="column in widget.structColumns">
-          <table-column v-if="column.children && column.children.length" :key="column.id" :prop="column.prop" :label="column.label" :width="column.width" :coloumn-header="column" :show-edit="true" />
+          <table-column v-if="column.children && column.children.length" :key="column.id" :prop="column.prop" :label="column.label" :width="column.width" :coloumn-header="column" :show-edit="!disabled" />
           <el-table-column v-else :key="column.id" :prop="column.prop" :label="column.label" :width="column.width">
             <template slot-scope="{row, $index}">
-              <el-input v-model="row[column.prop]" placeholder="请输入" size="small" />
+              <el-input v-if="!disabled" v-model="row[column.prop]" placeholder="请输入" size="small" />
             </template>
           </el-table-column>
         </template>
@@ -302,7 +308,7 @@ import SpreadSheet from '@/components/SpreadSheet';
 import TableColumn from '@/components/TableColumn';
 
 export default {
-  props: ['widget', 'models', 'rules', 'remote'],
+  props: ['widget', 'models', 'rules', 'remote', 'disabled'],
   components: {
     SpreadSheet,
     FmUpload,

@@ -1,5 +1,7 @@
 <template>
-  <el-date-picker v-model="datePickerValue" size="small" type="monthrange" value-format="yyyy-MM" :range-separator="displayValue" :picker-options="pickerOptions" popper-class="aqsc-report-demo-jidu-popper" class="aqsc-report-demo-jidu-ui" @change="quaterChange" />
+  <el-date-picker v-model="datePickerValue" size="small" type="monthrange" value-format="yyyy-MM"
+                  :disabled="disabled" :range-separator="displayValue" :picker-options="pickerOptions"
+                  popper-class="aqsc-report-demo-jidu-popper" class="aqsc-report-demo-jidu-ui" @change="quaterChange" />
 </template>
 <script>
 export default {
@@ -9,7 +11,7 @@ export default {
     prop: 'dpvalue',
     event: 'change'
   },
-  props: ['dpvalue'],
+  props: ['dpvalue', 'disabled'],
   data() {
     return {
       datePickerValue: this.dpvalue,
