@@ -471,8 +471,41 @@
       },
       querySpreadSheetData() {
         const data = this.$refs.widgetForm && this.$refs.widgetForm.querySpreadSheetDataByWidgetForm()
+
+        const tableDataList = []
+        for (const dataItem of data) {
+          const { cols, rows, merges} = dataItem
+          const { len: columnLength } = cols
+          const { len: rowLength } = rows
+          const datas = []
+          for (let i = 0; i < rowLength; i++) {
+            if (!rows[i]) continue
+            const { cells } = rows[i]
+            for (let j = 0; j < columnLength; j++) {
+              if (!cells[j]) continue
+              const { text } = cells[j]
+              datas.push({
+                rowIndex: i,
+                columnIndex: j,
+                text,
+                headers: false, // 是否是表头
+                zbbm: '', //
+                datasource: '',
+                table: '',
+                field: '',
+              })
+            }
+          }
+
+          tableDataList.push({
+            cols: columnLength,
+            rows: rowLength,
+            datas
+          })
+        }
+
         this.jsonVisible = true
-        this.jsonTemplate = data
+        this.jsonTemplate = tableDataList
         this.$nextTick(() => {
 
           const editor = ace.edit('jsoneditor')
@@ -484,7 +517,7 @@
               this.$message.success(this.$t('fm.message.copySuccess'))
             })
           }
-          this.jsonCopyValue = JSON.stringify(data)
+          this.jsonCopyValue = JSON.stringify(tableDataList)
         })
       },
       createTemplate() {

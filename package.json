@@ -31,6 +31,7 @@
     "serve": "vue-cli-service serve --open",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
+    "prepublishOnly": "npm run build-bundle",
     "build-bundle": "vue-cli-service build --target lib --name FormMaking ./src/index.js",
     "build-bundle:dev": "vue-cli-service build --mode development --target lib --name FormMaking ./src/index.js"
   },
