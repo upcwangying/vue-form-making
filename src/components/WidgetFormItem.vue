@@ -127,7 +127,11 @@
     </template>
 
     <template v-if="element.type === 'quarter'">
-      <quarter-component
+      <data-book-select
+        v-model="element.options.defaultValue"
+        :placeholder="element.options.placeholder"
+        groupcode="AQSC_JSJD_SUB_QUARTER"
+        value-field="datacode"
         :style="{width: element.options.width}" />
     </template>
 
@@ -335,7 +339,7 @@
   import FmUpload from './Upload'
   import JizuComponent from '@/components/JizuComponent'
   import StaffComponent from '@/components/StaffComponent';
-  import QuarterComponent from '@/components/QuarterComponent';
+  import DataBookSelect from '@/components/DataBook';
   import TableColumn from '@/components/TableColumn';
   import { addClass, removeClass } from 'element-ui/src/utils/dom';
   import SpreadSheet from '@/components/SpreadSheet';
@@ -346,7 +350,7 @@
       SpreadSheet,
       JizuComponent,
       StaffComponent,
-      QuarterComponent,
+      DataBookSelect,
       FmUpload,
       TableColumn,
     },

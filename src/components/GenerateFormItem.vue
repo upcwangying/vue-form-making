@@ -146,9 +146,12 @@
     </template>
 
     <template v-if="widget.type=='quarter'">
-      <quarter-component
+      <data-book-select
         v-model="dataModel"
         :disabled="disabled || widget.options.disabled"
+        :placeholder="widget.options.placeholder"
+        groupcode="AQSC_JSJD_SUB_QUARTER"
+        value-field="datacode"
         :style="{width: widget.options.width}" />
     </template>
 
@@ -303,7 +306,7 @@
 import FmUpload from './Upload'
 import JizuComponent from '@/components/JizuComponent';
 import StaffComponent from '@/components/StaffComponent';
-import QuarterComponent from '@/components/QuarterComponent';
+import DataBookSelect from '@/components/DataBook';
 import SpreadSheet from '@/components/SpreadSheet';
 import TableColumn from '@/components/TableColumn';
 
@@ -314,7 +317,7 @@ export default {
     FmUpload,
     JizuComponent,
     StaffComponent,
-    QuarterComponent,
+    DataBookSelect,
     TableColumn,
   },
   data() {
@@ -340,8 +343,53 @@ export default {
         this.widget.options.token = data
       })
     }
+
+    this.initDateTimeComponentDefaultValue();
   },
   methods: {
+    dateFtt(fmt, date) {
+      var o = {
+        "M+": date.getMonth() + 1, // 月份
+        "d+": date.getDate(), // 日
+        "h+": date.getHours(), // 小时
+        "m+": date.getMinutes(), // 分
+        "s+": date.getSeconds(), // 秒
+        "q+": Math.floor((date.getMonth() + 3) / 3), // 季度
+        "S": date.getMilliseconds() // 毫秒
+      };
+      if (/(y+)/.test(fmt)) { fmt = fmt.replace(RegExp.$1, (date.getFullYear() + "").substr(4 - RegExp.$1.length)); }
+      for (var k in o) {
+        if (new RegExp("(" + k + ")").test(fmt)) { fmt = fmt.replace(RegExp.$1, (RegExp.$1.length === 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length))); }
+      }
+      return fmt;
+    },
+    initQuarterComponent() {
+      this.dataModel = (parseInt(new Date().getMonth() / 3) + 1).toString()
+    },
+    initDateTimeComponentDefaultValue() {
+      // 在这里做时间类组件的默认值：
+      // 原因：widget.options.defaultValue的值会随模板数据存入数据库从而变成 固定常量,所以widget.options.defaultValue只存常量值,不要存计算值
+      // 后续如果需要 可以在 widget.options 添加配置:'是否显示当前时间为默认值'[勾选],从而配置时间类组件的默认值.处理逻辑在↓面zzsz修改
+      switch (this.widget.type) {
+        // case 'time' :
+        //   break;
+        case 'date' :
+          this.dataModel = this.dateFtt('yyyy-MM-dd', new Date());
+          break;
+        case 'month' :
+          this.dataModel = this.dateFtt('MM', new Date());
+          break;
+        case 'quarter' :
+          this.initQuarterComponent()
+          break;
+        case 'year' :
+          this.dataModel = this.dateFtt('yyyy', new Date());
+          break;
+      }
+    },
+    setGFIValue(arrayType, arrayValue) {
+      this.dataModel = arrayValue[arrayType.indexOf(this.widget.type)]
+    },
     objectSpanMethod({ row, column, rowIndex, columnIndex }) {
       let mergeRule = this.widget.mergeRule
       let result = false

@@ -57,7 +57,10 @@ export default {
   watch: {
     dpvalue : {
       handler: function (val) {
-        if (!val) { return }
+        if (!(val && val[0] && val[0].substring(val[0].length - 2, val[0].length))) {
+          this.displayValue = "";
+          return
+        }
         switch (val[0].substring(val[0].length - 2, val[0].length)) {
           case "01":
             this.displayValue = "一季度";
@@ -94,6 +97,9 @@ export default {
             break;
           case "12":
             this.displayValue = "四季度"
+            break;
+          default:
+            this.displayValue = "";
             break;
         }
       },
@@ -101,7 +107,10 @@ export default {
     },
     datePickerValue : {
       handler: function (val) {
-        if (!val) { return }
+        if (!(val && val[0] && val[0].substring(val[0].length - 2, val[0].length))) {
+          this.displayValue = "";
+          return
+        }
         switch (val[0].substring(val[0].length - 2, val[0].length)) {
           case "01":
             this.displayValue = "一季度";
@@ -139,69 +148,75 @@ export default {
           case "12":
             this.displayValue = "四季度"
             break;
+          default:
+            this.displayValue = "";
+            break;
         }
       },
       deep: true
     }
   },
   mounted() {
-    const dateFtt = (fmt, date) => { // author: meizz
-      var o = {
-        "M+": date.getMonth() + 1, // 月份
-        "d+": date.getDate(), // 日
-        "h+": date.getHours(), // 小时
-        "m+": date.getMinutes(), // 分
-        "s+": date.getSeconds(), // 秒
-        "q+": Math.floor((date.getMonth() + 3) / 3), // 季度
-        "S": date.getMilliseconds() // 毫秒
-      };
-      if (/(y+)/.test(fmt)) { fmt = fmt.replace(RegExp.$1, (date.getFullYear() + "").substr(4 - RegExp.$1.length)); }
-      for (var k in o) {
-        if (new RegExp("(" + k + ")").test(fmt)) { fmt = fmt.replace(RegExp.$1, (RegExp.$1.length === 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length))); }
-      }
-      return fmt;
-    }
-    const month = (new Date().getMonth() + 1).toString()
-    switch (month) {
-      case "1":
-        this.datePickerValue = "一季度"; this.datePickerValue = [dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 0)), dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 2))];
-        break;
-      case "2":
-        this.datePickerValue = "一季度"; this.datePickerValue = [dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 0)), dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 2))];
-        break;
-      case "3":
-        this.datePickerValue = "一季度"; this.datePickerValue = [dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 0)), dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 2))];
-        break;
-      case "4":
-        this.datePickerValue = "二季度"; this.datePickerValue = [dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 3)), dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 5))];
-        break;
-      case "5":
-        this.datePickerValue = "二季度"; this.datePickerValue = [dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 3)), dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 5))];
-        break;
-      case "6":
-        this.datePickerValue = "二季度"; this.datePickerValue = [dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 3)), dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 5))];
-        break;
-      case "7":
-        this.datePickerValue = "三季度"; this.datePickerValue = [dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 6)), dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 8))];
-        break;
-      case "8":
-        this.datePickerValue = "三季度"; this.datePickerValue = [dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 6)), dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 8))];
-        break;
-      case "9":
-        this.datePickerValue = "三季度"; this.datePickerValue = [dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 6)), dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 8))];
-        break;
-      case "10":
-        this.datePickerValue = "四季度"; this.datePickerValue = [dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 9)), dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 11))];
-        break;
-      case "11":
-        this.datePickerValue = "四季度"; this.datePickerValue = [dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 9)), dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 11))];
-        break;
-      case "12":
-        this.datePickerValue = "四季度"; this.datePickerValue = [dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 9)), dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 11))];
-        break;
-    }
+    this.quarterInit()
   },
   methods: {
+    quarterInit() {
+      const dateFtt = (fmt, date) => { // author: meizz
+        var o = {
+          "M+": date.getMonth() + 1, // 月份
+          "d+": date.getDate(), // 日
+          "h+": date.getHours(), // 小时
+          "m+": date.getMinutes(), // 分
+          "s+": date.getSeconds(), // 秒
+          "q+": Math.floor((date.getMonth() + 3) / 3), // 季度
+          "S": date.getMilliseconds() // 毫秒
+        };
+        if (/(y+)/.test(fmt)) { fmt = fmt.replace(RegExp.$1, (date.getFullYear() + "").substr(4 - RegExp.$1.length)); }
+        for (var k in o) {
+          if (new RegExp("(" + k + ")").test(fmt)) { fmt = fmt.replace(RegExp.$1, (RegExp.$1.length === 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length))); }
+        }
+        return fmt;
+      }
+      const month = (new Date().getMonth() + 1).toString()
+      switch (month) {
+        case "1":
+          this.quaterChange([dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 0)), dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 2))]);
+          break;
+        case "2":
+          this.quaterChange([dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 0)), dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 2))]);
+          break;
+        case "3":
+          this.quaterChange([dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 0)), dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 2))]);
+          break;
+        case "4":
+          this.quaterChange([dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 3)), dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 5))]);
+          break;
+        case "5":
+          this.quaterChange([dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 3)), dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 5))]);
+          break;
+        case "6":
+          this.quaterChange([dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 3)), dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 5))]);
+          break;
+        case "7":
+          this.quaterChange([dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 6)), dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 8))]);
+          break;
+        case "8":
+          this.quaterChange([dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 6)), dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 8))]);
+          break;
+        case "9":
+          this.quaterChange([dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 6)), dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 8))]);
+          break;
+        case "10":
+          this.quaterChange([dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 9)), dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 11))]);
+          break;
+        case "11":
+          this.quaterChange([dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 9)), dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 11))]);
+          break;
+        case "12":
+          this.quaterChange([dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 9)), dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 11))]);
+          break;
+      }
+    },
     quaterChange(val) {
       if (val === null) {
         this.displayValue = ''

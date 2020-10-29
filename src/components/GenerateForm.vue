@@ -22,6 +22,7 @@
                   <slot :name="citem.model" :model="models"></slot>
                 </el-form-item>
                 <generate-form-item v-else
+                  ref="generateFormItem_1"
                   :key="citem.key"
                   :models.sync="models"
                   :remote="remote"
@@ -43,6 +44,7 @@
 
         <template v-else>
           <generate-form-item
+            ref="generateFormItem_2"
             :key="item.key"
             :models.sync="models"
             :rules="rules"
@@ -150,7 +152,27 @@ export default {
     },
     refresh () {
 
-    }
+    },
+    initDTCompDefaultValue() {
+      const generateFormItem_1 = this.$refs['generateFormItem_1'] || null;
+      const generateFormItem_2 = this.$refs['generateFormItem_2'] || null;
+      generateFormItem_1 && generateFormItem_1.forEach(item => {
+        item.initDateTimeComponentDefaultValue()
+      })
+      generateFormItem_2 && generateFormItem_2.forEach(item => {
+        item.initDateTimeComponentDefaultValue()
+      })
+    },
+    setGenerateFormItemValue(arrayType, arrayValue) {
+      const generateFormItem_1 = this.$refs['generateFormItem_1'] || null;
+      const generateFormItem_2 = this.$refs['generateFormItem_2'] || null;
+      generateFormItem_1 && generateFormItem_1.forEach(item => {
+        item.setGFIValue(arrayType, arrayValue)
+      })
+      generateFormItem_2 && generateFormItem_2.forEach(item => {
+        item.setGFIValue(arrayType, arrayValue)
+      })
+    },
   },
   watch: {
     data: {

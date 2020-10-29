@@ -120,7 +120,7 @@ export const basicComponents = [
     type: 'time',
     icon: 'icon-time',
     options: {
-      defaultValue: '21:19:56',
+      defaultValue: '',
       readonly: false,
       disabled: false,
       editable: true,
@@ -164,7 +164,7 @@ export const basicComponents = [
     type: 'month',
     icon: 'icon-date',
     options: {
-      defaultValue: ((new Date().getMonth() - 5).toString().length > 1) ? (new Date().getMonth() + 1).toString() : ('0' + (new Date().getMonth() - 5).toString()),
+      defaultValue: '',
       readonly: false,
       disabled: false,
       editable: true,
@@ -186,7 +186,7 @@ export const basicComponents = [
     type: 'quarter',
     icon: 'icon-date',
     options: {
-      defaultValue: getQuarterDefaultValue(),
+      defaultValue: '',
       width: '',
       datasource: 'TPRI_VUE',
       table: 'TPRI_DMP_REPORT_DATA_TEST',
@@ -197,7 +197,7 @@ export const basicComponents = [
     type: 'year',
     icon: 'icon-date',
     options: {
-      defaultValue: new Date().getFullYear().toString(),
+      defaultValue: '',
       readonly: false,
       disabled: false,
       editable: true,
@@ -476,63 +476,3 @@ export const layoutComponents = [
     }
   }
 ]
-
-function getQuarterDefaultValue() {
-  let defaultValue = []
-  const dateFtt = (fmt, date) => { // author: meizz
-    var o = {
-      "M+": date.getMonth() + 1, // 月份
-      "d+": date.getDate(), // 日
-      "h+": date.getHours(), // 小时
-      "m+": date.getMinutes(), // 分
-      "s+": date.getSeconds(), // 秒
-      "q+": Math.floor((date.getMonth() + 3) / 3), // 季度
-      "S": date.getMilliseconds() // 毫秒
-    };
-    if (/(y+)/.test(fmt)) { fmt = fmt.replace(RegExp.$1, (date.getFullYear() + "").substr(4 - RegExp.$1.length)); }
-    for (var k in o) {
-      if (new RegExp("(" + k + ")").test(fmt)) { fmt = fmt.replace(RegExp.$1, (RegExp.$1.length === 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length))); }
-    }
-    return fmt;
-  }
-  const month = (new Date().getMonth() + 1).toString()
-  switch (month) {
-    case "1":
-      defaultValue = [dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 0)), dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 2))];
-      break;
-    case "2":
-      defaultValue = [dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 0)), dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 2))];
-      break;
-    case "3":
-      defaultValue = [dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 0)), dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 2))];
-      break;
-    case "4":
-      defaultValue = [dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 3)), dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 5))];
-      break;
-    case "5":
-      defaultValue = [dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 3)), dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 5))];
-      break;
-    case "6":
-      defaultValue = [dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 3)), dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 5))];
-      break;
-    case "7":
-      defaultValue= [dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 6)), dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 8))];
-      break;
-    case "8":
-      defaultValue= [dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 6)), dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 8))];
-      break;
-    case "9":
-      defaultValue= [dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 6)), dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 8))];
-      break;
-    case "10":
-      defaultValue = [dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 9)), dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 11))];
-      break;
-    case "11":
-      defaultValue = [dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 9)), dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 11))];
-      break;
-    case "12":
-      defaultValue = [dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 9)), dateFtt('yyyy-MM', new Date(new Date().getFullYear(), 11))];
-      break;
-  }
-  return defaultValue
-}
