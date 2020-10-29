@@ -387,8 +387,15 @@ export default {
           break;
       }
     },
+    clearDateTimeComponentValue() {
+      if (this.widget.type === 'date' || this.widget.type === 'month' || this.widget.type === 'quarter' || this.widget.type === 'year') {
+        this.dataModel = ""
+      }
+    },
     setGFIValue(arrayType, arrayValue) {
-      this.dataModel = arrayValue[arrayType.indexOf(this.widget.type)]
+      if (arrayType.indexOf(this.widget.type) !== -1) {
+        this.dataModel = arrayValue[arrayType.indexOf(this.widget.type)]
+      }
     },
     objectSpanMethod({ row, column, rowIndex, columnIndex }) {
       let mergeRule = this.widget.mergeRule
