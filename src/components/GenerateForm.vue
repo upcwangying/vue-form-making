@@ -163,6 +163,16 @@ export default {
         item.initDateTimeComponentDefaultValue()
       })
     },
+    clearDTCompDefaultValue() {
+      const generateFormItem_1 = this.$refs['generateFormItem_1'] || null;
+      const generateFormItem_2 = this.$refs['generateFormItem_2'] || null;
+      generateFormItem_1 && generateFormItem_1.forEach(item => {
+        item.clearDateTimeComponentValue()
+      })
+      generateFormItem_2 && generateFormItem_2.forEach(item => {
+        item.clearDateTimeComponentValue()
+      })
+    },
     setGenerateFormItemValue(arrayType, arrayValue) {
       const generateFormItem_1 = this.$refs['generateFormItem_1'] || null;
       const generateFormItem_2 = this.$refs['generateFormItem_2'] || null;
