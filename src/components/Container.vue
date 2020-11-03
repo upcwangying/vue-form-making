@@ -8,6 +8,7 @@
           <!--          <el-button @click="queryReportData">获取报表数据</el-button>-->
           <!--          <el-button @click="queryData">获取数据</el-button>-->
           <el-button @click="querySpreadSheetData">获取电子表格数据(测试)</el-button>
+          <el-button @click="loadSpreadSheetData">赋值电子表格数据(测试)</el-button>
           <el-button @click="createTemplate">创建</el-button>
           <el-button @click="saveTemplate">保存</el-button>
           <el-button @click="deleteTemplate">删除</el-button>
@@ -195,6 +196,7 @@
   import TableEditable from '@/components/TableEditable';
   import templateInitialData from '@/components/templateInitialData';
   import templateJson from '../mock/template.json';
+  import sheetTempIson from '../mock/sheetTemp.json';
   import reportJson from '../mock/report.json';
   import { getTemplate, postTemplate, deleteTemplate, enableTemplate, publishTemplate } from '@/api/template';
   import { getReport, postReport, getBbfl } from '@/api/report';
@@ -471,7 +473,6 @@
       },
       querySpreadSheetData() {
         const data = this.$refs.widgetForm && this.$refs.widgetForm.querySpreadSheetDataByWidgetForm()
-
         const tableDataList = []
         for (const dataItem of data) {
           const { cols, rows, merges} = dataItem
@@ -484,16 +485,29 @@
             for (let j = 0; j < columnLength; j++) {
               if (!cells[j]) continue
               const { text } = cells[j]
-              datas.push({
-                rowIndex: i,
-                columnIndex: j,
-                text,
-                headers: false, // 是否是表头
-                zbbm: '', //
-                datasource: '',
-                table: '',
-                field: '',
-              })
+              let headers=false
+              if(i === 0){
+                headers=true
+              }
+              if(headers){
+                datas.push({
+                  rowIndex: i,
+                  columnIndex: j,
+                  text,
+                  headers: true, // 是否是表头
+                })
+              }else{
+                datas.push({
+                  rowIndex: i,
+                  columnIndex: j,
+                  text,
+                  headers: false, // 是否是表头
+                  zbbm: '', //
+                  datasource: '',
+                  table: '',
+                  field: '',
+                })
+              }
             }
           }
 
@@ -505,7 +519,7 @@
         }
 
         this.jsonVisible = true
-        this.jsonTemplate = tableDataList
+        this.jsonTemplate = data
         this.$nextTick(() => {
 
           const editor = ace.edit('jsoneditor')
@@ -519,6 +533,10 @@
           }
           this.jsonCopyValue = JSON.stringify(tableDataList)
         })
+      },
+      loadSpreadSheetData(data) {
+        console.log(data)
+       this.$refs.widgetForm && this.$refs.widgetForm.loadSpreadSheetDataByWidgetForm(data)
       },
       createTemplate() {
         if (!this.selectTreeNode) {
@@ -565,7 +583,6 @@
       },
       saveTemplateJSON(dbid, flid) {
         const { list, config: { werks, bukrs, templateName, templateCode, templateGrade } } = this.widgetForm
-
         if (!werks) {
           this.$alert('工厂编码不允许为空', '提示')
           return
@@ -590,7 +607,6 @@
           this.$alert('模板级别不允许为空', '提示')
           return
         }
-
         let tables = []
         const listFunc = (data) => {
           for (let item of data) {
@@ -599,7 +615,10 @@
             if (item instanceof Array) {
               item = item[0]
             }
-
+            if (item.type === 'sheet') {
+              const data = this.$refs.widgetForm && this.$refs.widgetForm.querySpreadSheetDataByWidgetForm()
+              item.options=data
+            }
             if (item.type === 'table') {
               let tableData = Object.create(null)
               tableData['type'] = item.type
@@ -629,7 +648,6 @@
             }
           }
         }
-
         listFunc(list)
         postTemplate(dbid, werks, bukrs, templateName, templateCode, this.widgetForm, templateGrade, flid, tables)
           .then(result => {
@@ -642,7 +660,18 @@
       queryTemplateData(dbid) {
         getTemplate(dbid).then(result => {
           const { json } = result.dataset.datas[0]
+          const sheetOptions=[]
+          const { list } = json
           this.setJSON(JSON.parse(json), null)
+          this.$nextTick(() => {
+            for (let item of JSON.parse(json).list) {
+              if(item.type === "sheet"){
+                const  optionsJson  = item.options[0]
+                this.loadSpreadSheetData(optionsJson)
+              }
+            }
+
+          })
         })
       },
       handlePreview() {
@@ -853,6 +882,7 @@
         this.showAddColumn = true
       },
       submitColumnInfo(label, prop, width) {
+        console.log(this.widgetFormSelect)
         const label_ = label
         const prop_ = prop
         const width_ = width
