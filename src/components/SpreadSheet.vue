@@ -6,7 +6,7 @@
 
 <script>
 import Spreadsheet from "@aqsc/x-data-spreadsheet";
-import zhCN from '@aqsc/x-data-spreadsheetc/locale/zh-cn';
+import zhCN from '@aqsc/x-data-spreadsheet/src/locale/zh-cn';
 export default {
   name: 'SpreadSheet',
   data() {
