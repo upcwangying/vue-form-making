@@ -1,0 +1,28 @@
+  {
+    "name": "sheet2",
+    "freeze": "A1",
+    "styles": [],
+    "merges": [],
+    "rows": {
+      "0": {
+        "cells": {
+          "1": {
+            "text": "设备名称"
+          }
+        }
+      },
+      "1": {
+        "cells": {
+          "2": {
+            "text": "测试"
+          }
+        }
+      },
+      "len": 30
+    },
+    "cols": {
+      "len": 11
+    },
+    "validations": [],
+    "autofilter": {}
+  }
