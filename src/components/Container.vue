@@ -8,7 +8,7 @@
           <!--          <el-button @click="queryReportData">获取报表数据</el-button>-->
           <!--          <el-button @click="queryData">获取数据</el-button>-->
           <el-button @click="querySpreadSheetData">获取电子表格数据(测试)</el-button>
-          <el-button @click="loadSpreadSheetData">赋值电子表格数据(测试)</el-button>
+<!--          <el-button @click="loadSpreadSheetData">赋值电子表格数据(测试)</el-button>-->
           <el-button @click="createTemplate">创建</el-button>
           <el-button @click="saveTemplate">保存</el-button>
           <el-button @click="deleteTemplate">删除</el-button>
@@ -79,7 +79,7 @@
 <!--            <el-header class="btn-bar" style="height: 45px;">-->
             <!--              <slot name="action">-->
             <!--              </slot>-->
-            <!--              <el-button v-if="upload" type="text" size="medium" icon="el-icon-upload2" @click="handleUpload">{{$t('fm.actions.import')}}</el-button>-->
+                          <el-button v-if="upload" type="text" size="medium" icon="el-icon-upload2" @click="handleUpload">{{$t('fm.actions.import')}}</el-button>
             <!--              <el-button v-if="clearable" type="text" size="medium" icon="el-icon-delete" @click="handleClear">{{$t('fm.actions.clear')}}</el-button>-->
             <!--              <el-button v-if="generateJson" type="text" size="medium" icon="el-icon-tickets" @click="handleGenerateJson">{{$t('fm.actions.json')}}</el-button>-->
             <!--              <el-button v-if="generateCode" type="text" size="medium" icon="el-icon-document" @click="handleGenerateCode">{{$t('fm.actions.code')}}</el-button>-->
@@ -427,7 +427,6 @@
             if (item instanceof Array) {
               item = item[0]
             }
-
             if (item.type === 'table') {
               let data = Object.create(null)
               data['type'] = item.type
@@ -557,7 +556,6 @@
         })
       },
       loadSpreadSheetData(data) {
-        console.log(data)
         this.$refs.widgetForm && this.$refs.widgetForm.loadSpreadSheetDataByWidgetForm(data)
       },
       createTemplate() {
@@ -706,6 +704,7 @@
               if (item.type === "sheet") {
                 if (item.options.length > 0) {
                   const optionsJson = item.options[0]
+                  console.log(optionsJson)
                   this.loadSpreadSheetData(optionsJson)
                 }
               }
