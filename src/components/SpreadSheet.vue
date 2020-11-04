@@ -31,7 +31,8 @@ export default {
         minWidth: 60,
       }
     })
-      .loadData({}) // load data
+      .loadData({
+      }) // load data
       .change(data => {
         // save data to db
       });
@@ -39,6 +40,9 @@ export default {
   methods: {
     getSpreadSheetData() {
       return this.spreadsheet && this.spreadsheet.getData()
+    },
+    setSpreadSheetData(data) {
+       this.spreadsheet && this.spreadsheet.loadData(data)
     }
   }
 }

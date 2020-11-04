@@ -384,6 +384,9 @@
       querySpreadSheetDataByWidgetFormItem() {
         return this.$refs.spreadsheet && this.$refs.spreadsheet.getSpreadSheetData()
       },
+      loadSpreadSheetDataByWidgetFormItem(data) {
+         this.$refs.spreadsheet && this.$refs.spreadsheet.setSpreadSheetData(data)
+      },
       editableCellClassName({row, column, rowIndex, columnIndex}) {
         row.rowIndex=rowIndex;
         column.columnIndex=columnIndex;
