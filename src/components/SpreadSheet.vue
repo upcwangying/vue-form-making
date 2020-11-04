@@ -6,6 +6,8 @@
 
 <script>
 import Spreadsheet from "@aqsc/x-data-spreadsheet";
+import zhCN from '@aqsc/x-data-spreadsheetc/locale/zh-cn';
+import Spreadsheet from "@aqsc/x-data-spreadsheet";
 export default {
   name: 'SpreadSheet',
   data() {
@@ -15,6 +17,7 @@ export default {
   },
   mounted() {
     // const s = new Spreadsheet('#xapp')
+    Spreadsheet.locale('zh-cn', zhCN);
     this.spreadsheet = new Spreadsheet(this.$refs.xspreadsheet, {
       view: {
         height: () => document.documentElement.clientHeight,
