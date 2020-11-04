@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import Spreadsheet from "x-data-spreadsheet";
+import Spreadsheet from "@aqsc/x-data-spreadsheet";
 export default {
   name: 'SpreadSheet',
   data() {
