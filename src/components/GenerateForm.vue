@@ -29,6 +29,7 @@
                   :rules="rules"
                   :widget="citem"
                   :disabled="disabled"
+                  :readonly="readonly"
                   @input-change="onInputChange">
                 </generate-form-item>
               </template>
@@ -51,6 +52,7 @@
             :widget="item"
             :remote="remote"
             :disabled="disabled"
+            :readonly="readonly"
             @input-change="onInputChange">
           </generate-form-item>
         </template>
@@ -68,7 +70,7 @@ export default {
   components: {
     GenerateFormItem
   },
-  props: ['data', 'remote', 'value', 'insite', 'formLoading', 'disabled'],
+  props: ['data', 'remote', 'value', 'insite', 'formLoading', 'disabled', 'readonly'],
   data () {
     return {
       models: {},
@@ -174,13 +176,25 @@ export default {
       })
     },
     setGenerateFormItemValue(arrayType, arrayValue) {
+      let keyMap = arrayType
+      let valuyeMap = arrayValue
       const generateFormItem_1 = this.$refs['generateFormItem_1'] || null;
       const generateFormItem_2 = this.$refs['generateFormItem_2'] || null;
       generateFormItem_1 && generateFormItem_1.forEach(item => {
-        item.setGFIValue(arrayType, arrayValue)
+        const itemType = item.setGFIValue(keyMap, valuyeMap) || ''
+        if (itemType !== '') {
+          const index = keyMap.indexOf(itemType)
+          keyMap.splice(index, 1)
+          valuyeMap.splice(index, 1)
+        }
       })
       generateFormItem_2 && generateFormItem_2.forEach(item => {
-        item.setGFIValue(arrayType, arrayValue)
+        const itemType = item.setGFIValue(keyMap, valuyeMap) || ''
+        if (itemType !== '') {
+          const index = keyMap.indexOf(itemType)
+          keyMap.splice(index, 1)
+          valuyeMap.splice(index, 1)
+        }
       })
     },
   },
