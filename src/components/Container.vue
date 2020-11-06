@@ -5,11 +5,11 @@
       <el-header height="45">
         <el-row class="btn-container">
 <!--          <el-button @click="saveSheetJSON">保存sheet数据</el-button>-->
-<!--            <el-button @click="saveReportJSON">保存报表数据</el-button>-->
+          <!--            <el-button @click="saveReportJSON">保存报表数据</el-button>-->
           <!--          <el-button @click="queryReportData">获取报表数据</el-button>-->
           <!--          <el-button @click="queryData">获取数据</el-button>-->
           <el-button @click="querySpreadSheetData">获取电子表格数据(测试)</el-button>
-<!--          <el-button @click="loadSpreadSheetData">赋值电子表格数据(测试)</el-button>-->
+          <!--          <el-button @click="loadSpreadSheetData">赋值电子表格数据(测试)</el-button>-->
           <el-button @click="createTemplate">创建</el-button>
           <el-button @click="saveTemplate">保存</el-button>
           <el-button @click="deleteTemplate">删除</el-button>
@@ -80,7 +80,7 @@
 <!--            <el-header class="btn-bar" style="height: 45px;">-->
             <!--              <slot name="action">-->
             <!--              </slot>-->
-<!--                          <el-button v-if="upload" type="text" size="medium" icon="el-icon-upload2" @click="handleUpload">{{$t('fm.actions.import')}}</el-button>-->
+            <!--                          <el-button v-if="upload" type="text" size="medium" icon="el-icon-upload2" @click="handleUpload">{{$t('fm.actions.import')}}</el-button>-->
             <!--              <el-button v-if="clearable" type="text" size="medium" icon="el-icon-delete" @click="handleClear">{{$t('fm.actions.clear')}}</el-button>-->
             <!--              <el-button v-if="generateJson" type="text" size="medium" icon="el-icon-tickets" @click="handleGenerateJson">{{$t('fm.actions.json')}}</el-button>-->
             <!--              <el-button v-if="generateCode" type="text" size="medium" icon="el-icon-document" @click="handleGenerateCode">{{$t('fm.actions.code')}}</el-button>-->
@@ -417,7 +417,7 @@
         this.setSybbTreeDataForZB(data)
         console.log('updateZbflSelectData : ', this.syorjbParam, this['zbflSelectDataFor' + this.syorjbParam]);
       },
-      saveSheetJSON(){
+      saveSheetJSON() {
         const {list} = this.widgetForm
         let dataList = []
         const listFunc = (data) => {
@@ -707,7 +707,7 @@
               // OtherData['field'] = item.options.field
               item.options = data
               if (item.options.length > 0) {
-                item.options[0]['type'] == ss.type
+                item.options[0]['type'] = ss.type
                 item.options[0]['key'] = ss.model
                 item.options[0]['datasource'] = ss.datasource
                 item.options[0]['table'] = ss.table
@@ -755,7 +755,30 @@
         })
       },
       handlePreview() {
+        const {list} = this.widgetForm
         this.previewVisible = true
+        const listFunc = (data) => {
+          for (let item of data) {
+            if (!item || (item instanceof Array && item.length === 0)) continue
+
+            if (item instanceof Array) {
+              item = item[0]
+            }
+            if (item.type === 'sheet') {
+              const data = this.$refs.widgetForm && this.$refs.widgetForm.querySpreadSheetDataByWidgetForm()
+              const ss = this.cloneDeep(item.options)
+              item.options = data
+              if (item.options.length > 0) {
+                item.options[0]['type'] = ss.type
+                item.options[0]['key'] = ss.model
+                item.options[0]['datasource'] = ss.datasource
+                item.options[0]['table'] = ss.table
+              }
+              // OtherData['field'] = item.options.field
+            }
+          }
+        }
+        return listFunc(list)
       },
       publish() {
         // todo
@@ -1081,7 +1104,7 @@
                   }
                   gridData && listFunc(gridData)
                 }
-              }else if (item.type === 'sheet') {
+              } else if (item.type === 'sheet') {
                 const data = this.$refs.widgetForm && this.$refs.widgetForm.querySpreadSheetDataByWidgetForm()
                 const ss = _clonedeep(item.options)
                 let sheetData = Object.create(null)
@@ -1098,8 +1121,7 @@
                   item.options[0]['table'] = ss.table
                   dataList.push(sheetData)
                 }
-              }
-              else {
+              } else {
                 let OtherData = Object.create(null)
                 OtherData['type'] = item.type
                 OtherData['key'] = item.model

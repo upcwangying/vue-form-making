@@ -154,10 +154,8 @@ export default {
     loadsheetData(genList) {
       for (let i = 0; i < genList.length; i++) {
         if (genList[i].type === 'sheet') {
-          console.log(this.$refs.generateFormItem_2)
           if (genList[i].options.length > 0) {
             const optionsJson = genList[i].options[0]
-            console.log(optionsJson)
             this.$refs.generateFormItem_2 && this.$refs.generateFormItem_2[0].loadSpreadSheetDataByGenerateFormItem(optionsJson)
 
           }
