@@ -122,7 +122,7 @@
             width="1000px"
             form
           >
-            <generate-form insite="true" @on-change="handleDataChange" v-if="previewVisible" :data="widgetForm" @load-sheetData="loadSpreadSheetData"
+            <generate-form insite="true" @on-change="handleDataChange" v-if="previewVisible" :data="widgetForm"
                            :value="widgetModels" :remote="remoteFuncs" ref="generateForm">
 
               <template v-slot:blank="scope">
@@ -1081,7 +1081,25 @@
                   }
                   gridData && listFunc(gridData)
                 }
-              } else {
+              }else if (item.type === 'sheet') {
+                const data = this.$refs.widgetForm && this.$refs.widgetForm.querySpreadSheetDataByWidgetForm()
+                const ss = _clonedeep(item.options)
+                let sheetData = Object.create(null)
+                sheetData['type'] = item.type
+                sheetData['key'] = item.model
+                sheetData['datasource'] = ss.datasource
+                sheetData['table'] = ss.table
+                // OtherData['field'] = item.options.field
+                item.options = data
+                if (item.options.length > 0) {
+                  item.options[0]['type'] == ss.type
+                  item.options[0]['key'] = ss.model
+                  item.options[0]['datasource'] = ss.datasource
+                  item.options[0]['table'] = ss.table
+                  dataList.push(sheetData)
+                }
+              }
+              else {
                 let OtherData = Object.create(null)
                 OtherData['type'] = item.type
                 OtherData['key'] = item.model
