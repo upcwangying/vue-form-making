@@ -290,7 +290,6 @@
 
       </el-cascader>
     </template>
-
     <template v-if="widget.type === 'table'">
       <el-table
         ref="gFITable"
@@ -316,10 +315,10 @@
     </template>
 
     <template v-if="widget.type === 'sheet'">
-      <spread-sheet style="width: 100%" />
+      <spread-sheet style="width: 100%" ref="spreadsheet"  />
     </template>
 
-    <template v-if="widget.type == 'text'">
+    <template v-if="widget.type === 'text'">
       <span>{{ dataModel }}</span>
     </template>
   </el-form-item>
@@ -370,6 +369,9 @@ export default {
     this.initDateTimeComponentDefaultValue();
   },
   methods: {
+    loadSpreadSheetDataByGenerateFormItem(data) {
+      this.$refs.spreadsheet && this.$refs.spreadsheet.setSpreadSheetData(data)
+    },
     dateFtt(fmt, date) {
       var o = {
         "M+": date.getMonth() + 1, // 月份

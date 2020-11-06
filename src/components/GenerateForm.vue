@@ -53,7 +53,8 @@
             :remote="remote"
             :disabled="disabled"
             :readonly="readonly"
-            @input-change="onInputChange">
+            @input-change="onInputChange"
+          >
           </generate-form-item>
         </template>
 
@@ -81,6 +82,7 @@ export default {
     this.generateModule(this.data.list)
   },
   mounted () {
+    this.loadsheetData(this.data.list)
   },
   methods: {
     generateModule (genList) {
@@ -89,7 +91,7 @@ export default {
           genList[i].columns.forEach(item => {
             this.generateModule(item.list)
           })
-        } else {
+        }  else {
           if (this.value && Object.keys(this.value).indexOf(genList[i].model) >= 0) {
             this.models[genList[i].model] = this.value[genList[i].model]
           } else {
@@ -112,7 +114,6 @@ export default {
               this.models[genList[i].model] = genList[i].options.defaultValue
             }
           }
-
           if (this.rules[genList[i].model]) {
 
             this.rules[genList[i].model] = [...this.rules[genList[i].model], ...genList[i].rules.map(item => {
@@ -135,6 +136,7 @@ export default {
         }
       }
     },
+
     getData () {
       return new Promise((resolve, reject) => {
         this.$refs.generateForm.validate(valid => {
@@ -149,9 +151,20 @@ export default {
     reset () {
       this.$refs.generateForm.resetFields()
     },
-    loadsheetData(data) {
-      this.$emit('load-sheetData', data)
+    loadsheetData(genList) {
+      for (let i = 0; i < genList.length; i++) {
+        if (genList[i].type === 'sheet') {
+          console.log(this.$refs.generateFormItem_2)
+          if (genList[i].options.length > 0) {
+            const optionsJson = genList[i].options[0]
+            console.log(optionsJson)
+            this.$refs.generateFormItem_2 && this.$refs.generateFormItem_2[0].loadSpreadSheetDataByGenerateFormItem(optionsJson)
+
+          }
+        }
+      }
     },
+
     onInputChange (value, field) {
       this.$emit('on-change', field, value, this.models)
     },
