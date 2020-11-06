@@ -4,7 +4,8 @@
       <div class="add-column-mask-container" v-if="showAddColumn"></div>
       <el-header height="45">
         <el-row class="btn-container">
-<!--          <el-button @click="saveReportJSON">保存报表数据</el-button>-->
+<!--          <el-button @click="saveSheetJSON">保存sheet数据</el-button>-->
+<!--            <el-button @click="saveReportJSON">保存报表数据</el-button>-->
           <!--          <el-button @click="queryReportData">获取报表数据</el-button>-->
           <!--          <el-button @click="queryData">获取数据</el-button>-->
           <el-button @click="querySpreadSheetData">获取电子表格数据(测试)</el-button>
@@ -79,7 +80,7 @@
 <!--            <el-header class="btn-bar" style="height: 45px;">-->
             <!--              <slot name="action">-->
             <!--              </slot>-->
-                          <el-button v-if="upload" type="text" size="medium" icon="el-icon-upload2" @click="handleUpload">{{$t('fm.actions.import')}}</el-button>
+<!--                          <el-button v-if="upload" type="text" size="medium" icon="el-icon-upload2" @click="handleUpload">{{$t('fm.actions.import')}}</el-button>-->
             <!--              <el-button v-if="clearable" type="text" size="medium" icon="el-icon-delete" @click="handleClear">{{$t('fm.actions.clear')}}</el-button>-->
             <!--              <el-button v-if="generateJson" type="text" size="medium" icon="el-icon-tickets" @click="handleGenerateJson">{{$t('fm.actions.json')}}</el-button>-->
             <!--              <el-button v-if="generateCode" type="text" size="medium" icon="el-icon-document" @click="handleGenerateCode">{{$t('fm.actions.code')}}</el-button>-->
@@ -121,7 +122,7 @@
             width="1000px"
             form
           >
-            <generate-form insite="true" @on-change="handleDataChange" v-if="previewVisible" :data="widgetForm"
+            <generate-form insite="true" @on-change="handleDataChange" v-if="previewVisible" :data="widgetForm" @load-sheetData="loadSpreadSheetData"
                            :value="widgetModels" :remote="remoteFuncs" ref="generateForm">
 
               <template v-slot:blank="scope">
@@ -416,6 +417,45 @@
         this.setSybbTreeDataForZB(data)
         console.log('updateZbflSelectData : ', this.syorjbParam, this['zbflSelectDataFor' + this.syorjbParam]);
       },
+      saveSheetJSON(){
+        const {list} = this.widgetForm
+        let dataList = []
+        const listFunc = (data) => {
+          console.log(data)
+          for (let item of data) {
+            console.log(item)
+            if (!item || (item instanceof Array && item.length === 0)) continue
+
+            if (item instanceof Array) {
+              item = item[0]
+            }
+            if (item.type === 'sheet') {
+              let data = Object.create(null)
+              data['type'] = item.type
+              data['model'] = item.rows
+              // data['key'] = item.model
+              dataList.push(data)
+            }
+          }
+        }
+
+        listFunc(list)
+        this.jsonVisible = true
+        this.jsonTemplate = dataList
+        this.$nextTick(() => {
+
+          const editor = ace.edit('jsoneditor')
+          editor.session.setMode("ace/mode/json")
+
+          if (!this.jsonClipboard) {
+            this.jsonClipboard = new Clipboard('.json-btn')
+            this.jsonClipboard.on('success', (e) => {
+              this.$message.success(this.$t('fm.message.copySuccess'))
+            })
+          }
+          this.jsonCopyValue = JSON.stringify(dataList)
+        })
+      },
       saveReportJSON() {
         const {list} = this.widgetForm
 
@@ -428,10 +468,11 @@
               item = item[0]
             }
             if (item.type === 'table') {
+              console.log(item)
               let data = Object.create(null)
-              data['type'] = item.type
-              data['rows'] = item.rows
-              data['key'] = item.model
+              // data['type'] = item.type
+              // data['rows'] = item.rows
+              // data['key'] = item.model
               dataList.push(data)
             } else if (item.type === 'grid') {
               const {columns} = item
