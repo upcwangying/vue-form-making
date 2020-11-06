@@ -149,6 +149,9 @@ export default {
     reset () {
       this.$refs.generateForm.resetFields()
     },
+    loadsheetData(data) {
+      this.$emit('load-sheetData', data)
+    },
     onInputChange (value, field) {
       this.$emit('on-change', field, value, this.models)
     },
