@@ -304,7 +304,7 @@
         :span-method="objectSpanMethod(arguments, widget.mergeRule)"
         style="width: 100%">
         <template v-for="column in widget.structColumns">
-          <table-column v-if="column.children && column.children.length" :key="column.id" :prop="column.prop" :label="column.label" :width="column.width" :coloumn-header="column" :show-edit="!disabled" />
+          <table-column v-if="column.children && column.children.length" :key="column.id" :prop="column.prop" :label="column.label" :width="column.width" :coloumn-header="column" :show-edit="!disabled" :readonly="readonly" />
           <el-table-column v-else :key="column.id" :prop="column.prop" :label="column.label" :width="column.width">
             <template slot-scope="{row, $index}">
               <el-input v-if="!disabled" v-model="row[column.prop]" :readonly="readonly" placeholder="请输入" size="small" />

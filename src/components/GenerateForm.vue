@@ -29,7 +29,7 @@
                   :rules="rules"
                   :widget="citem"
                   :disabled="disabled"
-                  :readonly="readonly"
+                  :readonly="readonly_"
                   @input-change="onInputChange">
                 </generate-form-item>
               </template>
@@ -52,7 +52,7 @@
             :widget="item"
             :remote="remote"
             :disabled="disabled"
-            :readonly="readonly"
+            :readonly="readonly_"
             @input-change="onInputChange"
           >
           </generate-form-item>
@@ -60,6 +60,7 @@
 
       </template>
     </el-form>
+    <el-button @click="test">test</el-button>
   </div>
 </template>
 
@@ -75,7 +76,8 @@ export default {
   data () {
     return {
       models: {},
-      rules: {}
+      rules: {},
+      readonly_: this.readonly
     }
   },
   created () {
@@ -85,6 +87,9 @@ export default {
     this.loadsheetData(this.data.list)
   },
   methods: {
+    test() {
+      this.readonly_ = true
+    },
     generateModule (genList) {
       for (let i = 0; i < genList.length; i++) {
         if (genList[i].type === 'grid') {
