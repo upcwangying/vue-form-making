@@ -5,7 +5,8 @@
 </template>
 
 <script>
-import Spreadsheet from "x-data-spreadsheet";
+import Spreadsheet from "@aqsc/x-data-spreadsheet";
+import zhCN from '@aqsc/x-data-spreadsheet/src/locale/zh-cn';
 export default {
   name: 'SpreadSheet',
   data() {
@@ -15,6 +16,7 @@ export default {
   },
   mounted() {
     // const s = new Spreadsheet('#xapp')
+    Spreadsheet.locale('zh-cn', zhCN);
     this.spreadsheet = new Spreadsheet(this.$refs.xspreadsheet, {
       view: {
         height: () => document.documentElement.clientHeight,
@@ -31,7 +33,8 @@ export default {
         minWidth: 60,
       }
     })
-      .loadData({}) // load data
+      .loadData({
+      }) // load data
       .change(data => {
         // save data to db
       });
@@ -39,6 +42,9 @@ export default {
   methods: {
     getSpreadSheetData() {
       return this.spreadsheet && this.spreadsheet.getData()
+    },
+    setSpreadSheetData(data) {
+       this.spreadsheet && this.spreadsheet.loadData(data)
     }
   }
 }

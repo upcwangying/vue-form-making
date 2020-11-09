@@ -224,14 +224,14 @@ $primary-background-color: #ecf5ff;
           }
         }
 
-        &:after{
-          position: absolute;
-          left: 0;
-          right: 0;
-          top: 0;
-          bottom: 0;
-          display: block;
-        }
+        //&:after{
+        //  position: absolute;
+        //  left: 0;
+        //  right: 0;
+        //  top: 0;
+        //  bottom: 0;
+        //  display: block;
+        //}
 
         &:hover{
           background: $primary-background-color;

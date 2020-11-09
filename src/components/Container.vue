@@ -4,10 +4,12 @@
       <div class="add-column-mask-container" v-if="showAddColumn"></div>
       <el-header height="45">
         <el-row class="btn-container">
-<!--          <el-button @click="saveReportJSON">保存报表数据</el-button>-->
+<!--          <el-button @click="saveSheetJSON">保存sheet数据</el-button>-->
+          <!--            <el-button @click="saveReportJSON">保存报表数据</el-button>-->
           <!--          <el-button @click="queryReportData">获取报表数据</el-button>-->
           <!--          <el-button @click="queryData">获取数据</el-button>-->
           <el-button @click="querySpreadSheetData">获取电子表格数据(测试)</el-button>
+          <!--          <el-button @click="loadSpreadSheetData">赋值电子表格数据(测试)</el-button>-->
           <el-button @click="createTemplate">创建</el-button>
           <el-button @click="saveTemplate">保存</el-button>
           <el-button @click="deleteTemplate">删除</el-button>
@@ -18,13 +20,16 @@
         </el-row>
       </el-header>
       <el-main class="fm2-main">
-        <add-column class="add-column-container" v-if="showAddColumn" :zb-data="zbflSelectData" @submit="submitColumnInfo" @cancel="showAddColumn = false" />
+        <add-column class="add-column-container" v-if="showAddColumn" :zb-data="zbflSelectData"
+                    @submit="submitColumnInfo" @cancel="showAddColumn = false"/>
         <el-container>
           <el-aside class="widget-config-container">
             <el-container>
               <el-header height="45px">
-                <div class="config-tab left" :class="{active: leftConfigTab ==='shiyan'}" @click="handleLeftConfigSelect('shiyan')">{{$t('fm.left.shiyan.title')}}</div>
-                <div class="config-tab left" :class="{active: leftConfigTab ==='jiandu'}" @click="handleLeftConfigSelect('jiandu')">{{$t('fm.left.jiandu.title')}}</div>
+                <div class="config-tab left" :class="{active: leftConfigTab ==='shiyan'}"
+                     @click="handleLeftConfigSelect('shiyan')">{{$t('fm.left.shiyan.title')}}</div>
+                <div class="config-tab left" :class="{active: leftConfigTab ==='jiandu'}"
+                     @click="handleLeftConfigSelect('jiandu')">{{$t('fm.left.jiandu.title')}}</div>
               </el-header>
               <el-main class="config-content">
                 <div style="height: 100%" v-show="leftConfigTab ==='shiyan'">
@@ -33,7 +38,8 @@
                       <div class="config-tab all middle">报表分类</div>
                     </el-header>
                     <el-main>
-                      <template-tree :syorjb="syorjbParam" :tree-data="bbflTreeData" @node-expand="handleExpNode" @check-change="selectTree" />
+                      <template-tree :syorjb="syorjbParam" :tree-data="bbflTreeData" @node-expand="handleExpNode"
+                                     @check-change="selectTree"/>
                     </el-main>
                   </el-container>
                   <el-container style="height: 50% !important;">
@@ -41,7 +47,8 @@
                       <div class="config-tab all middle">指标分类</div>
                     </el-header>
                     <el-main>
-                      <quota-table :syorjb="syorjbParam" :zbfl-zb-data="zbflSelectData" :loading="quateTableLoading" @change="zbSelChange" @update-zbflzbdata="updateZbflSelectData" />
+                      <quota-table :syorjb="syorjbParam" :zbfl-zb-data="zbflSelectData" :loading="quateTableLoading"
+                                   @change="zbSelChange" @update-zbflzbdata="updateZbflSelectData"/>
                     </el-main>
                   </el-container>
                 </div>
@@ -51,7 +58,8 @@
                       <div class="config-tab all middle">报表分类</div>
                     </el-header>
                     <el-main>
-                      <template-tree :syorjb="syorjbParam" :tree-data="bbflTreeData" @node-expand="handleExpNode" @check-change="selectTree" />
+                      <template-tree :syorjb="syorjbParam" :tree-data="bbflTreeData" @node-expand="handleExpNode"
+                                     @check-change="selectTree"/>
                     </el-main>
                   </el-container>
                   <el-container style="height: 50% !important;">
@@ -59,7 +67,8 @@
                       <div class="config-tab all middle">指标分类</div>
                     </el-header>
                     <el-main>
-                      <quota-table :syorjb="syorjbParam" :zbfl-zb-data="zbflSelectData" :loading="quateTableLoading" @change="zbSelChange" @update-zbflzbdata="updateZbflSelectData" />
+                      <quota-table :syorjb="syorjbParam" :zbfl-zb-data="zbflSelectData" :loading="quateTableLoading"
+                                   @change="zbSelChange" @update-zbflzbdata="updateZbflSelectData"/>
                     </el-main>
                   </el-container>
                 </div>
@@ -71,13 +80,14 @@
 <!--            <el-header class="btn-bar" style="height: 45px;">-->
             <!--              <slot name="action">-->
             <!--              </slot>-->
-            <!--              <el-button v-if="upload" type="text" size="medium" icon="el-icon-upload2" @click="handleUpload">{{$t('fm.actions.import')}}</el-button>-->
+            <!--                          <el-button v-if="upload" type="text" size="medium" icon="el-icon-upload2" @click="handleUpload">{{$t('fm.actions.import')}}</el-button>-->
             <!--              <el-button v-if="clearable" type="text" size="medium" icon="el-icon-delete" @click="handleClear">{{$t('fm.actions.clear')}}</el-button>-->
             <!--              <el-button v-if="generateJson" type="text" size="medium" icon="el-icon-tickets" @click="handleGenerateJson">{{$t('fm.actions.json')}}</el-button>-->
             <!--              <el-button v-if="generateCode" type="text" size="medium" icon="el-icon-document" @click="handleGenerateCode">{{$t('fm.actions.code')}}</el-button>-->
             <!--            </el-header>-->
             <el-main :class="{'widget-empty': widgetForm.list.length === 0}">
-              <widget-form v-if="!resetJson"  ref="widgetForm" :data="widgetForm" :select.sync="widgetFormSelect" :cell-dom.sync="cellDomBlue" :area-dom.sync="areaDomRed" :ui-select="uiSelect"></widget-form>
+              <widget-form v-if="!resetJson" ref="widgetForm" :data="widgetForm" :select.sync="widgetFormSelect"
+                           :cell-dom.sync="cellDomBlue" :area-dom.sync="areaDomRed" :ui-select="uiSelect"></widget-form>
             </el-main>
           </el-container>
 
@@ -85,14 +95,20 @@
             <el-container>
               <el-header height="45px">
                 <div class="config-tab" :class="{active: configTab ==='header'}" @click="handleConfigSelect('header')">{{$t('fm.config.header.title')}}</div>
-                <div class="config-tab" :class="{active: configTab ==='zhibiao'}" @click="handleConfigSelect('zhibiao')">{{$t('fm.config.zhibiao.title')}}</div>
+                <div class="config-tab" :class="{active: configTab ==='zhibiao'}"
+                     @click="handleConfigSelect('zhibiao')">{{$t('fm.config.zhibiao.title')}}</div>
                 <div class="config-tab" :class="{active: configTab ==='widget'}" @click="handleConfigSelect('widget')">{{$t('fm.config.widget.title')}}</div>
                 <div class="config-tab" :class="{active: configTab ==='form'}" @click="handleConfigSelect('form')">{{$t('fm.config.form.title')}}</div>
               </el-header>
               <el-main class="config-content">
                 <header-config v-show="configTab ==='header'" :data="headerFormSelect"></header-config>
-                <zhi-biao-config v-show="configTab ==='zhibiao'" :data="zhiBiaoSelect" :zbattribute="zbAttribute" ></zhi-biao-config>
-                <widget-config ref="widgetConfig" v-show="configTab ==='widget'" :data="widgetFormSelect" :currcheck.sync="currentCheck" @show-add-column="addColumn" @show-add-row="addRow" @drag-end="dragend" @remove-column="removeColumn" @remove-row="removeRow" @merge-cell="mergeCell" @update-row-check="updateRowCheck" @show-jz="widgetConShowJz"></widget-config>
+                <zhi-biao-config v-show="configTab ==='zhibiao'" :data="zhiBiaoSelect"
+                                 :zbattribute="zbAttribute"></zhi-biao-config>
+                <widget-config ref="widgetConfig" v-show="configTab ==='widget'" :data="widgetFormSelect"
+                               :currcheck.sync="currentCheck" @show-add-column="addColumn" @show-add-row="addRow"
+                               @drag-end="dragend" @remove-column="removeColumn" @remove-row="removeRow"
+                               @merge-cell="mergeCell" @update-row-check="updateRowCheck"
+                               @show-jz="widgetConShowJz"></widget-config>
                 <form-config v-show="configTab ==='form'" :data="widgetForm.config"></form-config>
               </el-main>
             </el-container>
@@ -106,7 +122,8 @@
             width="1000px"
             form
           >
-            <generate-form insite="true" @on-change="handleDataChange" v-if="previewVisible" :data="widgetForm" :value="widgetModels" :remote="remoteFuncs" ref="generateForm">
+            <generate-form insite="true" @on-change="handleDataChange" v-if="previewVisible" :data="widgetForm"
+                           :value="widgetModels" :remote="remoteFuncs" ref="generateForm">
 
               <template v-slot:blank="scope">
                 Width <el-input v-model="scope.model.blank.width" style="width: 100px"></el-input>
@@ -195,10 +212,12 @@
   import TableEditable from '@/components/TableEditable';
   import templateInitialData from '@/components/templateInitialData';
   import templateJson from '../mock/template.json';
+  import sheetTempIson from '../mock/sheetTemp.json';
   import reportJson from '../mock/report.json';
-  import { getTemplate, postTemplate, deleteTemplate, enableTemplate, publishTemplate } from '@/api/template';
-  import { getReport, postReport, getBbfl } from '@/api/report';
-  import { getZb, getZbDetal } from '@/api/jsjdQuery';
+  import {getTemplate, postTemplate, deleteTemplate, enableTemplate, publishTemplate} from '@/api/template';
+  import {getReport, postReport, getBbfl} from '@/api/report';
+  import {getZb, getZbDetal} from '@/api/jsjdQuery';
+  import _clonedeep from 'lodash/cloneDeep'
 
   export default {
     name: 'fm-making-form',
@@ -234,10 +253,10 @@
         default: false
       },
     },
-    data () {
+    data() {
       return {
         resetJson: false,
-        showAddColumn:false,
+        showAddColumn: false,
         widgetForm: JSON.parse(JSON.stringify(templateInitialData)),
         zhiBiaoSelect: {
           config: {}
@@ -251,7 +270,7 @@
         codeVisible: false,
         uploadVisible: false,
         remoteFuncs: {
-          func_test (resolve) {
+          func_test(resolve) {
             setTimeout(() => {
               const options = [
                 {id: '1', name: '1111'},
@@ -262,12 +281,12 @@
               resolve(options)
             }, 2000)
           },
-          funcGetToken (resolve) {
+          funcGetToken(resolve) {
             request.get('http://tools-server.xiaoyaoji.cn/api/uptoken').then(res => {
               resolve(res.uptoken)
             })
           },
-          upload_callback (response, file, fileList) {
+          upload_callback(response, file, fileList) {
             console.log('callback', response, file, fileList)
           }
         },
@@ -325,11 +344,13 @@
         if (this['bbflTreeDataFor' + this.syorjbParam].length < 1) {
           getBbfl(this.syorjbParam).then(res => {
             if (res.success) {
-              const sybbTreeData_ = (this.syorjbParam === 'sy' ? [ ...res.dataset.datas[0].children ] : [ ...res.dataset.datas ])
+              const sybbTreeData_ = (this.syorjbParam === 'sy' ? [...res.dataset.datas[0].children] : [...res.dataset.datas])
               this.bbflTreeData = this.transIdLabel(sybbTreeData_)
               this.setSybbTreeDataForBB(this.bbflTreeData)
             }
-          }).catch(err => { err; })
+          }).catch(err => {
+            err;
+          })
         } else {
           this.bbflTreeData = this['bbflTreeDataFor' + this.syorjbParam]
         }
@@ -338,10 +359,12 @@
         this.quateTableLoading = true
         getZb(this.syorjbParam, jtzbfl).then(res => {
           if (res.success) {
-            this.zbflSelectData = [ ...res.dataset.datas ]
+            this.zbflSelectData = [...res.dataset.datas]
             this.quateTableLoading = false
           }
-        }).catch(err => { err; })
+        }).catch(err => {
+          err;
+        })
       },
       handleExpNode(obj, node, dom) {
         // request({
@@ -356,7 +379,7 @@
       selectTree(isCheck, obj) {
         if (isCheck) {
           this.selectTreeNode = obj
-          const { dbid, is_temp } = this.selectTreeNode
+          const {dbid, is_temp} = this.selectTreeNode
           is_temp === '1' && this.queryTemplateData(dbid)
           is_temp === '0' && this.handleClear()
           is_temp === '0' && this.query_zb(dbid)
@@ -385,15 +408,56 @@
               zbAttribute_.zbgx = val.jsgs
               this.zbAttribute = zbAttribute_
             }
-          }).catch(err => { err; })
+          }).catch(err => {
+            err;
+          })
         }
       },
       updateZbflSelectData(data) {
         this.setSybbTreeDataForZB(data)
         console.log('updateZbflSelectData : ', this.syorjbParam, this['zbflSelectDataFor' + this.syorjbParam]);
       },
+      saveSheetJSON() {
+        const {list} = this.widgetForm
+        let dataList = []
+        const listFunc = (data) => {
+          console.log(data)
+          for (let item of data) {
+            console.log(item)
+            if (!item || (item instanceof Array && item.length === 0)) continue
+
+            if (item instanceof Array) {
+              item = item[0]
+            }
+            if (item.type === 'sheet') {
+              let data = Object.create(null)
+              data['type'] = item.type
+              data['model'] = item.rows
+              // data['key'] = item.model
+              dataList.push(data)
+            }
+          }
+        }
+
+        listFunc(list)
+        this.jsonVisible = true
+        this.jsonTemplate = dataList
+        this.$nextTick(() => {
+
+          const editor = ace.edit('jsoneditor')
+          editor.session.setMode("ace/mode/json")
+
+          if (!this.jsonClipboard) {
+            this.jsonClipboard = new Clipboard('.json-btn')
+            this.jsonClipboard.on('success', (e) => {
+              this.$message.success(this.$t('fm.message.copySuccess'))
+            })
+          }
+          this.jsonCopyValue = JSON.stringify(dataList)
+        })
+      },
       saveReportJSON() {
-        const { list } = this.widgetForm
+        const {list} = this.widgetForm
 
         let dataList = []
         const listFunc = (data) => {
@@ -403,15 +467,15 @@
             if (item instanceof Array) {
               item = item[0]
             }
-
             if (item.type === 'table') {
+              console.log(item)
               let data = Object.create(null)
-              data['type'] = item.type
-              data['rows'] = item.rows
-              data['key'] = item.model
+              // data['type'] = item.type
+              // data['rows'] = item.rows
+              // data['key'] = item.model
               dataList.push(data)
             } else if (item.type === 'grid') {
-              const { columns } = item
+              const {columns} = item
               if (columns) {
                 const gridData = []
                 for (const column of columns) {
@@ -452,48 +516,60 @@
         // postReport(dataList)
       },
       queryReportData() {
-        getReport('1013114899288600576', 0, '14').then(({ success, fromData }) => {
+        getReport('1013114899288600576', 0, '14').then(({success, fromData}) => {
           if (fromData) {
-            const { bukrs, datas, werks, type } = JSON.parse(fromData);
+            const {bukrs, datas, werks, type} = JSON.parse(fromData);
             console.log(bukrs, datas, werks, type)
           }
         })
       },
       queryData() {
         Promise.all([getTemplate('1013114899288600576'), getReport('1013114899288600576', 0, '14')])
-          .then(([{ success: templateSuccess, dataset }, { success, fromData }]) => {
+          .then(([{success: templateSuccess, dataset}, {success, fromData}]) => {
             // console.log(templateSuccess, dataset, success, fromData)
-            const { json } = dataset.datas[0]
-            const { bukrs, datas, werks, type } = JSON.parse(fromData);
+            const {json} = dataset.datas[0]
+            const {bukrs, datas, werks, type} = JSON.parse(fromData);
             console.log(json, datas)
             this.setJSON(JSON.parse(json), datas)
           })
       },
       querySpreadSheetData() {
         const data = this.$refs.widgetForm && this.$refs.widgetForm.querySpreadSheetDataByWidgetForm()
-
         const tableDataList = []
         for (const dataItem of data) {
-          const { cols, rows, merges} = dataItem
-          const { len: columnLength } = cols
-          const { len: rowLength } = rows
+          const {cols, rows, merges} = dataItem
+          const {len: columnLength} = cols
+          const {len: rowLength} = rows
           const datas = []
           for (let i = 0; i < rowLength; i++) {
             if (!rows[i]) continue
-            const { cells } = rows[i]
+            const {cells} = rows[i]
             for (let j = 0; j < columnLength; j++) {
               if (!cells[j]) continue
-              const { text } = cells[j]
-              datas.push({
-                rowIndex: i,
-                columnIndex: j,
-                text,
-                headers: false, // 是否是表头
-                zbbm: '', //
-                datasource: '',
-                table: '',
-                field: '',
-              })
+              const {text} = cells[j]
+              let headers = false
+              if (i === 0) {
+                headers = true
+              }
+              if (headers) {
+                datas.push({
+                  rowIndex: i,
+                  columnIndex: j,
+                  text,
+                  headers: true, // 是否是表头
+                })
+              } else {
+                datas.push({
+                  rowIndex: i,
+                  columnIndex: j,
+                  text,
+                  headers: false, // 是否是表头
+                  zbbm: '', //
+                  datasource: '',
+                  table: '',
+                  field: '',
+                })
+              }
             }
           }
 
@@ -520,12 +596,15 @@
           this.jsonCopyValue = JSON.stringify(tableDataList)
         })
       },
+      loadSpreadSheetData(data) {
+        this.$refs.widgetForm && this.$refs.widgetForm.loadSpreadSheetDataByWidgetForm(data)
+      },
       createTemplate() {
         if (!this.selectTreeNode) {
           this.$alert('未选中报表分类', '提示')
           return
         }
-        const { dbid, is_temp } = this.selectTreeNode
+        const {dbid, is_temp} = this.selectTreeNode
         if (is_temp !== '0') { // 分类节点
           this.$alert('选中的报表分类非分类节点', '提示')
           return
@@ -537,7 +616,7 @@
           this.$alert('未选中报表分类', '提示')
           return
         }
-        const { dbid, is_temp, parentid } = this.selectTreeNode
+        const {dbid, is_temp, parentid} = this.selectTreeNode
         if (is_temp !== '1') { // 分类节点
           this.$alert('选中的报表分类非模板节点', '提示')
           return
@@ -549,7 +628,7 @@
           this.$alert('未选中报表分类', '提示')
           return
         }
-        const { dbid, is_temp } = this.selectTreeNode
+        const {dbid, is_temp} = this.selectTreeNode
         if (is_temp !== '1') { // 分类节点
           this.$alert('选中的报表分类非模板节点', '提示')
           return
@@ -564,8 +643,7 @@
         // todo
       },
       saveTemplateJSON(dbid, flid) {
-        const { list, config: { werks, bukrs, templateName, templateCode, templateGrade } } = this.widgetForm
-
+        const {list, config: {werks, bukrs, templateName, templateCode, templateGrade}} = this.widgetForm
         if (!werks) {
           this.$alert('工厂编码不允许为空', '提示')
           return
@@ -590,7 +668,6 @@
           this.$alert('模板级别不允许为空', '提示')
           return
         }
-
         let tables = []
         const listFunc = (data) => {
           for (let item of data) {
@@ -599,6 +676,7 @@
             if (item instanceof Array) {
               item = item[0]
             }
+
 
             if (item.type === 'table') {
               let tableData = Object.create(null)
@@ -610,13 +688,30 @@
               // tableData['field'] = item.options.field
               tables.push(tableData)
             } else if (item.type === 'grid') {
-              const { columns } = item
+              const {columns} = item
               if (columns) {
                 const gridData = []
                 for (const column of columns) {
                   gridData.push(column.list)
                 }
                 gridData && listFunc(gridData)
+              }
+            } else if (item.type === 'sheet') {
+              const data = this.$refs.widgetForm && this.$refs.widgetForm.querySpreadSheetDataByWidgetForm()
+              const ss = _clonedeep(item.options)
+              let sheetData = Object.create(null)
+              sheetData['type'] = item.type
+              sheetData['key'] = item.model
+              sheetData['datasource'] = ss.datasource
+              sheetData['table'] = ss.table
+              // OtherData['field'] = item.options.field
+              item.options = data
+              if (item.options.length > 0) {
+                item.options[0]['type'] = ss.type
+                item.options[0]['key'] = ss.model
+                item.options[0]['datasource'] = ss.datasource
+                item.options[0]['table'] = ss.table
+                tables.push(sheetData)
               }
             } else {
               let OtherData = Object.create(null)
@@ -629,7 +724,6 @@
             }
           }
         }
-
         listFunc(list)
         postTemplate(dbid, werks, bukrs, templateName, templateCode, this.widgetForm, templateGrade, flid, tables)
           .then(result => {
@@ -641,12 +735,50 @@
       },
       queryTemplateData(dbid) {
         getTemplate(dbid).then(result => {
-          const { json } = result.dataset.datas[0]
+          const {json} = result.dataset.datas[0]
+          const sheetOptions = []
+          const {list} = json
           this.setJSON(JSON.parse(json), null)
+          this.$nextTick(() => {
+            console.log(JSON.parse(json).list)
+            for (let item of JSON.parse(json).list) {
+              if (item.type === "sheet") {
+                if (item.options.length > 0) {
+                  const optionsJson = item.options[0]
+                  console.log(optionsJson)
+                  this.loadSpreadSheetData(optionsJson)
+                }
+              }
+            }
+
+          })
         })
       },
       handlePreview() {
+        const {list} = this.widgetForm
         this.previewVisible = true
+        const listFunc = (data) => {
+          for (let item of data) {
+            if (!item || (item instanceof Array && item.length === 0)) continue
+
+            if (item instanceof Array) {
+              item = item[0]
+            }
+            if (item.type === 'sheet') {
+              const data = this.$refs.widgetForm && this.$refs.widgetForm.querySpreadSheetDataByWidgetForm()
+              const ss = this.cloneDeep(item.options)
+              item.options = data
+              if (item.options.length > 0) {
+                item.options[0]['type'] = ss.type
+                item.options[0]['key'] = ss.model
+                item.options[0]['datasource'] = ss.datasource
+                item.options[0]['table'] = ss.table
+              }
+              // OtherData['field'] = item.options.field
+            }
+          }
+        }
+        return listFunc(list)
       },
       publish() {
         // todo
@@ -654,7 +786,7 @@
           this.$alert('未选中报表分类', '提示')
           return
         }
-        const { dbid, is_temp, json, version } = this.selectTreeNode
+        const {dbid, is_temp, json, version} = this.selectTreeNode
         if (is_temp !== '1') { // 分类节点
           this.$alert('选中的报表分类非模板节点', '提示')
           return
@@ -671,7 +803,7 @@
           this.$alert('未选中报表分类', '提示')
           return
         }
-        const { dbid, is_temp } = this.selectTreeNode
+        const {dbid, is_temp} = this.selectTreeNode
         if (is_temp !== '1') { // 分类节点
           this.$alert('选中的报表分类非模板节点', '提示')
           return
@@ -698,7 +830,7 @@
       },
       getLastIndex(columns, label) { // 获取列数组中 特定-label的最后一个子节点下标
         let index = this.getIndex(columns, label)
-        for (let i = this.getIndex(columns, label) + 1;i < columns.length; i++) {
+        for (let i = this.getIndex(columns, label) + 1; i < columns.length; i++) {
           if (columns[i].parent && columns[i].parent === label) {
             index = i
           }
@@ -735,7 +867,7 @@
               result.push(item.label)
             }
           })
-          result.push( ...this.getChildrenNodeArra(columns, result) )
+          result.push(...this.getChildrenNodeArra(columns, result))
         }
         return result
       },
@@ -744,12 +876,13 @@
           return;
         }
         var stack = [];
-        stack.push( ...columns );
+        stack.push(...columns);
         var tmpNode;
         while (stack.length > 0) {
           tmpNode = stack.pop();
           console.log('tmpNode : ', tmpNode);
-          if (tmpNode.label === label) {}
+          if (tmpNode.label === label) {
+          }
           if (tmpNode.children && tmpNode.children.length > 0) {
             var i = tmpNode.children.length - 1;
             for (i = tmpNode.children.length - 1; i >= 0; i--) {
@@ -778,14 +911,14 @@
               let i = 0
               // 非递归的遍历 不破坏structColumns结构
               let isBreak = false
-              while(i >= 0) {
+              while (i >= 0) {
                 let j = 0
                 for (j; j < temp[i].length; j++) {
                   if (!isBreak && temp[i][j].label === param) {
                     temp[i].splice(j, 1)
                     isBreak = true
                     break
-                  } else if (!isBreak && temp[i][j].children){
+                  } else if (!isBreak && temp[i][j].children) {
                     temp.push(temp[i][j].children)
                   }
                 }
@@ -803,7 +936,7 @@
             }
             if (tag === 'merge-cell') { // 合并单元格操作
               // mergeRule = { startRow: 2, startColumn: 2, endRow: 3, endColumn: 3, mergeFunction: (self)=>{} }
-              const mergeFunction_ = function ({ row, column, rowIndex, columnIndex }, mergeRule) {
+              const mergeFunction_ = function ({row, column, rowIndex, columnIndex}, mergeRule) {
                 let rowArea = []
                 let columnArea = []
                 if (mergeRule.startRow < mergeRule.endRow) {
@@ -853,15 +986,21 @@
         this.showAddColumn = true
       },
       submitColumnInfo(label, prop, width) {
+        console.log(this.widgetFormSelect)
         const label_ = label
         const prop_ = prop
         const width_ = width
         if (this.currentCheck.length === 0) {
-          this.widgetFormSelect.columns.push({ prop, label, width })
+          this.widgetFormSelect.columns.push({prop, label, width})
         } else if (this.currentCheck.length === 1) {
-          this.widgetFormSelect.columns.splice(this.getLastIndex(this.widgetFormSelect.columns, this.currentCheck[0]) + 1, 0, { prop, label, width, parent: this.currentCheck[0] })
+          this.widgetFormSelect.columns.splice(this.getLastIndex(this.widgetFormSelect.columns, this.currentCheck[0]) + 1, 0, {
+            prop,
+            label,
+            width,
+            parent: this.currentCheck[0]
+          })
         }
-        this.updateWidgetFormRowColumn('add-column', { prop, label, width })
+        this.updateWidgetFormRowColumn('add-column', {prop, label, width})
         this.showAddColumn = false
         this.updateWidgetFormTable()
       },
@@ -878,7 +1017,7 @@
       },
       addRow() {
         if (this.widgetFormSelect.columns.length > 0) {
-          this.widgetFormSelect.rows.push({ isColumnHeader: false })
+          this.widgetFormSelect.rows.push({isColumnHeader: false})
           this.updateWidgetFormRowColumn('add-row')
         }
       },
@@ -914,22 +1053,22 @@
         // console.log('areaDomRed : ', this.areaDomRed)
         // console.log('widgetForm : ', this.widgetForm)
         // console.log('widgetFormSelect : ', this.widgetFormSelect)
-        this.uiSelect.jz.push({ rowIndex: this.cellDomBlue.row.rowIndex, prop: this.cellDomBlue.column.property })
+        this.uiSelect.jz.push({rowIndex: this.cellDomBlue.row.rowIndex, prop: this.cellDomBlue.column.property})
       },
-      handleGoGithub () {
+      handleGoGithub() {
         window.location.href = 'https://github.com/upcwangying/vue-form-making'
       },
-      handleLeftConfigSelect (value) {
+      handleLeftConfigSelect(value) {
         this.leftConfigTab = value
-        this.syorjbParam = ( value === 'shiyan') ? 'sy' : 'jb' // 设置查询参数 syorjb - 实验or监督
+        this.syorjbParam = (value === 'shiyan') ? 'sy' : 'jb' // 设置查询参数 syorjb - 实验or监督
         this.query_bbfl() // 做查询
       },
-      handleConfigSelect (value) {
+      handleConfigSelect(value) {
         this.configTab = value
       },
-      handleTest () {
+      handleTest() {
         this.$refs.generateForm.getData().then(result => {
-          const { list } = this.widgetForm
+          const {list} = this.widgetForm
 
           let dataList = []
           const listFunc = (data) => {
@@ -957,13 +1096,30 @@
                 data['otherfields'] = "werks,bukrs,create_by,create_time,update_by,update_time,is_del"
                 dataList.push(data)
               } else if (item.type === 'grid') {
-                const { columns } = item
+                const {columns} = item
                 if (columns) {
                   const gridData = []
                   for (const column of columns) {
                     gridData.push(column.list)
                   }
                   gridData && listFunc(gridData)
+                }
+              } else if (item.type === 'sheet') {
+                const data = this.$refs.widgetForm && this.$refs.widgetForm.querySpreadSheetDataByWidgetForm()
+                const ss = _clonedeep(item.options)
+                let sheetData = Object.create(null)
+                sheetData['type'] = item.type
+                sheetData['key'] = item.model
+                sheetData['datasource'] = ss.datasource
+                sheetData['table'] = ss.table
+                // OtherData['field'] = item.options.field
+                item.options = data
+                if (item.options.length > 0) {
+                  item.options[0]['type'] = ss.type
+                  item.options[0]['key'] = ss.model
+                  item.options[0]['datasource'] = ss.datasource
+                  item.options[0]['table'] = ss.table
+                  dataList.push(sheetData)
                 }
               } else {
                 let OtherData = Object.create(null)
@@ -989,16 +1145,17 @@
               }
             }
           }
-          this.$alert(dataList, '').catch(e=>{})
+          this.$alert(dataList, '').catch(e => {
+          })
           this.$refs.widgetPreview.end()
         }).catch(e => {
           this.$refs.widgetPreview.end()
         })
       },
-      handleReset () {
+      handleReset() {
         this.$refs.generateForm.reset()
       },
-      handleGenerateJson () {
+      handleGenerateJson() {
         this.jsonVisible = true
         this.jsonTemplate = this.widgetForm
         // console.log(JSON.stringify(this.widgetForm))
@@ -1017,7 +1174,7 @@
         })
         // post(this.widgetForm)
       },
-      handleGenerateCode () {
+      handleGenerateCode() {
         this.codeVisible = true
         this.htmlTemplate = generateCode(JSON.stringify(this.widgetForm), 'html')
         this.vueTemplate = generateCode(JSON.stringify(this.widgetForm), 'vue')
@@ -1029,7 +1186,7 @@
           vueeditor.session.setMode("ace/mode/html")
         })
       },
-      handleUpload () {
+      handleUpload() {
         this.uploadVisible = true
         this.$nextTick(() => {
           this.uploadEditor = ace.edit('uploadeditor')
@@ -1038,7 +1195,7 @@
           this.reportEditor.session.setMode("ace/mode/json")
         })
       },
-      handleUploadJson () {
+      handleUploadJson() {
         try {
           this.setJSON(JSON.parse(this.uploadEditor.getValue()), JSON.parse(this.reportEditor.getValue()))
           this.uploadVisible = false
@@ -1047,25 +1204,25 @@
           this.$refs.uploadJson.end()
         }
       },
-      handleClear () {
+      handleClear() {
         this.widgetForm = JSON.parse(JSON.stringify(templateInitialData))
 
         this.widgetFormSelect = {}
       },
-      clear () {
+      clear() {
         this.handleClear()
       },
-      getJSON () {
+      getJSON() {
         return this.widgetForm
       },
-      getHtml () {
+      getHtml() {
         return generateCode(JSON.stringify(this.widgetForm))
       },
-      setJSON (templateJson, reportJson) {
-        const { list } = templateJson
+      setJSON(templateJson, reportJson) {
+        const {list} = templateJson
         if (list) {
           for (const listElement of list) {
-            const { type, model } = listElement
+            const {type, model} = listElement
             if (type !== 'table') {
               if (reportJson) {
                 for (const reportJsonElement of reportJson) {
@@ -1089,10 +1246,10 @@
           this.widgetFormSelect = templateJson.list[0]
         }
       },
-      handleInput (val) {
+      handleInput(val) {
         this.blank = val
       },
-      handleDataChange (field, value, data) {
+      handleDataChange(field, value, data) {
         // console.log(field, value, data)
         if (data && field !== '') {
           data[field] = value

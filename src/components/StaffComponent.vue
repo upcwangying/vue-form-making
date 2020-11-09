@@ -1,7 +1,7 @@
 <template>
   <el-tooltip :disabled="tooltipDisable" class="item" effect="dark" :content="tooltipContentStr" placement="top">
     <el-select v-model="svalue" filterable
-               :placeholder="spholder" :clearable="clearable" :disabled="disabled" :collapse-tags="collapseTags" :multiple="multiple" :size="size" :loading="loading"
+               :placeholder="spholder" :clearable="clearable" :disabled="disabled || readonly" :collapse-tags="collapseTags" :multiple="multiple" :size="size" :loading="loading"
                @change="selectChange" style="width: 100%">
       <el-option v-for="item in options" :key="item.index" :label="item[displayField]" :value="item[valueField]"  />
       <el-option v-show="disempty" value="_null" label="空" />
@@ -39,6 +39,10 @@
         default: ''
       },
       disabled: {
+        type: Boolean,
+        default: false
+      },
+      readonly: {
         type: Boolean,
         default: false
       },
@@ -145,7 +149,7 @@
         this.loading = true
         const p = { is_del: 0, werks: this.werks, bukrs: this.bukrs, bmid: this.bmid, bzid: this.bzid, isReplace: true };
         Object.assign(p, param);
-        getMethod('/sjgl/process/staff_componet?m=query_Staff', p).then(res => {
+        getMethod('/sjgl/process/staff_component?m=query_Staff', p).then(res => {
           const ss = res.dataset.datas
           for (let i = 0; i < ss.length; i++) {
             if (ss[i].staffcode !== undefined) {

@@ -1,13 +1,9 @@
 import request from '@/util/request'
 
-export function getDatabook(temp_id, version, baobid) {
+export function queryDataBook(query) {
   return request({
-    url: '/tpridmp/process/dmp_databook?method=query_data',
+    url: '/tpridmp/process/Common_ComboBox?type=databook',
     method: 'get',
-    params: {
-      temp_id,
-      version,
-      baobid,
-    }
+    params: query
   })
 }

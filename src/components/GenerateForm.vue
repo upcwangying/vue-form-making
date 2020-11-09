@@ -1,6 +1,7 @@
 <template>
   <div class="fm-style">
     <el-form ref="generateForm"
+      v-loading='formLoading'
       label-suffix=":"
       :size="data.config.size"
       :model="models" :rules="rules" :label-position="data.config.labelPosition" :label-width="data.config.labelWidth + 'px'">
@@ -21,11 +22,14 @@
                   <slot :name="citem.model" :model="models"></slot>
                 </el-form-item>
                 <generate-form-item v-else
+                  ref="generateFormItem_1"
                   :key="citem.key"
                   :models.sync="models"
                   :remote="remote"
                   :rules="rules"
                   :widget="citem"
+                  :disabled="disabled"
+                  :readonly="readonly"
                   @input-change="onInputChange">
                 </generate-form-item>
               </template>
@@ -41,12 +45,16 @@
 
         <template v-else>
           <generate-form-item
+            ref="generateFormItem_2"
             :key="item.key"
             :models.sync="models"
             :rules="rules"
             :widget="item"
+            :remote="remote"
+            :disabled="disabled"
+            :readonly="readonly"
             @input-change="onInputChange"
-            :remote="remote">
+          >
           </generate-form-item>
         </template>
 
@@ -63,7 +71,7 @@ export default {
   components: {
     GenerateFormItem
   },
-  props: ['data', 'remote', 'value', 'insite'],
+  props: ['data', 'remote', 'value', 'insite', 'formLoading', 'disabled', 'readonly'],
   data () {
     return {
       models: {},
@@ -74,6 +82,7 @@ export default {
     this.generateModule(this.data.list)
   },
   mounted () {
+    this.loadsheetData(this.data.list)
   },
   methods: {
     generateModule (genList) {
@@ -82,7 +91,7 @@ export default {
           genList[i].columns.forEach(item => {
             this.generateModule(item.list)
           })
-        } else {
+        }  else {
           if (this.value && Object.keys(this.value).indexOf(genList[i].model) >= 0) {
             this.models[genList[i].model] = this.value[genList[i].model]
           } else {
@@ -105,7 +114,6 @@ export default {
               this.models[genList[i].model] = genList[i].options.defaultValue
             }
           }
-
           if (this.rules[genList[i].model]) {
 
             this.rules[genList[i].model] = [...this.rules[genList[i].model], ...genList[i].rules.map(item => {
@@ -128,6 +136,7 @@ export default {
         }
       }
     },
+
     getData () {
       return new Promise((resolve, reject) => {
         this.$refs.generateForm.validate(valid => {
@@ -142,12 +151,66 @@ export default {
     reset () {
       this.$refs.generateForm.resetFields()
     },
+    loadsheetData(genList) {
+      for (let i = 0; i < genList.length; i++) {
+        if (genList[i].type === 'sheet') {
+          if (genList[i].options.length > 0) {
+            const optionsJson = genList[i].options[0]
+            this.$refs.generateFormItem_2 && this.$refs.generateFormItem_2[0].loadSpreadSheetDataByGenerateFormItem(optionsJson)
+
+          }
+        }
+      }
+    },
+
     onInputChange (value, field) {
       this.$emit('on-change', field, value, this.models)
     },
     refresh () {
 
-    }
+    },
+    initDTCompDefaultValue() {
+      const generateFormItem_1 = this.$refs['generateFormItem_1'] || null;
+      const generateFormItem_2 = this.$refs['generateFormItem_2'] || null;
+      generateFormItem_1 && generateFormItem_1.forEach(item => {
+        item.initDateTimeComponentDefaultValue()
+      })
+      generateFormItem_2 && generateFormItem_2.forEach(item => {
+        item.initDateTimeComponentDefaultValue()
+      })
+    },
+    clearDTCompDefaultValue() {
+      const generateFormItem_1 = this.$refs['generateFormItem_1'] || null;
+      const generateFormItem_2 = this.$refs['generateFormItem_2'] || null;
+      generateFormItem_1 && generateFormItem_1.forEach(item => {
+        item.clearDateTimeComponentValue()
+      })
+      generateFormItem_2 && generateFormItem_2.forEach(item => {
+        item.clearDateTimeComponentValue()
+      })
+    },
+    setGenerateFormItemValue(arrayType, arrayValue) {
+      let keyMap = arrayType
+      let valuyeMap = arrayValue
+      const generateFormItem_1 = this.$refs['generateFormItem_1'] || null;
+      const generateFormItem_2 = this.$refs['generateFormItem_2'] || null;
+      generateFormItem_1 && generateFormItem_1.forEach(item => {
+        const itemType = item.setGFIValue(keyMap, valuyeMap) || ''
+        if (itemType !== '') {
+          const index = keyMap.indexOf(itemType)
+          keyMap.splice(index, 1)
+          valuyeMap.splice(index, 1)
+        }
+      })
+      generateFormItem_2 && generateFormItem_2.forEach(item => {
+        const itemType = item.setGFIValue(keyMap, valuyeMap) || ''
+        if (itemType !== '') {
+          const index = keyMap.indexOf(itemType)
+          keyMap.splice(index, 1)
+          valuyeMap.splice(index, 1)
+        }
+      })
+    },
   },
   watch: {
     data: {

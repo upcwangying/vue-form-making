@@ -120,7 +120,7 @@ export const basicComponents = [
     type: 'time',
     icon: 'icon-time',
     options: {
-      defaultValue: '21:19:56',
+      defaultValue: '',
       readonly: false,
       disabled: false,
       editable: true,
@@ -164,7 +164,7 @@ export const basicComponents = [
     type: 'month',
     icon: 'icon-date',
     options: {
-      defaultValue: new Date(),
+      defaultValue: '',
       readonly: false,
       disabled: false,
       editable: true,
@@ -186,18 +186,7 @@ export const basicComponents = [
     type: 'quarter',
     icon: 'icon-date',
     options: {
-      defaultValue: new Date(),
-      readonly: false,
-      disabled: false,
-      editable: true,
-      clearable: true,
-      placeholder: '',
-      startPlaceholder: '',
-      endPlaceholder: '',
-      type: 'monthrange',
-      format: 'yyyy-MM',
-      timestamp: false,
-      required: false,
+      defaultValue: '',
       width: '',
       datasource: 'TPRI_VUE',
       table: 'TPRI_DMP_REPORT_DATA_TEST',
@@ -208,7 +197,7 @@ export const basicComponents = [
     type: 'year',
     icon: 'icon-date',
     options: {
-      defaultValue: new Date(),
+      defaultValue: '',
       readonly: false,
       disabled: false,
       editable: true,
@@ -333,6 +322,7 @@ export const basicComponents = [
     type: 'jizu',
     icon: '',
     options: {
+      width: '',
       datasource: 'TPRI_VUE',
       table: 'TPRI_DMP_REPORT_DATA_TEST',
       field: 'value'
@@ -342,6 +332,7 @@ export const basicComponents = [
     type: 'staff',
     icon: '',
     options: {
+      width: '',
       datasource: 'TPRI_VUE',
       table: 'TPRI_DMP_REPORT_DATA_TEST',
       field: 'value'
@@ -472,16 +463,6 @@ export const layoutComponents = [
     options: {
       datasource: 'TPRI_VUE',
       table: 'TPRI_DMP_REPORT_DATA_TEST',
-      dataTransformRules: {
-        rows:{
-          "wd_jz": "jzid",
-          "wd_sheb": "shebid"
-        },
-        columns:{
-          key: "zbid1",
-          value: "value"
-        }
-      },
     }
   }
 ]

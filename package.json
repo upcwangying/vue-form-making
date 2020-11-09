@@ -1,7 +1,7 @@
 {
   "name": "@aqsc/form-making",
   "description": "A designer and generator of form base on Vue.js, make form development simple and efficient.",
-  "version": "0.0.27",
+  "version": "0.0.40",
   "author": {
     "name": "wangying",
     "email": "upcwangying@126.com",
@@ -50,7 +50,7 @@
     "vue-router": "^3.0.1",
     "vue2-editor": "^2.10.2",
     "vuedraggable": "^2.16.0",
-    "x-data-spreadsheet": "^1.1.7"
+    "@aqsc/x-data-spreadsheet": "^0.0.6"
   },
   "devDependencies": {
     "@babel/core": "^7.0.1",
