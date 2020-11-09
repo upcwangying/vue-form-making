@@ -60,7 +60,6 @@
 
       </template>
     </el-form>
-    <el-button @click="test">test</el-button>
   </div>
 </template>
 
