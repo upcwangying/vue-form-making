@@ -704,14 +704,14 @@
               sheetData['key'] = item.model
               sheetData['datasource'] = ss.datasource
               sheetData['table'] = ss.table
-              // OtherData['field'] = item.options.field
+              sheetData['field'] = ss.field
+              tables.push(sheetData)
               item.options = data
               if (item.options.length > 0) {
                 item.options[0]['type'] = ss.type
                 item.options[0]['key'] = ss.model
                 item.options[0]['datasource'] = ss.datasource
                 item.options[0]['table'] = ss.table
-                tables.push(sheetData)
               }
             } else {
               let OtherData = Object.create(null)
@@ -725,13 +725,14 @@
           }
         }
         listFunc(list)
-        postTemplate(dbid, werks, bukrs, templateName, templateCode, this.widgetForm, templateGrade, flid, tables)
-          .then(result => {
-            if (result.success) {
-              this.query_bbfl()
-              this.$alert('操作成功', '提示')
-            }
-          })
+        console.log(tables)
+        // postTemplate(dbid, werks, bukrs, templateName, templateCode, this.widgetForm, templateGrade, flid, tables)
+        //   .then(result => {
+        //     if (result.success) {
+        //       this.query_bbfl()
+        //       this.$alert('操作成功', '提示')
+        //     }
+        //   })
       },
       queryTemplateData(dbid) {
         getTemplate(dbid).then(result => {

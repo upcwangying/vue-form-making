@@ -463,6 +463,7 @@ export const layoutComponents = [
     options: {
       datasource: 'TPRI_VUE',
       table: 'TPRI_DMP_REPORT_DATA_TEST',
+      field: 'value'
     }
   }
 ]
