@@ -1115,7 +1115,7 @@
                 // OtherData['field'] = item.options.field
                 item.options = data
                 if (item.options.length > 0) {
-                  item.options[0]['type'] == ss.type
+                  item.options[0]['type'] = ss.type
                   item.options[0]['key'] = ss.model
                   item.options[0]['datasource'] = ss.datasource
                   item.options[0]['table'] = ss.table
