@@ -1,7 +1,7 @@
 {
   "name": "@aqsc/form-making",
   "description": "A designer and generator of form base on Vue.js, make form development simple and efficient.",
-  "version": "0.0.40",
+  "version": "0.0.41",
   "author": {
     "name": "wangying",
     "email": "upcwangying@126.com",
