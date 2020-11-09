@@ -1,6 +1,6 @@
 <template>
   <el-tooltip :disabled="tooltipDisable" class="item" effect="dark" :content="tooltipContentStr" placement="top">
-    <el-select v-model="svalue" :placeholder="spholder" filterable :clearable="clearable" :disabled="disabled" style="width:100%" :collapse-tags="collapseTags"
+    <el-select v-model="svalue" :placeholder="spholder" filterable :clearable="clearable" :disabled="disabled || readonly" style="width:100%" :collapse-tags="collapseTags"
                :size="size" :multiple="multiple" @change="selectChange">
       <el-option v-for="item in options" :key="item.dataid" :label="item[displayField]" :value="item[valueField]" />
     </el-select>
@@ -24,6 +24,10 @@
         default: ''
       },
       disabled: {
+        type: Boolean,
+        default: false
+      },
+      readonly: {
         type: Boolean,
         default: false
       },
