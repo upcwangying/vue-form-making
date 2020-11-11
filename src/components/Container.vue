@@ -676,8 +676,6 @@
             if (item instanceof Array) {
               item = item[0]
             }
-
-
             if (item.type === 'table') {
               let tableData = Object.create(null)
               tableData['type'] = item.type
@@ -700,12 +698,51 @@
               const data = this.$refs.widgetForm && this.$refs.widgetForm.querySpreadSheetDataByWidgetForm()
               const ss = _clonedeep(item.options)
               let sheetData = Object.create(null)
-              sheetData['type'] = item.type
-              sheetData['key'] = item.model
-              sheetData['datasource'] = ss.datasource
-              sheetData['table'] = ss.table
-              sheetData['field'] = ss.field
-              tables.push(sheetData)
+              if (ss.length > 0) {
+                const rowsarrys = ss[0].rows
+                const rightsmenus = ss[0].rightMenus
+                const datas_ = []
+                for (const x in rowsarrys) {
+                  const cells = rowsarrys[x].cells
+                  const rowsColumns = {}
+                  for (const k in cells) {
+                    for (const m in rightsmenus) {
+                      if (Number(x) === Number(rightsmenus[m].ri) && Number(k) === Number(rightsmenus[m].ci)) {
+                        rowsColumns["rowIndex"] = Number(x)
+                        rowsColumns["columnIndex"] = Number(k)
+                        if (cells[Number(k)].type === "list") {
+                          rowsColumns["text"] = cells[Number(k)].value
+                        } else {
+                          rowsColumns["text"] = cells[Number(k)].text
+                        }
+                        rowsColumns["headers"] = rightsmenus[m].headers
+                        rowsColumns["datasource"] = rightsmenus[m].datasource
+                        rowsColumns["table"] = rightsmenus[m].table
+                        rowsColumns["zbbm"] = rightsmenus[m].zbbm
+                        rowsColumns["field"] = rightsmenus[m].field
+                        // rowsColumns["headers"] = rightsmenus[m].headers
+                        // rowsColumns["datasource"] = "TPRI_VUE"
+                        // rowsColumns["table"] = "TPRI_DMP_REPORT_DATA_TEST"
+                        // rowsColumns["zbbm"] = "12"
+                        // rowsColumns["field"] = "value"
+                        datas_.push(rowsColumns)
+                      }
+                    }
+                  }
+                }
+                sheetData['type'] = item.type
+                sheetData['key'] = item.model
+                sheetData['model'] = "model2"
+                sheetData['cols'] = item.options[0].cols.len
+                sheetData['rows'] = item.options[0].rows.len
+                sheetData['datas'] = datas_
+                // data['dataTransformRules'] = item.options.dataTransformRules
+                sheetData['defaultFields'] = 'werks,bukrs,create_by,create_time,update_by,update_time,is_del'
+                tables.push(sheetData)
+              }
+              // sheetData['datasource'] = ss.datasource
+              // sheetData['table'] = ss.table
+              // sheetData['field'] = ss.field
               item.options = data
               if (item.options.length > 0) {
                 item.options[0]['type'] = ss.type
@@ -725,14 +762,13 @@
           }
         }
         listFunc(list)
-        console.log(tables)
-        // postTemplate(dbid, werks, bukrs, templateName, templateCode, this.widgetForm, templateGrade, flid, tables)
-        //   .then(result => {
-        //     if (result.success) {
-        //       this.query_bbfl()
-        //       this.$alert('操作成功', '提示')
-        //     }
-        //   })
+        postTemplate(dbid, werks, bukrs, templateName, templateCode, this.widgetForm, templateGrade, flid, tables)
+          .then(result => {
+            if (result.success) {
+              this.query_bbfl()
+              this.$alert('操作成功', '提示')
+            }
+          })
       },
       queryTemplateData(dbid) {
         getTemplate(dbid).then(result => {
