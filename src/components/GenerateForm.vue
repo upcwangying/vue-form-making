@@ -82,7 +82,7 @@ export default {
     this.generateModule(this.data.list)
   },
   mounted () {
-    this.loadsheetData(this.data.list)
+    this.querysheetDate(this.data.list)
   },
   methods: {
     generateModule (genList) {
@@ -150,6 +150,9 @@ export default {
     },
     reset () {
       this.$refs.generateForm.resetFields()
+    },
+    querysheetDate(genList){
+      this.loadsheetData(genList)
     },
     loadsheetData(genList) {
       for (let i = 0; i < genList.length; i++) {
