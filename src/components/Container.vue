@@ -716,15 +716,18 @@
                           rowsColumns["text"] = cells[Number(k)].text
                         }
                         rowsColumns["headers"] = rightsmenus[m].headers
-                        rowsColumns["datasource"] = rightsmenus[m].datasource
-                        rowsColumns["table"] = rightsmenus[m].table
-                        rowsColumns["zbbm"] = rightsmenus[m].zbbm
-                        rowsColumns["field"] = rightsmenus[m].field
-                        // rowsColumns["headers"] = rightsmenus[m].headers
-                        // rowsColumns["datasource"] = "TPRI_VUE"
-                        // rowsColumns["table"] = "TPRI_DMP_REPORT_DATA_TEST"
-                        // rowsColumns["zbbm"] = "12"
-                        // rowsColumns["field"] = "value"
+                        if (rightsmenus[m].headers === "false") {
+                          rowsColumns["datasource"] = rightsmenus[m].datasource
+                          rowsColumns["table"] = rightsmenus[m].table
+                          rowsColumns["zbbm"] = rightsmenus[m].zbbm
+                          rowsColumns["field"] = rightsmenus[m].field
+                        }
+                        // if(!rightsmenus[m].headers){
+                        //   rowsColumns["datasource"] = "TPRI_VUE"
+                        //   rowsColumns["table"] = "TPRI_DMP_REPORT_DATA_TEST"
+                        //   rowsColumns["zbbm"] = "12"
+                        //   rowsColumns["field"] = "value"
+                        // }
                         datas_.push(rowsColumns)
                       }
                     }
@@ -733,8 +736,8 @@
                 sheetData['type'] = item.type
                 sheetData['key'] = item.model
                 sheetData['model'] = "model2"
-                sheetData['cols'] = item.options[0].cols.len
-                sheetData['rows'] = item.options[0].rows.len
+                sheetData['cols'] = ss[0].cols.len
+                sheetData['rows'] = ss[0].rows.len
                 sheetData['datas'] = datas_
                 // data['dataTransformRules'] = item.options.dataTransformRules
                 sheetData['defaultFields'] = 'werks,bukrs,create_by,create_time,update_by,update_time,is_del'
