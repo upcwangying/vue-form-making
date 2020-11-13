@@ -542,7 +542,7 @@
         const data = this.$refs.widgetForm && this.$refs.widgetForm.querySpreadSheetDataByWidgetForm()
         const tableDataList = []
         for (const dataItem of data) {
-          const {cols, rows, merges} = dataItem
+          const {cols, rows, merges, rightMenus} = dataItem
           const {len: columnLength} = cols
           const {len: rowLength} = rows
           const datas = []
@@ -552,35 +552,37 @@
             for (let j = 0; j < columnLength; j++) {
               if (!cells[j]) continue
               const {text} = cells[j]
-              let headers = false
-              if (i === 0) {
-                headers = true
-              }
-              if (headers) {
-                datas.push({
-                  rowIndex: i,
-                  columnIndex: j,
-                  text,
-                  headers: true, // 是否是表头
-                })
-              } else {
-                datas.push({
-                  rowIndex: i,
-                  columnIndex: j,
-                  text,
-                  headers: false, // 是否是表头
-                  zbbm: '', //
-                  datasource: '',
-                  table: '',
-                  field: '',
-                })
+              for (const m in rightMenus) {
+                if (i === Number(rightMenus[m].ri) && j === Number(rightMenus[m].ci)) {
+                  if (rightMenus[m].headers === "true") {
+                    datas.push({
+                      rowIndex: i,
+                      columnIndex: j,
+                      text: text,
+                      headers: rightMenus[m].headers, // 是否是表头
+                    })
+                  } else {
+                    datas.push({
+                      rowIndex: i,
+                      columnIndex: j,
+                      text: text,
+                      headers: rightMenus[m].headers, // 是否是表头
+                      zbbm: rightMenus[m].zbbm, //
+                      datasource: rightMenus[m].datasource,
+                      table: rightMenus[m].table,
+                      field: rightMenus[m].field,
+                    })
+                  }
+                }
               }
             }
           }
 
           tableDataList.push({
+            type: "sheet",
             cols: columnLength,
             rows: rowLength,
+            model: "model2",
             datas
           })
         }
@@ -770,13 +772,13 @@
           }
         }
         listFunc(list)
-        postTemplate(dbid, werks, bukrs, templateName, templateCode, this.widgetForm, templateGrade, flid, tables)
-          .then(result => {
-            if (result.success) {
-              this.query_bbfl()
-              this.$alert('操作成功', '提示')
-            }
-          })
+        // postTemplate(dbid, werks, bukrs, templateName, templateCode, this.widgetForm, templateGrade, flid, tables)
+        //   .then(result => {
+        //     if (result.success) {
+        //       this.query_bbfl()
+        //       this.$alert('操作成功', '提示')
+        //     }
+        //   })
       },
       queryTemplateData(dbid) {
         getTemplate(dbid).then(result => {
@@ -1153,18 +1155,54 @@
                 const data = this.$refs.widgetForm && this.$refs.widgetForm.querySpreadSheetDataByWidgetForm()
                 const ss = _clonedeep(item.options)
                 let sheetData = Object.create(null)
-                sheetData['type'] = item.type
-                sheetData['key'] = item.model
-                sheetData['datasource'] = ss.datasource
-                sheetData['table'] = ss.table
-                // OtherData['field'] = item.options.field
+                if (ss.length > 0) {
+                  const rowsarrys = ss[0].rows
+                  const rightsmenus = ss[0].rightMenus
+                  const datas_ = []
+                  for (const x in rowsarrys) {
+                    const cells = rowsarrys[x].cells
+                    const rowsColumns = {}
+                    for (const k in cells) {
+                      for (const m in rightsmenus) {
+                        if (Number(x) === Number(rightsmenus[m].ri) && Number(k) === Number(rightsmenus[m].ci)) {
+                          rowsColumns["rowIndex"] = Number(x)
+                          rowsColumns["columnIndex"] = Number(k)
+                          if (cells[Number(k)].type === "list") {
+                            rowsColumns["text"] = cells[Number(k)].value
+                          } else {
+                            rowsColumns["text"] = cells[Number(k)].text
+                          }
+                          rowsColumns["headers"] = rightsmenus[m].headers
+                          if (rightsmenus[m].headers === "false") {
+                            rowsColumns["datasource"] = rightsmenus[m].datasource
+                            rowsColumns["table"] = rightsmenus[m].table
+                            rowsColumns["zbbm"] = rightsmenus[m].zbbm
+                            rowsColumns["field"] = rightsmenus[m].field
+                          }
+                          datas_.push(rowsColumns)
+                        }
+                      }
+                    }
+                  }
+                  sheetData['type'] = item.type
+                  sheetData['key'] = item.model
+                  sheetData['model'] = "model2"
+                  sheetData['cols'] = ss[0].cols.len
+                  sheetData['rows'] = ss[0].rows.len
+                  sheetData['datas'] = datas_
+                  // data['dataTransformRules'] = item.options.dataTransformRules
+                  sheetData['defaultFields'] = 'werks,bukrs,create_by,create_time,update_by,update_time,is_del'
+                  dataList.push(sheetData)
+                }
+                // sheetData['datasource'] = ss.datasource
+                // sheetData['table'] = ss.table
+                // sheetData['field'] = ss.field
                 item.options = data
                 if (item.options.length > 0) {
                   item.options[0]['type'] = ss.type
                   item.options[0]['key'] = ss.model
                   item.options[0]['datasource'] = ss.datasource
                   item.options[0]['table'] = ss.table
-                  dataList.push(sheetData)
                 }
               } else {
                 let OtherData = Object.create(null)
