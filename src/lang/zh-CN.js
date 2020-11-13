@@ -29,6 +29,7 @@ export default {
         divider: '分割线',
         jizu: '机组',
         staff: '人员',
+        databook: '数据字典',
         sheet: '电子表格'
       },
       basic: {
@@ -209,7 +210,8 @@ export default {
         tab: '标签页',
         validatorRequired: '必须填写',
         validatorType: '格式不正确',
-        validatorPattern: '格式不匹配'
+        validatorPattern: '格式不匹配',
+        groupcode: '类别代码'
       }
     },
     upload: {

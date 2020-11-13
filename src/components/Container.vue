@@ -77,14 +77,14 @@
           </el-aside>
 
           <el-container class="center-container" direction="vertical">
-<!--            <el-header class="btn-bar" style="height: 45px;">-->
-            <!--              <slot name="action">-->
-            <!--              </slot>-->
-            <!--                          <el-button v-if="upload" type="text" size="medium" icon="el-icon-upload2" @click="handleUpload">{{$t('fm.actions.import')}}</el-button>-->
-            <!--              <el-button v-if="clearable" type="text" size="medium" icon="el-icon-delete" @click="handleClear">{{$t('fm.actions.clear')}}</el-button>-->
-            <!--              <el-button v-if="generateJson" type="text" size="medium" icon="el-icon-tickets" @click="handleGenerateJson">{{$t('fm.actions.json')}}</el-button>-->
-            <!--              <el-button v-if="generateCode" type="text" size="medium" icon="el-icon-document" @click="handleGenerateCode">{{$t('fm.actions.code')}}</el-button>-->
-            <!--            </el-header>-->
+            <!--<el-header class="btn-bar" style="height: 45px;">-->
+              <!--<slot name="action">-->
+              <!--</slot>-->
+              <!--<el-button v-if="upload" type="text" size="medium" icon="el-icon-upload2" @click="handleUpload">{{$t('fm.actions.import')}}</el-button>-->
+              <!--<el-button v-if="clearable" type="text" size="medium" icon="el-icon-delete" @click="handleClear">{{$t('fm.actions.clear')}}</el-button>-->
+              <!--<el-button v-if="generateJson" type="text" size="medium" icon="el-icon-tickets" @click="handleGenerateJson">{{$t('fm.actions.json')}}</el-button>-->
+              <!--<el-button v-if="generateCode" type="text" size="medium" icon="el-icon-document" @click="handleGenerateCode">{{$t('fm.actions.code')}}</el-button>-->
+            <!--</el-header>-->
             <el-main :class="{'widget-empty': widgetForm.list.length === 0}">
               <widget-form v-if="!resetJson" ref="widgetForm" :data="widgetForm" :select.sync="widgetFormSelect"
                            :cell-dom.sync="cellDomBlue" :area-dom.sync="areaDomRed" :ui-select="uiSelect"></widget-form>
@@ -105,7 +105,8 @@
                 <zhi-biao-config v-show="configTab ==='zhibiao'" :data="zhiBiaoSelect"
                                  :zbattribute="zbAttribute"></zhi-biao-config>
                 <widget-config ref="widgetConfig" v-show="configTab ==='widget'" :data="widgetFormSelect"
-                               :currcheck.sync="currentCheck" @show-add-column="addColumn" @show-add-row="addRow"
+                               :currcheck.sync="currentCheck"  :module="module"
+                               @show-add-column="addColumn" @show-add-row="addRow"
                                @drag-end="dragend" @remove-column="removeColumn" @remove-row="removeRow"
                                @merge-cell="mergeCell" @update-row-check="updateRowCheck"
                                @show-jz="widgetConShowJz"></widget-config>
@@ -251,6 +252,10 @@
       clearable: {
         type: Boolean,
         default: false
+      },
+      module: {
+        type: String,
+        default: 'jsjd'
       },
     },
     data() {

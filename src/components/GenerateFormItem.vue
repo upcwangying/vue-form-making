@@ -5,6 +5,17 @@
     :label-width="widget.type === 'table' ? '0px' : 'auto'"
   >
 
+    <template v-if="widget.type=='databook'">
+      <data-book-select
+        v-model="dataModel"
+        :disabled="disabled || widget.options.disabled"
+        :readonly="readonly || widget.options.readonly"
+        :placeholder="widget.options.placeholder"
+        :groupcode="widget.options.groupcode"
+        value-field="datacode"
+        :style="{width: widget.options.width}" />
+    </template>
+
     <template v-if="widget.type === 'staff'">
       <staff-component
         v-model="dataModel"

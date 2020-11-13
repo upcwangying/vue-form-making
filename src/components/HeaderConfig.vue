@@ -114,7 +114,7 @@ export default {
   props: {
     basicFields: {
       type: Array,
-      default: () => ['input', 'textarea', 'number', 'radio', 'checkbox', 'time', 'date', 'month', 'quarter', 'year', 'rate', 'color', 'select', 'switch', 'slider', 'text', 'jizu', 'staff']
+      default: () => ['input', 'textarea', 'number', 'radio', 'checkbox', 'time', 'date', 'month', 'quarter', 'year', 'rate', 'color', 'select', 'switch', 'slider', 'text', 'jizu', 'staff', 'databook']
     },
     advanceFields: {
       type: Array,

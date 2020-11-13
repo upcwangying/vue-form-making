@@ -7,3 +7,13 @@ export function queryDataBook(query) {
     params: query
   })
 }
+
+export function queryDataBookGroupCode(code) {
+  return request({
+    url: '/tpridmp/process/dmp_databook?method=query_group',
+    method: 'get',
+    params: {
+    projectcode: 'AQSC_' + code.toUpperCase()
+    }
+  })
+}

@@ -31,6 +31,15 @@
         <el-input style="width: 90px;" type="number" v-model.number="data.options.size.height"></el-input>
       </el-form-item>
 
+      <el-form-item :label="$t('fm.config.widget.groupcode')"
+                    v-if="Object.keys(data.options).indexOf('groupcode')>=0 && (data.type!=='time' || data.type!=='date')">
+        <!--<el-input v-model="data.options.groupcode"></el-input>-->
+        <el-cascader
+          v-model="values_"
+          :options="groupCodeOptions"
+          :props="{ expandTrigger: 'hover', label: 'dataname', value: 'datacode' }" @change="abc">
+        </el-cascader>
+      </el-form-item>
       <el-form-item :label="$t('fm.config.widget.placeholder')"
                     v-if="Object.keys(data.options).indexOf('placeholder')>=0 && (data.type!=='time' || data.type!=='date')">
         <el-input v-model="data.options.placeholder"></el-input>
@@ -427,26 +436,41 @@
         <el-form-item label="单元格属性">
           <el-row type="flex" justify="space-around" style="padding-bottom: 15px;">
             <el-col>
-              <el-button>显示指标符号</el-button>
+              <el-button style="width: 80%;margin-left: 10%;">显示指标符号</el-button>
             </el-col>
             <el-col>
-              <el-button>显示指标单位</el-button>
-            </el-col>
-          </el-row>
-          <el-row type="flex" justify="space-around" style="padding-bottom: 15px;">
-            <el-col>
-              <el-button>显示指标标准值</el-button>
-            </el-col>
-            <el-col>
-              <el-button>显示指标期望值</el-button>
+              <el-button style="width: 80%;margin-left: 10%;">显示指标单位</el-button>
             </el-col>
           </el-row>
           <el-row type="flex" justify="space-around" style="padding-bottom: 15px;">
             <el-col>
-              <el-button @click="showJz">显示机组</el-button>
+              <el-button style="width: 80%;margin-left: 10%;">显示指标标准值</el-button>
             </el-col>
             <el-col>
-              <el-button>重置</el-button>
+              <el-button style="width: 80%;margin-left: 10%;">显示指标期望值</el-button>
+            </el-col>
+          </el-row>
+          <el-row type="flex" justify="space-around" style="padding-bottom: 15px;">
+            <el-col>
+              <el-button @click="showJz" style="width: 80%;margin-left: 10%;">显示机组</el-button>
+            </el-col>
+            <el-col>
+              <el-button style="width: 80%;margin-left: 10%;">显示设备</el-button>
+            </el-col>
+          </el-row>
+          <el-row type="flex" justify="space-around" style="padding-bottom: 15px;">
+            <el-col :span="6">
+              <span style="padding-left: 20%;">公式计算:</span>
+            </el-col>
+            <el-col :span="18">
+              <el-input style="padding-right: 5%;"></el-input>
+            </el-col>
+          </el-row>
+          <el-row type="flex" justify="space-around" style="padding-bottom: 15px;">
+            <el-col>
+              <el-button  style="width: 80%;margin-left: 10%;">重置</el-button>
+            </el-col>
+            <el-col>
             </el-col>
           </el-row>
         </el-form-item>
@@ -528,13 +552,14 @@
 <script>
   import Draggable from 'vuedraggable'
   import AddColumn from '@/components/AddColumn';
+  import { queryDataBookGroupCode } from '@/api/databook';
 
   export default {
     components: {
       Draggable,
       AddColumn,
     },
-    props: ['data', 'currcheck'],
+    props: ['data', 'currcheck', 'module'],
     data() {
       return {
         validator: {
@@ -547,6 +572,8 @@
         columnCurrentCheck: this.currcheck,
         rowCurrentCheck: [],
         // currrentCheckOfMergeCell: [],
+        values_: [],
+        groupCodeOptions: [],
       }
     },
     computed: {
@@ -554,8 +581,16 @@
         return this.data && Object.keys(this.data).length > 0;
       }
     },
-    mounted() {},
+    mounted() {
+      queryDataBookGroupCode(this.module).then(res => {
+        this.groupCodeOptions = res.dataset.datas;
+      })
+    },
     methods: {
+      abc(val) {
+        this.data.options.groupcode = val[val.length-1]
+        console.log('=-=-=-=-=> ', val)
+      },
       handleOptionsRemove(index) {
         if (this.data.type === 'grid') {
           this.data.columns.splice(index, 1)

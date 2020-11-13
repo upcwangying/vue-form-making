@@ -71,11 +71,12 @@ export default {
   components: {
     GenerateFormItem
   },
-  props: ['data', 'remote', 'value', 'insite', 'formLoading', 'disabled', 'readonly'],
+  props: ['data', 'remote', 'value', 'insite', 'formLoading', 'disabled', 'readonly', 'module'],
   data () {
     return {
       models: {},
       rules: {},
+      module_: this.module || 'jsjd'
     }
   },
   created () {

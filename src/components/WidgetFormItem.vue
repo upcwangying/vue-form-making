@@ -7,6 +7,15 @@
                 @click.native.stop="handleSelectWidget(index)"
   >
 
+    <template v-if="element.type === 'databook'">
+      <data-book-select
+        v-model="element.options.defaultValue"
+        :placeholder="element.options.placeholder"
+        :groupcode="element.options.groupcode"
+        value-field="datacode"
+        :style="{width: element.options.width}" />
+    </template>
+
     <template v-if="element.type === 'staff'">
       <staff-component
         :style="{width: element.options.width}" />
