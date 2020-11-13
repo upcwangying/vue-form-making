@@ -97,9 +97,19 @@
     },
     methods: {
       querySpreadSheetDataByWidgetForm() {
+        for (let i in this.$refs.widget_form_item_table[0].data.list) {
+          if(this.$refs.widget_form_item_table[0].data.list[i].type !== "sheet"){
+            delete this.$refs.widget_form_item_table[0].data.list[i]
+          }
+        }
         return this.$refs.widget_form_item_table && this.$refs.widget_form_item_table[0].querySpreadSheetDataByWidgetFormItem()
       },
       loadSpreadSheetDataByWidgetForm(data) {
+        for (let i in this.$refs.widget_form_item_table[0].data.list) {
+          if(this.$refs.widget_form_item_table[0].data.list[i].type !== "sheet"){
+            delete this.$refs.widget_form_item_table[0].data.list[i]
+          }
+        }
          this.$refs.widget_form_item_table && this.$refs.widget_form_item_table[0].loadSpreadSheetDataByWidgetFormItem(data)
       },
       updateSelectWidget(index) {
