@@ -160,8 +160,11 @@ export default {
         if (genList[i].type === 'sheet') {
           if (genList[i].options.length > 0) {
             const optionsJson = genList[i].options[0]
-            this.$refs.generateFormItem_2 && this.$refs.generateFormItem_2[0].loadSpreadSheetDataByGenerateFormItem(optionsJson)
-
+            for (let j = 0; j < this.$refs.generateFormItem_2.length; j++) {
+              if(this.$refs.generateFormItem_2[j].widget.type ===  "sheet"){
+                this.$refs.generateFormItem_2[j].loadSpreadSheetDataByGenerateFormItem(optionsJson)
+              }
+            }
           }
         }
       }
