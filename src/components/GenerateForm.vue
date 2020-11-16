@@ -215,6 +215,26 @@ export default {
         }
       })
     },
+    displayTableOnly(showOnlyArray) {
+      const generateFormItem_1 = this.$refs['generateFormItem_1'] || null;
+      const generateFormItem_2 = this.$refs['generateFormItem_2'] || null;
+      generateFormItem_1 && generateFormItem_1.forEach(item => {
+        item.displayTableOnly(showOnlyArray)
+      })
+      generateFormItem_2 && generateFormItem_2.forEach(item => {
+        item.displayTableOnly(showOnlyArray)
+      })
+    },
+    resetReportStatus() {
+      const generateFormItem_1 = this.$refs['generateFormItem_1'] || null;
+      const generateFormItem_2 = this.$refs['generateFormItem_2'] || null;
+      generateFormItem_1 && generateFormItem_1.forEach(item => {
+        item.resetReportStatus()
+      })
+      generateFormItem_2 && generateFormItem_2.forEach(item => {
+        item.resetReportStatus()
+      })
+    }
   },
   watch: {
     data: {

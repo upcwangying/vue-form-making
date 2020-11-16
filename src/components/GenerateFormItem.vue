@@ -1,5 +1,6 @@
 <template>
   <el-form-item
+    v-show="!showTableOnly"
     :prop="widget.model"
     :label="widget.type === 'table' || widget.type === 'sheet' ? '' : widget.name"
     :label-width="widget.type === 'table' ? '0px' : 'auto'"
@@ -356,6 +357,7 @@ export default {
   data() {
     return {
       dataModel: this.models[this.widget.model],
+      showTableOnly: false,
     }
   },
   created() {
@@ -460,6 +462,13 @@ export default {
           return result
         }
       }
+    },
+    displayTableOnly(showOnlyArray) {
+      const showOnlyArray_ = showOnlyArray || ['table', 'sheet']
+      this.showTableOnly = (showOnlyArray_.indexOf(this.widget.type) === -1)
+    },
+    resetReportStatus() {
+      this.showTableOnly = false
     },
   },
   watch: {
