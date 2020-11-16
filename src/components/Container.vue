@@ -604,6 +604,12 @@
         })
       },
       loadSpreadSheetData(data) {
+        console.log(this.$refs.widgetForm)
+        // for (let j = 0; j < this.$refs.generateFormItem_2.length; j++) {
+        //   if(this.$refs.generateFormItem_2[j].widget.type ===  "sheet"){
+        //     this.$refs.generateFormItem_2[j].loadSpreadSheetDataByGenerateFormItem(optionsJson)
+        //   }
+        // }
         this.$refs.widgetForm && this.$refs.widgetForm.loadSpreadSheetDataByWidgetForm(data)
       },
       createTemplate() {
@@ -772,13 +778,13 @@
           }
         }
         listFunc(list)
-        // postTemplate(dbid, werks, bukrs, templateName, templateCode, this.widgetForm, templateGrade, flid, tables)
-        //   .then(result => {
-        //     if (result.success) {
-        //       this.query_bbfl()
-        //       this.$alert('操作成功', '提示')
-        //     }
-        //   })
+        postTemplate(dbid, werks, bukrs, templateName, templateCode, this.widgetForm, templateGrade, flid, tables)
+          .then(result => {
+            if (result.success) {
+              this.query_bbfl()
+              this.$alert('操作成功', '提示')
+            }
+          })
       },
       queryTemplateData(dbid) {
         getTemplate(dbid).then(result => {
@@ -787,12 +793,10 @@
           const {list} = json
           this.setJSON(JSON.parse(json), null)
           this.$nextTick(() => {
-            console.log(JSON.parse(json).list)
             for (let item of JSON.parse(json).list) {
               if (item.type === "sheet") {
                 if (item.options.length > 0) {
                   const optionsJson = item.options[0]
-                  console.log(optionsJson)
                   this.loadSpreadSheetData(optionsJson)
                 }
               }

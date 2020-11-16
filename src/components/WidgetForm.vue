@@ -97,20 +97,18 @@
     },
     methods: {
       querySpreadSheetDataByWidgetForm() {
-        for (let i in this.$refs.widget_form_item_table[0].data.list) {
-          if(this.$refs.widget_form_item_table[0].data.list[i].type !== "sheet"){
-            delete this.$refs.widget_form_item_table[0].data.list[i]
+        for (let i in this.$refs.widget_form_item_table) {
+          if(this.$refs.widget_form_item_table[i].element.type === "sheet"){
+            return this.$refs.widget_form_item_table && this.$refs.widget_form_item_table[0].querySpreadSheetDataByWidgetFormItem()
           }
         }
-        return this.$refs.widget_form_item_table && this.$refs.widget_form_item_table[0].querySpreadSheetDataByWidgetFormItem()
       },
       loadSpreadSheetDataByWidgetForm(data) {
-        for (let i in this.$refs.widget_form_item_table[0].data.list) {
-          if(this.$refs.widget_form_item_table[0].data.list[i].type !== "sheet"){
-            delete this.$refs.widget_form_item_table[0].data.list[i]
+        for (let i in this.$refs.widget_form_item_table) {
+          if(this.$refs.widget_form_item_table[i].element.type === "sheet"){
+            this.$refs.widget_form_item_table && this.$refs.widget_form_item_table[i].loadSpreadSheetDataByWidgetFormItem(data)
           }
         }
-         this.$refs.widget_form_item_table && this.$refs.widget_form_item_table[0].loadSpreadSheetDataByWidgetFormItem(data)
       },
       updateSelectWidget(index) {
         if (this.data.list[index].type === 'table') {
