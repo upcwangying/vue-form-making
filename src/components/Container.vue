@@ -123,7 +123,7 @@
             width="1000px"
             form
           >
-            <generate-form insite="true" @on-change="handleDataChange" v-if="previewVisible" :data="widgetForm"
+            <generate-form insite="true" @on-change="handleDataChange" v-if="previewVisible" :data="widgetForm" :zbDatas="zbDatas"
                            :value="widgetModels" :remote="remoteFuncs" ref="generateForm">
 
               <template v-slot:blank="scope">
