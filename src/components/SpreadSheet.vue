@@ -9,6 +9,12 @@ import Spreadsheet from "@aqsc/x-data-spreadsheet";
 import zhCN from '@aqsc/x-data-spreadsheet/src/locale/zh-cn';
 export default {
   name: 'SpreadSheet',
+  props: {
+    zbbmDatas: {
+      type: Array,
+      default: () => []
+    }
+  },
   data() {
     return {
       spreadsheet: null
@@ -31,7 +37,8 @@ export default {
         width: 100,
         indexWidth: 60,
         minWidth: 60,
-      }
+      },
+      zbbmData: this.zbbmDatas
     })
       .loadData({
       }) // load data

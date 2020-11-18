@@ -86,7 +86,7 @@
               <!--<el-button v-if="generateCode" type="text" size="medium" icon="el-icon-document" @click="handleGenerateCode">{{$t('fm.actions.code')}}</el-button>-->
             <!--</el-header>-->
             <el-main :class="{'widget-empty': widgetForm.list.length === 0}">
-              <widget-form v-if="!resetJson" ref="widgetForm" :data="widgetForm" :select.sync="widgetFormSelect"
+              <widget-form v-if="!resetJson" ref="widgetForm" :data="widgetForm" :select.sync="widgetFormSelect" :zbDatas="zbDatas"
                            :cell-dom.sync="cellDomBlue" :area-dom.sync="areaDomRed" :ui-select="uiSelect"></widget-form>
             </el-main>
           </el-container>
@@ -260,6 +260,7 @@
     },
     data() {
       return {
+        zbDatas:[],
         resetJson: false,
         showAddColumn: false,
         widgetForm: JSON.parse(JSON.stringify(templateInitialData)),
@@ -362,17 +363,18 @@
       },
       query_zb(jtzbfl) {
         this.quateTableLoading = true
+        this.zbDatas = []
         getZb(this.syorjbParam, jtzbfl).then(res => {
           if (res.success) {
             this.zbflSelectData = [...res.dataset.datas]
-            let zbDatas=[]
+            let zbDatas_=[]
             this.zbflSelectData.forEach(item => {
               let obj={}
-              obj.id=item.dbid
-              obj.name=item.zbmc
-              zbDatas.push(obj)
+              obj.key=item.dbid
+              obj.title=item.zbmc
+              zbDatas_.push(obj)
             })
-            this.$set(this.widgetForm,"zbDatas",zbDatas)
+            this.zbDatas= zbDatas_
             this.quateTableLoading = false
           }
         }).catch(err => {
