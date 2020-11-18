@@ -327,7 +327,7 @@
     </template>
 
     <template v-if="widget.type === 'sheet'">
-      <spread-sheet style="width: 100%" ref="spreadsheet"  />
+      <spread-sheet style="width: 100%" ref="spreadsheet" :zbbmDatas="zbbmDatas"  />
     </template>
 
     <template v-if="widget.type === 'text'">
@@ -345,7 +345,7 @@ import SpreadSheet from '@/components/SpreadSheet';
 import TableColumn from '@/components/TableColumn';
 
 export default {
-  props: ['widget', 'models', 'rules', 'remote', 'disabled', 'readonly'],
+  props: ['widget', 'models', 'rules', 'remote', 'disabled', 'readonly','zbbmDatas'],
   components: {
     SpreadSheet,
     FmUpload,

@@ -53,6 +53,7 @@
             :remote="remote"
             :disabled="disabled"
             :readonly="readonly"
+            :zbbmDatas="zbDatas"
             @input-change="onInputChange"
           >
           </generate-form-item>
@@ -71,7 +72,7 @@ export default {
   components: {
     GenerateFormItem
   },
-  props: ['data', 'remote', 'value', 'insite', 'formLoading', 'disabled', 'readonly', 'module'],
+  props: ['data', 'remote', 'value', 'insite', 'formLoading', 'disabled', 'readonly', 'module','zbDatas'],
   data () {
     return {
       models: {},
@@ -83,6 +84,7 @@ export default {
     this.generateModule(this.data.list)
   },
   mounted () {
+    console.log(this.zbDatas)
     this.querysheetDate(this.data.list)
     this.displayTableOnly(["sheet"])
   },
@@ -241,6 +243,9 @@ export default {
     }
   },
   watch: {
+    zbDatas(val){
+      this.zbDatas=val
+    },
     data: {
       deep: true,
       handler (val) {
