@@ -84,6 +84,7 @@ export default {
   },
   mounted () {
     this.querysheetDate(this.data.list)
+    this.displayTableOnly(["sheet"])
   },
   methods: {
     generateModule (genList) {

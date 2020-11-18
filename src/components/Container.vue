@@ -365,6 +365,14 @@
         getZb(this.syorjbParam, jtzbfl).then(res => {
           if (res.success) {
             this.zbflSelectData = [...res.dataset.datas]
+            let zbDatas=[]
+            this.zbflSelectData.forEach(item => {
+              let obj={}
+              obj.id=item.dbid
+              obj.name=item.zbmc
+              zbDatas.push(obj)
+            })
+            this.$set(this.widgetForm,"zbDatas",zbDatas)
             this.quateTableLoading = false
           }
         }).catch(err => {
@@ -604,12 +612,6 @@
         })
       },
       loadSpreadSheetData(data) {
-        console.log(this.$refs.widgetForm)
-        // for (let j = 0; j < this.$refs.generateFormItem_2.length; j++) {
-        //   if(this.$refs.generateFormItem_2[j].widget.type ===  "sheet"){
-        //     this.$refs.generateFormItem_2[j].loadSpreadSheetDataByGenerateFormItem(optionsJson)
-        //   }
-        // }
         this.$refs.widgetForm && this.$refs.widgetForm.loadSpreadSheetDataByWidgetForm(data)
       },
       createTemplate() {
@@ -703,6 +705,9 @@
               if (columns) {
                 const gridData = []
                 for (const column of columns) {
+                  if(column.list[0].type === "year"){
+                    column.list[0].defaultValue=new Date(column.list[0].options.defaultValue).getFullYear()
+                  }
                   gridData.push(column.list)
                 }
                 gridData && listFunc(gridData)
