@@ -708,7 +708,8 @@
                 const gridData = []
                 for (const column of columns) {
                   if(column.list[0].type === "year"){
-                    column.list[0].defaultValue=new Date(column.list[0].options.defaultValue).getFullYear()
+                    column.list[0].options.defaultValue=new Date(column.list[0].options.defaultValue).getFullYear()
+
                   }
                   gridData.push(column.list)
                 }
