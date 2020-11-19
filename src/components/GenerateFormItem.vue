@@ -176,7 +176,7 @@
         :disabled="disabled || widget.options.disabled"
         :readonly="readonly || widget.options.readonly"
         :placeholder="widget.options.placeholder"
-        groupcode="AQSC_JSJD_SUB_QUARTER"
+        :groupcode="['AQSC_JSJD_SUB_QUARTER']"
         value-field="datacode"
         :style="{width: widget.options.width}" />
     </template>

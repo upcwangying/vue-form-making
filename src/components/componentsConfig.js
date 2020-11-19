@@ -5,6 +5,7 @@ export const basicComponents = [
     options: {
       width: '100%',
       defaultValue: '',
+      readonly: false,
       required: false,
       dataType: 'string',
       pattern: '',
@@ -21,6 +22,7 @@ export const basicComponents = [
     options: {
       width: '100%',
       defaultValue: '',
+      readonly: false,
       required: false,
       disabled: false,
       pattern: '',
@@ -37,6 +39,7 @@ export const basicComponents = [
       width: '',
       required: false,
       defaultValue: 0,
+      readonly: false,
       min: '',
       max: '',
       step: 1,
@@ -350,7 +353,7 @@ export const basicComponents = [
     type: 'databook',
     icon: '',
     options: {
-      groupcode:'',
+      groupcode:[],
       defaultValue: '',
       readonly: false,
       disabled: false,

@@ -106,10 +106,11 @@
                                  :zbattribute="zbAttribute"></zhi-biao-config>
                 <widget-config ref="widgetConfig" v-show="configTab ==='widget'" :data="widgetFormSelect"
                                :currcheck.sync="currentCheck"  :module="module"
+                               :cell-dom="cellDomBlue" :area-dom="areaDomRed"
                                @show-add-column="addColumn" @show-add-row="addRow"
                                @drag-end="dragend" @remove-column="removeColumn" @remove-row="removeRow"
                                @merge-cell="mergeCell" @update-row-check="updateRowCheck"
-                               @show-jz="widgetConShowJz"></widget-config>
+                               @show-jz="widgetConShowJz" @cell-auto-computed="cellAutoComputed"></widget-config>
                 <form-config v-show="configTab ==='form'" :data="widgetForm.config"></form-config>
               </el-main>
             </el-container>
@@ -1114,6 +1115,11 @@
         // console.log('widgetFormSelect : ', this.widgetFormSelect)
         this.uiSelect.jz.push({rowIndex: this.cellDomBlue.row.rowIndex, prop: this.cellDomBlue.column.property})
       },
+      cellAutoComputed(val) {
+        console.log('=-=-=-> ', this.widgetFormSelect.options.cellComputeRules)
+        this.widgetFormSelect.options.cellComputeRules || (this.widgetFormSelect.options.cellComputeRules = []);
+        this.widgetFormSelect.options.cellComputeRules.push({ rowIndex: this.cellDomBlue.row.rowIndex, colIndex: this.cellDomBlue.column.columnIndex, formula: val })
+      },
       handleGoGithub() {
         window.location.href = 'https://github.com/upcwangying/vue-form-making'
       },
@@ -1219,6 +1225,7 @@
               } else {
                 let OtherData = Object.create(null)
                 OtherData['type'] = item.type
+                (OtherData['type'] === 'databook') && (OtherData['groupcode'] = item.options.groupcode);
                 OtherData['key'] = item.model
                 OtherData['value'] = item.options.defaultValue
                 OtherData['datasource'] = item.options.datasource

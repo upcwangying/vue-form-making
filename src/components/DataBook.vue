@@ -20,8 +20,10 @@
         default: ''
       },
       groupcode: {
-        type: String,
-        default: ''
+        type: Array,
+        default() {
+          return []
+        }
       },
       disabled: {
         type: Boolean,
@@ -68,7 +70,8 @@
         svalue: '',
         spholder: '请选择',
         tooltipContentStr: "",
-        tooltipDisable: true
+        tooltipDisable: true,
+        groupcode_: this.groupcode[this.groupcode.length-1] || ''
       }
     },
     watch: {
@@ -120,7 +123,7 @@
         }
       },
       getCrama() {
-        queryDataBook({ groupcode: this.groupcode }).then(response => {
+        queryDataBook({ groupcode: this.groupcode_ }).then(response => {
           const datas = response.dataset.datas;
           const options = []
           datas.forEach(itee => {

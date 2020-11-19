@@ -11,7 +11,7 @@
       <data-book-select
         v-model="element.options.defaultValue"
         :placeholder="element.options.placeholder"
-        :groupcode="element.options.groupcode"
+        :groupcode="[]"
         value-field="datacode"
         :style="{width: element.options.width}" />
     </template>
@@ -139,7 +139,7 @@
       <data-book-select
         v-model="element.options.defaultValue"
         :placeholder="element.options.placeholder"
-        groupcode="AQSC_JSJD_SUB_QUARTER"
+        :groupcode="['AQSC_JSJD_SUB_QUARTER']"
         value-field="datacode"
         :style="{width: element.options.width}" />
     </template>
