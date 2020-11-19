@@ -708,10 +708,6 @@
               if (columns) {
                 const gridData = []
                 for (const column of columns) {
-                  if(column.list[0].type === "year"){
-                    column.list[0].options.defaultValue=new Date(column.list[0].options.defaultValue).getFullYear()
-
-                  }
                   gridData.push(column.list)
                 }
                 gridData && listFunc(gridData)
@@ -726,9 +722,9 @@
                 const datas_ = []
                 for (const x in rowsarrys) {
                   const cells = rowsarrys[x].cells
-                  const rowsColumns = {}
                   for (const k in cells) {
                     for (const m in rightsmenus) {
+                      const rowsColumns = {}
                       if (Number(x) === Number(rightsmenus[m].ri) && Number(k) === Number(rightsmenus[m].ci)) {
                         rowsColumns["rowIndex"] = Number(x)
                         rowsColumns["columnIndex"] = Number(k)
@@ -800,8 +796,10 @@
           const {json} = result.dataset.datas[0]
           const sheetOptions = []
           const {list} = json
+          console.log(json)
           this.setJSON(JSON.parse(json), null)
           this.$nextTick(() => {
+            console.log(JSON.parse(json).list)
             for (let item of JSON.parse(json).list) {
               if (item.type === "sheet") {
                 if (item.options.length > 0) {
@@ -1179,9 +1177,9 @@
                   const datas_ = []
                   for (const x in rowsarrys) {
                     const cells = rowsarrys[x].cells
-                    const rowsColumns = {}
                     for (const k in cells) {
                       for (const m in rightsmenus) {
+                        const rowsColumns = {}
                         if (Number(x) === Number(rightsmenus[m].ri) && Number(k) === Number(rightsmenus[m].ci)) {
                           rowsColumns["rowIndex"] = Number(x)
                           rowsColumns["columnIndex"] = Number(k)

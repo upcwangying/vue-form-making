@@ -84,9 +84,8 @@ export default {
     this.generateModule(this.data.list)
   },
   mounted () {
-    console.log(this.zbDatas)
     this.querysheetDate(this.data.list)
-    this.displayTableOnly(["sheet"])
+    // this.displayTableOnly(["sheet"])
   },
   methods: {
     generateModule (genList) {
