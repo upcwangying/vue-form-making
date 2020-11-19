@@ -796,10 +796,8 @@
           const {json} = result.dataset.datas[0]
           const sheetOptions = []
           const {list} = json
-          console.log(json)
           this.setJSON(JSON.parse(json), null)
           this.$nextTick(() => {
-            console.log(JSON.parse(json).list)
             for (let item of JSON.parse(json).list) {
               if (item.type === "sheet") {
                 if (item.options.length > 0) {
@@ -1132,7 +1130,6 @@
       handleTest() {
         this.$refs.generateForm.getData().then(result => {
           const {list} = this.widgetForm
-
           let dataList = []
           const listFunc = (data) => {
             for (let item of data) {
@@ -1141,7 +1138,6 @@
               if (item instanceof Array) {
                 item = item[0]
               }
-
               if (item.type === 'table') {
                 let data = Object.create(null)
                 data['type'] = item.type
@@ -1174,6 +1170,7 @@
                 if (ss.length > 0) {
                   const rowsarrys = ss[0].rows
                   const rightsmenus = ss[0].rightMenus
+                  console.log(rowsarrys)
                   const datas_ = []
                   for (const x in rowsarrys) {
                     const cells = rowsarrys[x].cells
