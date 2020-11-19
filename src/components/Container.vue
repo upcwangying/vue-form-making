@@ -721,9 +721,9 @@
                 const datas_ = []
                 for (const x in rowsarrys) {
                   const cells = rowsarrys[x].cells
-                  const rowsColumns = {}
                   for (const k in cells) {
                     for (const m in rightsmenus) {
+                      const rowsColumns = {}
                       if (Number(x) === Number(rightsmenus[m].ri) && Number(k) === Number(rightsmenus[m].ci)) {
                         rowsColumns["rowIndex"] = Number(x)
                         rowsColumns["columnIndex"] = Number(k)
@@ -1171,9 +1171,9 @@
                   const datas_ = []
                   for (const x in rowsarrys) {
                     const cells = rowsarrys[x].cells
-                    const rowsColumns = {}
                     for (const k in cells) {
                       for (const m in rightsmenus) {
+                        const rowsColumns = {}
                         if (Number(x) === Number(rightsmenus[m].ri) && Number(k) === Number(rightsmenus[m].ci)) {
                           rowsColumns["rowIndex"] = Number(x)
                           rowsColumns["columnIndex"] = Number(k)
