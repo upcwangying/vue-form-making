@@ -707,10 +707,6 @@
               if (columns) {
                 const gridData = []
                 for (const column of columns) {
-                  if(column.list[0].type === "year"){
-                    column.list[0].options.defaultValue=new Date(column.list[0].options.defaultValue).getFullYear()
-
-                  }
                   gridData.push(column.list)
                 }
                 gridData && listFunc(gridData)
@@ -799,8 +795,10 @@
           const {json} = result.dataset.datas[0]
           const sheetOptions = []
           const {list} = json
+          console.log(json)
           this.setJSON(JSON.parse(json), null)
           this.$nextTick(() => {
+            console.log(JSON.parse(json).list)
             for (let item of JSON.parse(json).list) {
               if (item.type === "sheet") {
                 if (item.options.length > 0) {
