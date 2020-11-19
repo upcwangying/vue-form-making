@@ -33,11 +33,10 @@
 
       <el-form-item :label="$t('fm.config.widget.groupcode')"
                     v-if="Object.keys(data.options).indexOf('groupcode')>=0 && (data.type!=='time' || data.type!=='date')">
-        <!--<el-input v-model="data.options.groupcode"></el-input>-->
         <el-cascader
-          v-model="values_"
+          v-model="data.options.groupcode"
           :options="groupCodeOptions"
-          :props="{ expandTrigger: 'hover', label: 'dataname', value: 'datacode' }" @change="abc">
+          :props="{ expandTrigger: 'hover', label: 'dataname', value: 'datacode' }">
         </el-cascader>
       </el-form-item>
       <el-form-item :label="$t('fm.config.widget.placeholder')"
@@ -412,7 +411,7 @@
             <el-button type="text" @click="handleAddTableColumn">{{ $t('fm.actions.addColumn') }}</el-button>
           </div>
         </el-form-item>
-        <el-form-item label="列表样式">
+        <el-form-item label="列表样式" v-if="cellDom && areaDom">
           <!--<el-row type="flex" justify="space-around">-->
           <!--<el-checkbox-group v-model="currrentCheckOfMergeCell" :max="1">-->
           <!--<li v-for="(item, index) in data.mergeRule" :key="index + '_li'">-->
@@ -433,7 +432,7 @@
             <el-button @click="handleCancelMergeClick">取消合并</el-button>
           </el-row>
         </el-form-item>
-        <el-form-item label="单元格属性">
+        <el-form-item label="单元格属性" v-if="cellDom">
           <el-row type="flex" justify="space-around" style="padding-bottom: 15px;">
             <el-col>
               <el-button style="width: 80%;margin-left: 10%;">显示指标符号</el-button>
@@ -463,7 +462,7 @@
               <span style="padding-left: 20%;">公式计算:</span>
             </el-col>
             <el-col :span="18">
-              <el-input style="padding-right: 5%;"></el-input>
+              <el-input v-model="test" @change="cellAutoComputed" style="padding-right: 5%;"></el-input>
             </el-col>
           </el-row>
           <el-row type="flex" justify="space-around" style="padding-bottom: 15px;">
@@ -559,7 +558,7 @@
       Draggable,
       AddColumn,
     },
-    props: ['data', 'currcheck', 'module'],
+    props: ['data', 'currcheck', 'module', 'cellDom', 'areaDom'],
     data() {
       return {
         validator: {
@@ -572,8 +571,8 @@
         columnCurrentCheck: this.currcheck,
         rowCurrentCheck: [],
         // currrentCheckOfMergeCell: [],
-        values_: [],
         groupCodeOptions: [],
+        test: ''
       }
     },
     computed: {
@@ -587,10 +586,6 @@
       })
     },
     methods: {
-      abc(val) {
-        this.data.options.groupcode = val[val.length-1]
-        console.log('=-=-=-=-=> ', val)
-      },
       handleOptionsRemove(index) {
         if (this.data.type === 'grid') {
           this.data.columns.splice(index, 1)
@@ -732,6 +727,9 @@
       showJz() {
         this.$emit('show-jz')
       },
+      cellAutoComputed(val) {
+        this.$emit('cell-auto-computed', val)
+      }
     },
     watch: {
       'data.options.isRange': function (val) {
