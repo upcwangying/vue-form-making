@@ -13,6 +13,10 @@ export default {
     zbbmDatas: {
       type: Array,
       default: () => []
+    },
+    readonly: {
+      type: Boolean,
+      default: true
     }
   },
   data() {
@@ -38,7 +42,9 @@ export default {
         indexWidth: 60,
         minWidth: 60,
       },
-      zbbmData: this.zbbmDatas
+      zbbmData: this.zbbmDatas,
+      showContextmenu: this.readonly,
+      showToolbar: this.readonly
     })
       .loadData({
       }) // load data
