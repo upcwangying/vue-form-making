@@ -1207,9 +1207,6 @@
                   sheetData['defaultFields'] = 'werks,bukrs,create_by,create_time,update_by,update_time,is_del'
                   dataList.push(sheetData)
                 }
-                // sheetData['datasource'] = ss.datasource
-                // sheetData['table'] = ss.table
-                // sheetData['field'] = ss.field
                 item.options = data
                 if (item.options.length > 0) {
                   item.options[0]['type'] = ss.type
@@ -1220,7 +1217,9 @@
               } else {
                 let OtherData = Object.create(null)
                 OtherData['type'] = item.type
-                (OtherData['type'] === 'databook') && (OtherData['groupcode'] = item.options.groupcode);
+                if (item.type === 'databook') {
+                  OtherData['groupcode'] = item.options.groupcode
+                }
                 OtherData['key'] = item.model
                 OtherData['value'] = item.options.defaultValue
                 OtherData['datasource'] = item.options.datasource
