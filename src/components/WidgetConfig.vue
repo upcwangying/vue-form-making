@@ -462,7 +462,7 @@
               <span style="padding-left: 20%;">公式计算:</span>
             </el-col>
             <el-col :span="18">
-              <el-input v-model="test" @change="cellAutoComputed" style="padding-right: 5%;"></el-input>
+              <el-input v-model="compFormula" @change="cellAutoComputed" style="padding-right: 5%;"></el-input>
             </el-col>
           </el-row>
           <el-row type="flex" justify="space-around" style="padding-bottom: 15px;">
@@ -572,7 +572,7 @@
         rowCurrentCheck: [],
         // currrentCheckOfMergeCell: [],
         groupCodeOptions: [],
-        test: ''
+        compFormula: ''
       }
     },
     computed: {
@@ -729,7 +729,14 @@
       },
       cellAutoComputed(val) {
         this.$emit('cell-auto-computed', val)
-      }
+        this.$emit('clean-cell-dom')
+      },
+      setCompFormula() {
+        if (this.data.type !== 'table') { return }
+        // this.data.options
+        // console.log('cellDom : ', this.cellDom)
+        // console.log('data : ', this.data)
+      },
     },
     watch: {
       'data.options.isRange': function (val) {
@@ -763,6 +770,9 @@
       currcheck(val) {
         this.columnCurrentCheck = val
       },
+      cellDom(val) {
+        this.setCompFormula();
+      }
     },
   }
 </script>

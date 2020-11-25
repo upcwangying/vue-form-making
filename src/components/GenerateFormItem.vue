@@ -381,7 +381,15 @@ export default {
 
     this.initDateTimeComponentDefaultValue();
   },
+  mounted() {
+    if (this.widget.type === 'table' && (this.widget.options.cellComputeRules.length > 0)) {
+      this.tableCellAutoComp();
+    }
+  },
   methods: {
+    tableCellAutoComp() {
+      // console.log('widget : ', this.widget);
+    },
     loadSpreadSheetDataByGenerateFormItem(data) {
       this.$refs.spreadsheet && this.$refs.spreadsheet.setSpreadSheetData(data)
     },
