@@ -107,10 +107,9 @@
                 <widget-config ref="widgetConfig" v-show="configTab ==='widget'" :data="widgetFormSelect"
                                :currcheck.sync="currentCheck"  :module="module"
                                :cell-dom="cellDomBlue" :area-dom="areaDomRed"
-                               @show-add-column="addColumn" @show-add-row="addRow"
-                               @drag-end="dragend" @remove-column="removeColumn" @remove-row="removeRow"
-                               @merge-cell="mergeCell" @update-row-check="updateRowCheck"
-                               @show-jz="widgetConShowJz" @cell-auto-computed="cellAutoComputed"></widget-config>
+                               @show-add-column="addColumn" @show-add-row="addRow" @drag-end="dragend" @remove-column="removeColumn" @remove-row="removeRow"
+                               @merge-cell="mergeCell" @update-row-check="updateRowCheck" @show-jz="widgetConShowJz" @cell-auto-computed="cellAutoComputed"
+                               @clean-cell-dom = "cleanCellDom"></widget-config>
                 <form-config v-show="configTab ==='form'" :data="widgetForm.config"></form-config>
               </el-main>
             </el-container>
@@ -333,6 +332,9 @@
       this.query_bbfl();
     },
     methods: {
+      cleanCellDom() {
+        this.cellDomBlue = null
+      },
       transIdLabel(datas) {
         datas.forEach(item => {
           item.id = item.dbid;
@@ -1112,9 +1114,18 @@
         this.uiSelect.jz.push({rowIndex: this.cellDomBlue.row.rowIndex, prop: this.cellDomBlue.column.property})
       },
       cellAutoComputed(val) {
-        console.log('=-=-=-> ', this.widgetFormSelect.options.cellComputeRules)
-        this.widgetFormSelect.options.cellComputeRules || (this.widgetFormSelect.options.cellComputeRules = []);
-        this.widgetFormSelect.options.cellComputeRules.push({ rowIndex: this.cellDomBlue.row.rowIndex, colIndex: this.cellDomBlue.column.columnIndex, formula: val })
+        for (const wfItemIndex in this.widgetForm.list) {
+          if (this.widgetForm.list[wfItemIndex].key === this.widgetFormSelect.key) {
+            let newCellComputeRules = true
+            this.widgetForm.list[wfItemIndex].options.cellComputeRules || (this.$set(this.widgetForm.list[wfItemIndex].options, 'cellComputeRules', []));
+            for (const ruleItemIndex in this.widgetForm.list[wfItemIndex].options.cellComputeRules) {
+              (this.widgetForm.list[wfItemIndex].options.cellComputeRules[ruleItemIndex].rowIndex === this.cellDomBlue.row.rowIndex && this.widgetForm.list[wfItemIndex].options.cellComputeRules[ruleItemIndex].colIndex ===this.cellDomBlue.column.columnIndex) && (this.$set(this.widgetForm.list[wfItemIndex].options.cellComputeRules[ruleItemIndex], 'formula', val ), newCellComputeRules = false);
+            }
+            newCellComputeRules && (this.widgetForm.list[wfItemIndex].options.cellComputeRules.push({ rowIndex: this.cellDomBlue.row.rowIndex, colIndex: this.cellDomBlue.column.columnIndex, formula: val }));
+          }
+        }
+        // console.log('=-=-=-> ', this.widgetForm)
+        // console.log('=-=-=-> ', this.widgetFormSelect)
       },
       handleGoGithub() {
         window.location.href = 'https://github.com/upcwangying/vue-form-making'
