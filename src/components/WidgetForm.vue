@@ -55,7 +55,7 @@
             </template>
             <template v-else>
               <widget-form-item v-if="element && element.key" ref="widget_form_item_table" :key="element.key" :element="element"
-                                :select.sync="selectWidget" :celldom.sync="cellDomBlue" :areadom.sync="areaDomRed"  :zbbmDatas="zbDatas"
+                                :select.sync="selectWidget" :celldom.sync="cellDomBlue" :areadom.sync="areaDomRed"  :zbbmDatas="zbDatas"  :cellPro="cellPro"
                                 :index="index" :data="data" :ui-select="uiselect" :changeshowtt="changeShowTableTag"></widget-form-item>
             </template>
           </template>
@@ -74,7 +74,7 @@
       Draggable,
       WidgetFormItem
     },
-    props: ['data', 'select', 'cellDom', 'areaDom', 'uiSelect','zbDatas'],
+    props: ['data', 'select', 'cellDom', 'areaDom', 'uiSelect','zbDatas','cellPro'],
     data () {
       return {
         selectWidget: this.select,
@@ -247,6 +247,9 @@
       },
       zbDatas(val){
         this.zbDatas=val
+      },
+      cellPro(val){
+        this.cellPro=val
       },
       selectWidget: {
         handler (val) {

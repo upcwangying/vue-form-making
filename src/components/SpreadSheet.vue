@@ -14,6 +14,10 @@ export default {
       type: Array,
       default: () => []
     },
+    cellPro: {
+      type: Object,
+      default: () => {}
+    },
     readonly: {
       type: Boolean,
       default: true
@@ -43,6 +47,7 @@ export default {
         minWidth: 60,
       },
       zbbmData: this.zbbmDatas,
+      cellPro: this.cellPro,
       showContextmenu: this.readonly,
       showToolbar: this.readonly
     })

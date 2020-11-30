@@ -78,15 +78,16 @@
 
           <el-container class="center-container" direction="vertical">
             <!--<el-header class="btn-bar" style="height: 45px;">-->
-              <!--<slot name="action">-->
-              <!--</slot>-->
-              <!--<el-button v-if="upload" type="text" size="medium" icon="el-icon-upload2" @click="handleUpload">{{$t('fm.actions.import')}}</el-button>-->
-              <!--<el-button v-if="clearable" type="text" size="medium" icon="el-icon-delete" @click="handleClear">{{$t('fm.actions.clear')}}</el-button>-->
-              <!--<el-button v-if="generateJson" type="text" size="medium" icon="el-icon-tickets" @click="handleGenerateJson">{{$t('fm.actions.json')}}</el-button>-->
-              <!--<el-button v-if="generateCode" type="text" size="medium" icon="el-icon-document" @click="handleGenerateCode">{{$t('fm.actions.code')}}</el-button>-->
+            <!--<slot name="action">-->
+            <!--</slot>-->
+            <!--<el-button v-if="upload" type="text" size="medium" icon="el-icon-upload2" @click="handleUpload">{{$t('fm.actions.import')}}</el-button>-->
+            <!--<el-button v-if="clearable" type="text" size="medium" icon="el-icon-delete" @click="handleClear">{{$t('fm.actions.clear')}}</el-button>-->
+            <!--<el-button v-if="generateJson" type="text" size="medium" icon="el-icon-tickets" @click="handleGenerateJson">{{$t('fm.actions.json')}}</el-button>-->
+            <!--<el-button v-if="generateCode" type="text" size="medium" icon="el-icon-document" @click="handleGenerateCode">{{$t('fm.actions.code')}}</el-button>-->
             <!--</el-header>-->
             <el-main :class="{'widget-empty': widgetForm.list.length === 0}">
-              <widget-form v-if="!resetJson" ref="widgetForm" :data="widgetForm" :select.sync="widgetFormSelect" :zbDatas="zbDatas"
+              <widget-form v-if="!resetJson" ref="widgetForm" :data="widgetForm" :select.sync="widgetFormSelect"
+                           :zbDatas="zbDatas"  :cellPro="cellPro"
                            :cell-dom.sync="cellDomBlue" :area-dom.sync="areaDomRed" :ui-select="uiSelect"></widget-form>
             </el-main>
           </el-container>
@@ -105,11 +106,13 @@
                 <zhi-biao-config v-show="configTab ==='zhibiao'" :data="zhiBiaoSelect"
                                  :zbattribute="zbAttribute"></zhi-biao-config>
                 <widget-config ref="widgetConfig" v-show="configTab ==='widget'" :data="widgetFormSelect"
-                               :currcheck.sync="currentCheck"  :module="module"
+                               :currcheck.sync="currentCheck" :module="module"
                                :cell-dom="cellDomBlue" :area-dom="areaDomRed"
-                               @show-add-column="addColumn" @show-add-row="addRow" @drag-end="dragend" @remove-column="removeColumn" @remove-row="removeRow"
-                               @merge-cell="mergeCell" @update-row-check="updateRowCheck" @show-jz="widgetConShowJz" @cell-auto-computed="cellAutoComputed"
-                               @clean-cell-dom = "cleanCellDom"></widget-config>
+                               @show-add-column="addColumn" @show-add-row="addRow" @drag-end="dragend"
+                               @remove-column="removeColumn" @remove-row="removeRow"
+                               @merge-cell="mergeCell" @update-row-check="updateRowCheck" @show-jz="widgetConShowJz"
+                               @cell-auto-computed="cellAutoComputed"
+                               @clean-cell-dom="cleanCellDom"></widget-config>
                 <form-config v-show="configTab ==='form'" :data="widgetForm.config"></form-config>
               </el-main>
             </el-container>
@@ -123,7 +126,8 @@
             width="1000px"
             form
           >
-            <generate-form insite="true" @on-change="handleDataChange" v-if="previewVisible" :data="widgetForm" :zbDatas="zbDatas"
+            <generate-form insite="true" @on-change="handleDataChange" v-if="previewVisible" :data="widgetForm"
+                           :zbDatas="zbDatas" :cellPro="cellPro"
                            :value="widgetModels" :remote="remoteFuncs" ref="generateForm">
 
               <template v-slot:blank="scope">
@@ -260,7 +264,7 @@
     },
     data() {
       return {
-        zbDatas:[],
+        zbDatas: [],
         resetJson: false,
         showAddColumn: false,
         widgetForm: JSON.parse(JSON.stringify(templateInitialData)),
@@ -320,6 +324,7 @@
         currentCheck: [],
         cellDomBlue: null,
         areaDomRed: null,
+        cellPro: {},
         uiSelect: {
           jz: [],
           sb: [],
@@ -329,6 +334,7 @@
     },
     mounted() {
       this.cloneDeep = require('lodash').cloneDeep
+      this.cellPro = {datasource: 'TPRI_VUE', table: 'TPRI_DMP_REPORT_DATA_TEST', field: 'VALUE'}
       this.query_bbfl();
     },
     methods: {
@@ -370,14 +376,14 @@
         getZb(this.syorjbParam, jtzbfl).then(res => {
           if (res.success) {
             this.zbflSelectData = [...res.dataset.datas]
-            let zbDatas_=[]
+            let zbDatas_ = []
             this.zbflSelectData.forEach(item => {
-              let obj={}
-              obj.key=item.dbid
-              obj.title=item.zbmc
+              let obj = {}
+              obj.key = item.dbid
+              obj.title = item.zbmc
               zbDatas_.push(obj)
             })
-            this.zbDatas= zbDatas_
+            this.zbDatas = zbDatas_
             this.quateTableLoading = false
           }
         }).catch(err => {
@@ -397,6 +403,7 @@
       selectTree(isCheck, obj) {
         if (isCheck) {
           this.selectTreeNode = obj
+          this.cellPro = {datasource: 'TPRI_VUE', table: 'TPRI_DMP_REPORT_DATA_TEST', field: 'VALUE'}
           const {dbid, is_temp} = this.selectTreeNode
           is_temp === '1' && this.queryTemplateData(dbid)
           is_temp === '0' && this.handleClear()
@@ -486,7 +493,6 @@
               item = item[0]
             }
             if (item.type === 'table') {
-              console.log(item)
               let data = Object.create(null)
               // data['type'] = item.type
               // data['rows'] = item.rows
@@ -1119,9 +1125,13 @@
             let newCellComputeRules = true
             this.widgetForm.list[wfItemIndex].options.cellComputeRules || (this.$set(this.widgetForm.list[wfItemIndex].options, 'cellComputeRules', []));
             for (const ruleItemIndex in this.widgetForm.list[wfItemIndex].options.cellComputeRules) {
-              (this.widgetForm.list[wfItemIndex].options.cellComputeRules[ruleItemIndex].rowIndex === this.cellDomBlue.row.rowIndex && this.widgetForm.list[wfItemIndex].options.cellComputeRules[ruleItemIndex].colIndex ===this.cellDomBlue.column.columnIndex) && (this.$set(this.widgetForm.list[wfItemIndex].options.cellComputeRules[ruleItemIndex], 'formula', val ), newCellComputeRules = false);
+              (this.widgetForm.list[wfItemIndex].options.cellComputeRules[ruleItemIndex].rowIndex === this.cellDomBlue.row.rowIndex && this.widgetForm.list[wfItemIndex].options.cellComputeRules[ruleItemIndex].colIndex === this.cellDomBlue.column.columnIndex) && (this.$set(this.widgetForm.list[wfItemIndex].options.cellComputeRules[ruleItemIndex], 'formula', val), newCellComputeRules = false);
             }
-            newCellComputeRules && (this.widgetForm.list[wfItemIndex].options.cellComputeRules.push({ rowIndex: this.cellDomBlue.row.rowIndex, colIndex: this.cellDomBlue.column.columnIndex, formula: val }));
+            newCellComputeRules && (this.widgetForm.list[wfItemIndex].options.cellComputeRules.push({
+              rowIndex: this.cellDomBlue.row.rowIndex,
+              colIndex: this.cellDomBlue.column.columnIndex,
+              formula: val
+            }));
           }
         }
         // console.log('=-=-=-> ', this.widgetForm)
