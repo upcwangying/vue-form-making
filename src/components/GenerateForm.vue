@@ -54,6 +54,7 @@
             :disabled="disabled"
             :readonly="readonly"
             :zbbmDatas="zbDatas"
+            :cellPro="cellPro"
             @input-change="onInputChange"
           >
           </generate-form-item>
@@ -72,7 +73,7 @@ export default {
   components: {
     GenerateFormItem
   },
-  props: ['data', 'remote', 'value', 'insite', 'formLoading', 'disabled', 'readonly', 'module','zbDatas'],
+  props: ['data', 'remote', 'value', 'insite', 'formLoading', 'disabled', 'readonly', 'module','zbDatas','cellPro'],
   data () {
     return {
       models: {},
@@ -244,6 +245,9 @@ export default {
   watch: {
     zbDatas(val){
       this.zbDatas=val
+    },
+    cellPro(val){
+      this.cellPro=val
     },
     data: {
       deep: true,
