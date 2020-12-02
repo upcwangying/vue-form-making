@@ -55,6 +55,7 @@
             :readonly="readonly"
             :zbbmDatas="zbDatas"
             :cellPro="cellPro"
+            :jizuData="jizuData"
             @input-change="onInputChange"
           >
           </generate-form-item>
@@ -73,7 +74,7 @@ export default {
   components: {
     GenerateFormItem
   },
-  props: ['data', 'remote', 'value', 'insite', 'formLoading', 'disabled', 'readonly', 'module','zbDatas','cellPro'],
+  props: ['data', 'remote', 'value', 'insite', 'formLoading', 'disabled', 'readonly', 'module','zbDatas','cellPro','jizuData'],
   data () {
     return {
       models: {},
@@ -86,6 +87,7 @@ export default {
   },
   mounted () {
     this.querysheetDate(this.data.list)
+    // this.displaystrokestyle(true)
     // this.displayTableOnly(["sheet"])
   },
   methods: {
@@ -231,6 +233,11 @@ export default {
         item.displayTableOnly(showOnlyArray)
       })
     },
+    displaystrokestyle(flag) {
+      const generateFormItem_2 = this.$refs['generateFormItem_2'] || null;
+      console.log(flag)
+      generateFormItem_2 && generateFormItem_2.displaystrokestyle_(flag)
+    },
     resetReportStatus() {
       const generateFormItem_1 = this.$refs['generateFormItem_1'] || null;
       const generateFormItem_2 = this.$refs['generateFormItem_2'] || null;
@@ -248,6 +255,9 @@ export default {
     },
     cellPro(val){
       this.cellPro=val
+    },
+    jizuData(val){
+      this.jizuData=val
     },
     data: {
       deep: true,
