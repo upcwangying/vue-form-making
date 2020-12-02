@@ -18,6 +18,14 @@ export default {
       type: Object,
       default: () => {}
     },
+    jizuData: {
+      type: String,
+      default: ''
+    },
+    sbData: {
+      type: String,
+      default: ''
+    },
     readonly: {
       type: Boolean,
       default: true
@@ -40,20 +48,28 @@ export default {
         height: 25,
         len: 30
       },
+      border: {
+        bottom: ["thick", "#000"]
+      },
       col: {
         len: 11,
         width: 100,
         indexWidth: 60,
         minWidth: 60,
       },
+      showGrid:true,
       zbbmData: this.zbbmDatas,
       cellPro: this.cellPro,
+      jizuData: this.jizuData,
+      sbData: this.sbData,
       showContextmenu: this.readonly,
       showToolbar: this.readonly
     })
       .loadData({
       }) // load data
       .change(data => {
+        console.log(this.jizuData)
+
         // save data to db
       });
   },

@@ -285,7 +285,7 @@
     </template>
 
     <template v-if="element.type === 'sheet'">
-      <spread-sheet ref="spreadsheet" :zbbmDatas="zbbmDatas" :cellPro="cellPro" />
+      <spread-sheet ref="spreadsheet" :zbbmDatas="zbbmDatas" :cellPro="cellPro" :jizuData="jizuData" />
     </template>
 
     <template v-if="element.type === 'editor'">
@@ -354,7 +354,7 @@
   import SpreadSheet from '@/components/SpreadSheet';
 
   export default {
-    props: ['element', 'select', 'index', 'data', 'changeshowtt', 'celldom', 'areadom', 'uiSelect','zbbmDatas','cellPro'],
+    props: ['element', 'select', 'index', 'data', 'changeshowtt', 'celldom', 'areadom', 'uiSelect','zbbmDatas','cellPro','jizuData'],
     components: {
       SpreadSheet,
       JizuComponent,

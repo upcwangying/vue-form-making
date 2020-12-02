@@ -87,7 +87,7 @@
             <!--</el-header>-->
             <el-main :class="{'widget-empty': widgetForm.list.length === 0}">
               <widget-form v-if="!resetJson" ref="widgetForm" :data="widgetForm" :select.sync="widgetFormSelect"
-                           :zbDatas="zbDatas"  :cellPro="cellPro"
+                           :zbDatas="zbDatas"  :cellPro="cellPro" :jizuData="jizuData"
                            :cell-dom.sync="cellDomBlue" :area-dom.sync="areaDomRed" :ui-select="uiSelect"></widget-form>
             </el-main>
           </el-container>
@@ -127,7 +127,7 @@
             form
           >
             <generate-form insite="true" @on-change="handleDataChange" v-if="previewVisible" :data="widgetForm"
-                           :zbDatas="zbDatas" :cellPro="cellPro"
+                           :zbDatas="zbDatas" :cellPro="cellPro" :jizuData="jizuData"
                            :value="widgetModels" :remote="remoteFuncs" ref="generateForm">
 
               <template v-slot:blank="scope">
@@ -223,7 +223,7 @@
   import {getReport, postReport, getBbfl} from '@/api/report';
   import {getZb, getZbDetal} from '@/api/jsjdQuery';
   import _clonedeep from 'lodash/cloneDeep'
-
+  import { getMethod } from "@/util/method";
   export default {
     name: 'fm-making-form',
     components: {
@@ -325,6 +325,8 @@
         cellDomBlue: null,
         areaDomRed: null,
         cellPro: {},
+        jizuData:'',
+        sbData:'',
         uiSelect: {
           jz: [],
           sb: [],
@@ -370,6 +372,27 @@
           this.bbflTreeData = this['bbflTreeDataFor' + this.syorjbParam]
         }
       },
+      queryjz(param) {
+        console.log(this.widgetForm.werks)
+        const p = { is_del: 0, werks: this.widgetForm.werks === "undefined"?"_null":this.widgetForm.werks, bukrs: this.widgetForm.bukrs === "undefined"?"_null":this.widgetForm.bukrs };
+        Object.assign(p, param);
+        getMethod('/sjgl/process/aqsc_zsj_jizupz?m=query', p).then(response => {
+         let options = response.dataset.datas;
+
+         let ss=[];
+          options.forEach(item => {
+            let obj=item.dbid+":"+item.txt
+            ss.push(obj)
+          })
+          this.jizuData=ss.toString()
+        })
+          .catch(() => {
+            this.$message({
+              type: "error",
+              message: "查询数据失败"
+            });
+          });
+      },
       query_zb(jtzbfl) {
         this.quateTableLoading = true
         this.zbDatas = []
@@ -403,11 +426,15 @@
       selectTree(isCheck, obj) {
         if (isCheck) {
           this.selectTreeNode = obj
+          console.log(JSON.stringify(this.widgetForm))
           this.cellPro = {datasource: 'TPRI_VUE', table: 'TPRI_DMP_REPORT_DATA_TEST', field: 'VALUE'}
           const {dbid, is_temp} = this.selectTreeNode
           is_temp === '1' && this.queryTemplateData(dbid)
           is_temp === '0' && this.handleClear()
           is_temp === '0' && this.query_zb(dbid)
+          this.$nextTick(() => {
+            this.queryjz();
+          })
         } else {
           this.selectTreeNode = null
           this.handleClear()

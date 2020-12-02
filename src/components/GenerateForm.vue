@@ -55,6 +55,7 @@
             :readonly="readonly"
             :zbbmDatas="zbDatas"
             :cellPro="cellPro"
+            :jizuData="jizuData"
             @input-change="onInputChange"
           >
           </generate-form-item>
@@ -73,7 +74,7 @@ export default {
   components: {
     GenerateFormItem
   },
-  props: ['data', 'remote', 'value', 'insite', 'formLoading', 'disabled', 'readonly', 'module','zbDatas','cellPro'],
+  props: ['data', 'remote', 'value', 'insite', 'formLoading', 'disabled', 'readonly', 'module','zbDatas','cellPro','jizuData'],
   data () {
     return {
       models: {},
@@ -248,6 +249,9 @@ export default {
     },
     cellPro(val){
       this.cellPro=val
+    },
+    jizuData(val){
+      this.jizuData=val
     },
     data: {
       deep: true,
