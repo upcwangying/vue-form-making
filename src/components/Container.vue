@@ -763,7 +763,7 @@
                       if (Number(x) === Number(rightsmenus[m].ri) && Number(k) === Number(rightsmenus[m].ci)) {
                         rowsColumns["rowIndex"] = Number(x)
                         rowsColumns["columnIndex"] = Number(k)
-                        if (cells[Number(k)].type === "list") {
+                        if (cells[Number(k)].type === "list"||cells[Number(k)].type === "jizu") {
                           rowsColumns["text"] = cells[Number(k)].value
                         } else {
                           rowsColumns["text"] = cells[Number(k)].text
