@@ -327,7 +327,7 @@
     </template>
 
     <template v-if="widget.type === 'sheet'">
-      <spread-sheet style="width: 100%" ref="spreadsheet" :zbbmDatas="zbbmDatas"  :cellPro="cellPro" :jizuData="jizuData" />
+      <spread-sheet style="width: 100%" ref="spreadsheet" :zbbmDatas="zbbmDatas"  :cellPro="cellPro" :jizuData="jizuData" :showgrid="showgrid" />
     </template>
 
     <template v-if="widget.type === 'text'">
@@ -358,6 +358,7 @@ export default {
     return {
       dataModel: this.models[this.widget.model],
       showTableOnly: false,
+      showgrid: true
     }
   },
   created() {
@@ -474,6 +475,9 @@ export default {
     displayTableOnly(showOnlyArray) {
       const showOnlyArray_ = showOnlyArray || ['table', 'sheet']
       this.showTableOnly = (showOnlyArray_.indexOf(this.widget.type) === -1)
+    },
+    displaystrokestyle_(flag) {
+      this.showgrid = flag
     },
     resetReportStatus() {
       this.showTableOnly = false

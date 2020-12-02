@@ -29,6 +29,10 @@ export default {
     readonly: {
       type: Boolean,
       default: true
+    },
+    showgrid: {
+      type: Boolean,
+      default: true
     }
   },
   data() {
@@ -57,7 +61,7 @@ export default {
         indexWidth: 60,
         minWidth: 60,
       },
-      showGrid:true,
+      showGrid:this.showgrid,
       zbbmData: this.zbbmDatas,
       cellPro: this.cellPro,
       jizuData: this.jizuData,
@@ -68,7 +72,7 @@ export default {
       .loadData({
       }) // load data
       .change(data => {
-        console.log(this.jizuData)
+        console.log(this.showgrid)
 
         // save data to db
       });

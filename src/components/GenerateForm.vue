@@ -87,6 +87,7 @@ export default {
   },
   mounted () {
     this.querysheetDate(this.data.list)
+    // this.displaystrokestyle(true)
     // this.displayTableOnly(["sheet"])
   },
   methods: {
@@ -231,6 +232,11 @@ export default {
       generateFormItem_2 && generateFormItem_2.forEach(item => {
         item.displayTableOnly(showOnlyArray)
       })
+    },
+    displaystrokestyle(flag) {
+      const generateFormItem_2 = this.$refs['generateFormItem_2'] || null;
+      console.log(flag)
+      generateFormItem_2 && generateFormItem_2.displaystrokestyle_(flag)
     },
     resetReportStatus() {
       const generateFormItem_1 = this.$refs['generateFormItem_1'] || null;
