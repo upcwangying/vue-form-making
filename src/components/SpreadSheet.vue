@@ -1,6 +1,6 @@
 <template>
   <div class="spreadsheet-container">
-    <div ref="xspreadsheet" id="xapp" />
+    <div ref="xspreadsheet" id="xapp"  />
   </div>
 </template>
 
@@ -45,8 +45,8 @@ export default {
     Spreadsheet.locale('zh-cn', zhCN);
     this.spreadsheet = new Spreadsheet(this.$refs.xspreadsheet, {
       view: {
-        height: () => document.documentElement.clientHeight,
-        width: () => document.documentElement.clientWidth
+        height: () => document.documentElement.clientHeight-220,
+        width: () => document.documentElement.clientWidth-730
       },
       row: {
         height: 25,
@@ -92,5 +92,10 @@ export default {
 .spreadsheet-container {
   width: auto;
   overflow: hidden;
+}
+.x-spreadsheet-scrollbar.horizontal {
+  right: 15px;
+  overflow-x: scroll;
+  overflow-y: hidden;
 }
 </style>
