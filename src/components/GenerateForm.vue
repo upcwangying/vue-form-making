@@ -56,6 +56,7 @@
             :zbbmDatas="zbDatas"
             :cellPro="cellPro"
             :jizuData="jizuData"
+            :showGrid="showGrid"
             @input-change="onInputChange"
           >
           </generate-form-item>
@@ -74,7 +75,7 @@ export default {
   components: {
     GenerateFormItem
   },
-  props: ['data', 'remote', 'value', 'insite', 'formLoading', 'disabled', 'readonly', 'module','zbDatas','cellPro','jizuData'],
+  props: ['data', 'remote', 'value', 'insite', 'formLoading', 'disabled', 'readonly', 'module','zbDatas','cellPro','jizuData','showGrid'],
   data () {
     return {
       models: {},
@@ -232,11 +233,6 @@ export default {
       generateFormItem_2 && generateFormItem_2.forEach(item => {
         item.displayTableOnly(showOnlyArray)
       })
-    },
-    displaystrokestyle(flag) {
-      const generateFormItem_2 = this.$refs['generateFormItem_2'] || null;
-      console.log(flag)
-      generateFormItem_2 && generateFormItem_2.displaystrokestyle_(flag)
     },
     resetReportStatus() {
       const generateFormItem_1 = this.$refs['generateFormItem_1'] || null;

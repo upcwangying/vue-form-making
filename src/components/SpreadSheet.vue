@@ -22,10 +22,6 @@ export default {
       type: String,
       default: ''
     },
-    sbData: {
-      type: String,
-      default: ''
-    },
     readonly: {
       type: Boolean,
       default: true
@@ -45,8 +41,8 @@ export default {
     Spreadsheet.locale('zh-cn', zhCN);
     this.spreadsheet = new Spreadsheet(this.$refs.xspreadsheet, {
       view: {
-        height: () => document.documentElement.clientHeight-220,
-        width: () => document.documentElement.clientWidth-730
+        height: () => document.documentElement.clientHeight,
+        width: () => document.documentElement.clientWidth
       },
       row: {
         height: 25,

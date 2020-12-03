@@ -127,7 +127,7 @@
             form
           >
             <generate-form insite="true" @on-change="handleDataChange" v-if="previewVisible" :data="widgetForm"
-                           :zbDatas="zbDatas" :cellPro="cellPro" :jizuData="jizuData"
+                           :zbDatas="zbDatas" :cellPro="cellPro" :jizuData="jizuData" :showGrid="false"
                            :value="widgetModels" :remote="remoteFuncs" ref="generateForm">
 
               <template v-slot:blank="scope">
