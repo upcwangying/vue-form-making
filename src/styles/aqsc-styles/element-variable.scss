@@ -1,0 +1,22 @@
+/* 改变table表头颜色变量 */
+$--table-header-background-color: #f5f7fa;
+//$--table-header-background-color: $--background-color-base;//#f5f7fa
+
+/* 改变 icon 字体路径变量，必需 */
+$--font-path: '~element-ui/lib/theme-chalk/fonts';
+
+@import "~element-ui/packages/theme-chalk/src/index";
+
+/*@include b(pagination) {
+  @include when(background) {
+    .btn-prev,
+    .btn-next,
+    .el-pager li {
+      background-color: #ffffff;
+      border: 1px solid $--color-info-lighter;
+      color: $--color-text-regular;
+      border-radius: 4px;
+
+    }
+  }
+}*/

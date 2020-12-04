@@ -87,7 +87,7 @@
             <!--</el-header>-->
             <el-main :class="{'widget-empty': widgetForm.list.length === 0}">
               <widget-form v-if="!resetJson" ref="widgetForm" :data="widgetForm" :select.sync="widgetFormSelect"
-                           :zbDatas="zbDatas"  :cellPro="cellPro" :jizuData="jizuData"
+                           :zbDatas="zbDatas"  :cellPro="cellPro" :jizuData="jizuData" :werks="werks" :bukrs="bukrs"
                            :cell-dom.sync="cellDomBlue" :area-dom.sync="areaDomRed" :ui-select="uiSelect"></widget-form>
             </el-main>
           </el-container>
@@ -126,7 +126,7 @@
             width="1000px"
             form
           >
-            <generate-form insite="true" @on-change="handleDataChange" v-if="previewVisible" :data="widgetForm"
+            <generate-form insite="true" @on-change="handleDataChange" v-if="previewVisible" :data="widgetForm" :werks="werks" :bukrs="bukrs"
                            :zbDatas="zbDatas" :cellPro="cellPro" :jizuData="jizuData" :showGrid="false"
                            :value="widgetModels" :remote="remoteFuncs" ref="generateForm">
 
@@ -260,6 +260,14 @@
       module: {
         type: String,
         default: 'jsjd'
+      },
+      bukrs: {
+        type: String,
+        default: "5120"
+      },
+      werks: {
+        type: String,
+        default: "W040"
       },
     },
     data() {

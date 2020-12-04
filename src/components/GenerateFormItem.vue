@@ -327,7 +327,9 @@
     </template>
 
     <template v-if="widget.type === 'sheet'">
-      <spread-sheet style="width: 100%" ref="spreadsheet" :zbbmDatas="zbbmDatas"  :cellPro="cellPro" :jizuData="jizuData" :showgrid="showGrid" :readonly="readonly" />
+      <spread-sheet style="width: 100%" ref="spreadsheet" :zbbmDatas="zbbmDatas"  :cellPro="cellPro" :jizuData="jizuData" :showgrid="showGrid" :readonly="readonly" @updateInfo="cellSelectsb" />
+      <sb-componet :dialog-form-visible="dialogFormVisisbjzm"  @close="dialogFormVisisbjzm=false"
+                    @row-dblclick="clicksb" :bukrs="bukrs" :werks="werks" ></sb-componet>
     </template>
 
     <template v-if="widget.type === 'text'">
@@ -343,9 +345,10 @@ import StaffComponent from '@/components/StaffComponent';
 import DataBookSelect from '@/components/DataBook';
 import SpreadSheet from '@/components/SpreadSheet';
 import TableColumn from '@/components/TableColumn';
+import sbComponet from '@/components/sbComponent';
 
 export default {
-  props: ['widget', 'models', 'rules', 'remote', 'disabled', 'readonly','zbbmDatas','cellPro','jizuData','showGrid'],
+  props: ['widget', 'models', 'rules', 'remote', 'disabled', 'readonly','zbbmDatas','cellPro','jizuData','showGrid',"werks","bukrs"],
   components: {
     SpreadSheet,
     FmUpload,
@@ -353,11 +356,16 @@ export default {
     StaffComponent,
     DataBookSelect,
     TableColumn,
+    sbComponet
   },
   data() {
     return {
       dataModel: this.models[this.widget.model],
-      showTableOnly: false
+      showTableOnly: false,
+      dialogFormVisisbjzm: false,
+      sheet:null,
+      ci:0,
+      ri:0
     }
   },
   created() {
@@ -387,6 +395,16 @@ export default {
     }
   },
   methods: {
+    cellSelectsb(sheet,ri,ci){
+      this.dialogFormVisisbjzm =true
+      this.sheet=sheet
+      this.ri=ri
+      this.ci=ci
+    },
+    clicksb(row) {
+      this.sheet.cellText(this.ri,this.ci,row.sbmc).reRender()
+      this.dialogFormVisisbjzm = false;
+    },
     tableCellAutoComp() {
       // console.log('widget : ', this.widget);
     },

@@ -1,0 +1,74 @@
+/* ========================================================安全生产UI规范========================================================================================= */
+/* 默认主题配色：*/
+$aqscThemeColor: #409eff; /* 主题颜色 */
+$aqscSuccessColor: #67c23a; /* 成功颜色 */
+$aqscWarningColor: #e6a23c; /* 警告颜色 */
+$aqscErrorColor: #f56c6c; /* 危险颜色 */
+$aqscInfoColor: #909399;  /* 信息颜色 */
+/* 字体颜色 */
+$aqscPrimaryFontColor: #303133; /* 主要文字颜色 */
+$aqscNormalFontColor: #000000;  /* 常规文字颜色 */
+$aqscSecondaryFontColor: $aqscInfoColor;  /* 次要文字颜色 */
+$aqscUnimportantFontColor: #c0c4cc; /* 站位文字颜色 */
+/* 边框颜色 */
+$aqscBorderColor1: #dcdfe6; /* 一级边框 */
+$aqscBorderColor2: #e4e7ed; /* 二级边框 */
+$aqscBorderColor3: #ebeef5; /* 三级边框 */
+$aqscBorderColor4: #f2f6fc; /* 四级边框 */
+/* 背景颜色 */
+$aqscBlackBackgroundColor: #000000; /* 基础黑色 */
+$aqscWhiteBackgroundColor: #ffffff; /* 基础白色 */
+$aqscNormalBackgroundColor: #f5f7fa; /* 基础背景色 */
+/* 文字规范 */
+$aqscFontSizeBig: 14px; /* 大号字体 */
+$aqscFontSizeNormal: 12px;  /* 常规字体 */
+$aqscFontSizeSmall: 10px; /* 小号字体 */
+$aqscFontSizeSmaller: 8px;  /* mini号字体 */
+/* 阴影效果 */
+$aqscBoxShadowColor: #dddddd; /* 阴影颜色 */
+
+/*  -----------------------公共布局必要样式抽出----------------------- */
+/* navbar抽出样式 */
+$aqscNavbarHeight: 50px;  /* navbar高度 */
+$aqscAvatarWrapperW: 36px;  /* 用户头像框宽度 */
+$aqscAvatarWrapperH: 36px;  /* 用户头像框高度 */
+
+/* sidebar抽出样式 */
+$aqscSideBarWidth: 120px;  /* sidebar宽度 */
+$aqscSidebarContainerW: $aqscSideBarWidth; /* 一级菜单选项宽度 */
+$aqscSidebarContainerH: $aqscSideBarWidth; /* 一级菜单选项高度 */
+$aqscSidebarActiveBorderColor: $aqscWhiteBackgroundColor;        /* 一级菜单选中左边线颜色 */
+$aqscSidebarBackgroundColor: $aqscWhiteBackgroundColor;        /* 一级菜单背景色 */
+$aqscSidebarHoverColor: $aqscWhiteBackgroundColor;        /* 一级菜单聚焦颜色 */
+$aqscSidebarItemHeight: 36px;         /* 弹出菜单(二级三级菜单) 单项高度 */
+$aqscSidebarItemIconSize: 24px;  /* 弹出菜单 单项字图字号大小 */
+$aqscSubmenuText: $aqscPrimaryFontColor;  /* 弹出菜单文字颜色 */
+$aqscMenuItemFontSize: $aqscFontSizeNormal;  /* 弹出菜单 单项字号大小 */
+
+$menuText: $aqscNormalFontColor;  /* 一级菜单文字颜色 */
+$menuActiveText: $aqscThemeColor; /* 一级菜单选中文字颜色 */
+$menuBg: $aqscSidebarBackgroundColor; /* 一级菜单背景色 */
+$menuHover:$aqscSidebarHoverColor; /* 一级菜单聚焦颜色 */
+$subMenuBg: $aqscWhiteBackgroundColor;  /* 弹出菜单(二级三级菜单)背景色 */
+$subMenuHover: $aqscWhiteBackgroundColor; /* 弹出菜单聚焦背景色 */
+$subMenuActiveText: $aqscThemeColor;  /* 弹出菜单选中文字颜色 */
+$sideBarWidth: $aqscSideBarWidth;  /* sidebar宽度 */
+
+/* tagView抽出样式 */
+$aqscTagViewHeight: 40px; /* tagview高度 */
+
+/* toolbar抽出样式 */
+$aqscToolbarContainerH: 40px; /* toolbar高度 */
+$aqscToolbarLeftIconSize: 20px; /* toolbar左侧字图字号大小 */
+$aqscToolbarRightIconSize: 16px;  /* toolbar右侧字图字号大小 */
+
+:export {
+  menuText: $menuText;
+  menuActiveText: $menuActiveText;
+  subMenuActiveText: $subMenuActiveText;
+  menuBg: $menuBg;
+  menuHover: $menuHover;
+  subMenuBg: $subMenuBg;
+  subMenuHover: $subMenuHover;
+  sideBarWidth: $sideBarWidth;
+}

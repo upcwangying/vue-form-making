@@ -57,6 +57,8 @@
             :cellPro="cellPro"
             :jizuData="jizuData"
             :showGrid="showGrid"
+            :werks="werks"
+            :bukrs="bukrs"
             @input-change="onInputChange"
           >
           </generate-form-item>
@@ -75,7 +77,7 @@ export default {
   components: {
     GenerateFormItem
   },
-  props: ['data', 'remote', 'value', 'insite', 'formLoading', 'disabled', 'readonly', 'module','zbDatas','cellPro','jizuData','showGrid'],
+  props: ['data', 'remote', 'value', 'insite', 'formLoading', 'disabled', 'readonly', 'module','zbDatas','cellPro','jizuData','showGrid','werks','bukrs'],
   data () {
     return {
       models: {},

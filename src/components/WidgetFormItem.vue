@@ -285,7 +285,9 @@
     </template>
 
     <template v-if="element.type === 'sheet'">
-      <spread-sheet ref="spreadsheet" :zbbmDatas="zbbmDatas" :cellPro="cellPro" :jizuData="jizuData" />
+      <spread-sheet ref="spreadsheet" :zbbmDatas="zbbmDatas" :cellPro="cellPro" :jizuData="jizuData" @updateInfo="cellSelectsb"  />
+      <sb-componet :dialog-form-visible="dialogFormVisisbjzm"  @close="dialogFormVisisbjzm=false"
+                   @row-dblclick="clicksb" :bukrs="bukrs" :werks="werks" ></sb-componet>
     </template>
 
     <template v-if="element.type === 'editor'">
@@ -352,9 +354,9 @@
   import TableColumn from '@/components/TableColumn';
   import { addClass, removeClass } from 'element-ui/src/utils/dom';
   import SpreadSheet from '@/components/SpreadSheet';
-
+  import sbComponet from '@/components/sbComponent';
   export default {
-    props: ['element', 'select', 'index', 'data', 'changeshowtt', 'celldom', 'areadom', 'uiSelect','zbbmDatas','cellPro','jizuData'],
+    props: ['element', 'select', 'index', 'data', 'changeshowtt', 'celldom', 'areadom', 'uiSelect','zbbmDatas','cellPro','jizuData','werks','bukrs'],
     components: {
       SpreadSheet,
       JizuComponent,
@@ -362,6 +364,7 @@
       DataBookSelect,
       FmUpload,
       TableColumn,
+      sbComponet
     },
     data() {
       return {
@@ -374,6 +377,10 @@
         cellDom: null,
         areaDom: null,
         uiselect: this.uiSelect,
+        dialogFormVisisbjzm: false,
+        sheet:null,
+        ci:0,
+        ri:0
       }
     },
     mounted() {
@@ -390,6 +397,16 @@
       })
     },
     methods: {
+      cellSelectsb(sheet,ri,ci){
+        this.dialogFormVisisbjzm =true
+        this.sheet=sheet
+        this.ri=ri
+        this.ci=ci
+      },
+      clicksb(row) {
+        this.sheet.cellText(this.ri,this.ci,row.sbmc).reRender()
+        this.dialogFormVisisbjzm = false;
+      },
       querySpreadSheetDataByWidgetFormItem() {
         return this.$refs.spreadsheet && this.$refs.spreadsheet.getSpreadSheetData()
       },
