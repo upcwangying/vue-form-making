@@ -22,6 +22,15 @@ export default {
       type: String,
       default: ''
     },
+    //设置sheet高度避免出现双滚动条
+    height_: {
+      type: Number,
+      default: 0
+    },
+    width_: {
+      type: Number,
+      default: 0
+    },
     readonly: {
       type: Boolean,
       default: true
@@ -41,8 +50,8 @@ export default {
     Spreadsheet.locale('zh-cn', zhCN);
     this.spreadsheet = new Spreadsheet(this.$refs.xspreadsheet, {
       view: {
-        height: () => document.documentElement.clientHeight-230,
-        width: () => document.documentElement.clientWidth-730
+        height: () => document.documentElement.clientHeight-230 + this.height_,
+        width: () => document.documentElement.clientWidth-730 + this.width_,
       },
       row: {
         height: 25,

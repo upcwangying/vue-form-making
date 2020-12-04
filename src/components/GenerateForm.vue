@@ -59,6 +59,8 @@
             :showGrid="showGrid"
             :werks="werks"
             :bukrs="bukrs"
+            :wigth_="width_"
+            :height_="height_"
             @input-change="onInputChange"
           >
           </generate-form-item>
@@ -77,7 +79,8 @@ export default {
   components: {
     GenerateFormItem
   },
-  props: ['data', 'remote', 'value', 'insite', 'formLoading', 'disabled', 'readonly', 'module','zbDatas','cellPro','jizuData','showGrid','werks','bukrs'],
+  props: ['data', 'remote', 'value', 'insite', 'formLoading', 'disabled', 'readonly', 'module',
+    'zbDatas','cellPro','jizuData','showGrid','werks','bukrs','width_','height_'],
   data () {
     return {
       models: {},

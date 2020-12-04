@@ -327,7 +327,7 @@
     </template>
 
     <template v-if="widget.type === 'sheet'">
-      <spread-sheet style="width: 100%" ref="spreadsheet" :zbbmDatas="zbbmDatas"  :cellPro="cellPro" :jizuData="jizuData" :showgrid="showGrid" :readonly="readonly" @updateInfo="cellSelectsb" />
+      <spread-sheet style="width: 100%" ref="spreadsheet" :zbbmDatas="zbbmDatas"  :cellPro="cellPro" :jizuData="jizuData" :showgrid="showGrid" :readonly="readonly" @updateInfo="cellSelectsb" :width_="width_" :height_="height_" />
       <sb-componet :dialog-form-visible="dialogFormVisisbjzm"  @close="dialogFormVisisbjzm=false"
                     @row-dblclick="clicksb" :bukrs="bukrs" :werks="werks" ></sb-componet>
     </template>
@@ -348,7 +348,7 @@ import TableColumn from '@/components/TableColumn';
 import sbComponet from '@/components/sbComponent';
 
 export default {
-  props: ['widget', 'models', 'rules', 'remote', 'disabled', 'readonly','zbbmDatas','cellPro','jizuData','showGrid',"werks","bukrs"],
+  props: ['widget', 'models', 'rules', 'remote', 'disabled', 'readonly','zbbmDatas','cellPro','jizuData','showGrid',"werks","bukrs",'width_','height_'],
   components: {
     SpreadSheet,
     FmUpload,
