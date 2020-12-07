@@ -128,7 +128,7 @@
           >
             <generate-form insite="true" @on-change="handleDataChange" v-if="previewVisible" :data="widgetForm" :werks="werks" :bukrs="bukrs"
                            :zbDatas="zbDatas" :cellPro="cellPro" :jizuData="jizuData" :showGrid="false"
-                           :value="widgetModels" :remote="remoteFuncs" ref="generateForm">
+                           :value="widgetModels" :remote="remoteFuncs" ref="generateForm" :width_="width_" :height_="height_">
 
               <template v-slot:blank="scope">
                 Width <el-input v-model="scope.model.blank.width" style="width: 100px"></el-input>
@@ -339,6 +339,8 @@
           jz: [],
           sb: [],
         },
+        width_: 230,
+        height_: 70,
         quateTableLoading: false,
       }
     },

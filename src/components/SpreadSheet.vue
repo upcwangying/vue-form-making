@@ -50,8 +50,8 @@ export default {
     Spreadsheet.locale('zh-cn', zhCN);
     this.spreadsheet = new Spreadsheet(this.$refs.xspreadsheet, {
       view: {
-        height: () => document.documentElement.clientHeight-230 + this.height_,
-        width: () => document.documentElement.clientWidth-730 + this.width_,
+        height: () => document.documentElement.clientHeight-(230 - this.height_),
+        width: () => document.documentElement.clientWidth-(730 - this.width_),
       },
       row: {
         height: 25,

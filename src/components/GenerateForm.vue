@@ -59,7 +59,7 @@
             :showGrid="showGrid"
             :werks="werks"
             :bukrs="bukrs"
-            :wigth_="width_"
+            :width_="width_"
             :height_="height_"
             @input-change="onInputChange"
           >
