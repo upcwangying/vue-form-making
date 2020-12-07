@@ -1,0 +1,646 @@
+/* ==================================统一布局样式添加------------标准间距 ===========================================*/
+.body {
+  margin-left: 20px;
+  margin-right: 33px;
+}
+.m5p {
+  margin-right: 5px;
+}
+.m10p {
+  margin-right: 5px;
+}
+
+// =================================================sidebar组件样式修改=================================================
+#app {
+  .main-container {
+    margin-left: 0;
+    &.fixedFormViewToolbar {
+      section.app-main {
+        .aqsc-layout-comp-container.aqscNormalbackgroundColor.aqscBorderColor {
+          position: fixed;
+          top: 90px;
+          right: 0;
+          z-index: 9;
+          width: 100%;
+          padding-left: 140px;
+          -webkit-transition: width 0.28s;
+          transition: width 0.28s;
+          & + div {
+            padding-top: 41px
+          }
+        }
+      }
+    }
+  }
+  .sidebar-container {
+    width: 0 !important;
+    background-color: $menuBg;
+    height: calc(100% - #{$aqscNavbarHeight});
+    margin-top: $aqscNavbarHeight;
+    &.has-logo {    // reset element-ui css
+      .el-scrollbar {
+        height: 100%;
+      }
+    }
+    .submenu-title-noDropdown,
+    .el-submenu__title {      // menu hover
+      color: $menuText;
+      background-color: $menuBg;
+      border-bottom: 1px solid #d9d9d9;
+    &:hover {
+        color: $menuText !important;
+        background-color: $menuBg !important;
+      }
+    }
+    .is-active,.is-active>.el-submenu__title {
+      color: $menuText !important;      // 预留active sidebar 颜色修改
+    }
+    .menu-active-tag {
+      position: absolute;
+      width: 0;
+      height: 0;
+      right: 0;
+      bottom: 0;
+      border-style: solid;
+      border-width: 0 0 30px 30px;
+      border-color: transparent
+    }
+    .is-active .menu-active-tag{
+      border-color: transparent transparent $aqscThemeColor transparent;
+    }
+    .menu-bar-hover {
+      .is-active .menu-active-tag{
+        border-color: transparent;
+      }
+      .is-opened .menu-active-tag{
+        border-color: transparent transparent $aqscThemeColor;
+      }
+    }
+    & .nest-menu .el-submenu>.el-submenu__title,
+    & .el-submenu .el-menu-item {
+      min-width: $aqscSideBarWidth !important;
+      background-color: $subMenuBg !important;
+    }
+  }
+  .hideSidebar {
+    .sidebar-container {
+      width: $aqscSidebarContainerW !important;
+      box-shadow: $aqscBoxShadowColor 4px 5px 5px;
+    }
+    .main-container {
+      margin-left: 0;
+      .tags-view-container, & > .app-main{
+        margin-left: $aqscSidebarContainerW;
+        width: calc(100% - #{$aqscSidebarContainerW});
+      }
+    }
+    .submenu-title-noDropdown {
+      padding:30px 0 0 0 !important;
+      height: calc(#{$aqscSidebarContainerH} - 10px);
+      text-align: center;
+      &>span {
+        height: $aqscMenuItemFontSize + 2px;
+        line-height:$aqscMenuItemFontSize + 2px;
+        font-size: $aqscMenuItemFontSize;
+        padding-top: 2px;
+        overflow: hidden;
+        display: block;
+        &.aqsc-sidebar-icon {
+          height: 36px;
+          font-size: 32px;
+          padding-top: 10px;
+        }
+      }
+      .el-tooltip {
+        padding: 8px 0 !important;
+      }
+    }
+    .el-submenu {
+      &>.el-submenu__title {
+        padding:30px 0 !important;
+        height: calc(#{$aqscSidebarContainerH} - 10px);
+        text-align: center;
+      }
+    }
+    .el-menu--collapse {
+      .el-submenu {
+        &>.el-submenu__title {
+          font-size:$aqscMenuItemFontSize;
+          &>span {
+            height: $aqscMenuItemFontSize;
+            width: auto;
+            line-height:$aqscMenuItemFontSize;
+            overflow: hidden;
+            visibility: visible;
+            display: block;
+            &.aqsc-sidebar-icon {
+            height: 36px;
+            font-size: 32px;
+            padding-top: 10px;
+            }
+          }
+        }
+      }
+    }
+  }
+  .el-menu--collapse .el-menu .el-submenu {
+    min-width: $aqscSideBarWidth !important;
+  }
+  .mobile {  // mobile responsive
+    .sidebar-container {
+      width: $aqscSideBarWidth !important;
+    }
+    &.hideSidebar {
+      .sidebar-container {
+        transform: translate3d(-$aqscSideBarWidth, 0, 0);
+      }
+    }
+  }
+  //.el-menu-item {
+  //  border-left: 4px solid transparent;
+    //&.is-active {
+    //  border-left: 4px solid $menuActiveBorder;
+    //}
+  //}
+  //.el-submenu.is-active {
+    //border-left: 4px solid $menuActiveBorder;
+    //& > div {
+    //  margin-left: -4px;
+    //}
+  //}
+}
+.el-menu--vertical {// when menu collapsed
+  top: auto !important;
+  bottom: 0 !important;
+  background: transparent;
+  border-top: 5px solid #FFFFFF;
+  .nest-menu .el-submenu>.el-submenu__title,
+  .el-menu-item {
+    background-color:$subMenuBg !important;
+    color:$aqscSubmenuText !important;
+    &:hover {// you can use $subMenuHover
+      background-color: $subMenuHover !important;
+      color:$subMenuActiveText !important;
+    }
+  }
+  .el-submenu {
+    .el-submenu__title {
+      padding-left: 20px !important;
+    }
+    .el-menu.el-menu--inline {
+      padding-left: 20px !important;
+    }
+  }
+  >.el-menu--popup {
+    height: calc(100vh - 55px) !important;
+    max-height: calc(100vh - 55px) !important;
+    background: $subMenuBg !important;
+    .el-submenu__title { // the scroll bar appears when the subMenu is too long
+      background: $subMenuBg !important;
+      color:$aqscSubmenuText !important;
+      height: $aqscSidebarItemHeight;
+      line-height: $aqscSidebarItemHeight;
+    }
+    .el-menu-item {
+      height: $aqscSidebarItemHeight;
+      line-height: $aqscSidebarItemHeight;
+    }
+  }
+}
+
+// ==================================================navbar组件样式修改=================================================
+#app {
+  .sidebar-logo-container.logo-on-navbar {
+    position: fixed;
+  }
+  .hamburger-container {
+    margin-left: $aqscSideBarWidth;
+  }
+}
+
+// ==================================================message-box组件样式修改============================================
+.el-message-box {
+  .el-message-box__btns {
+    button {
+      float: right;
+      margin-left: 10px;
+    }
+  }
+}
+// =================================模态框组件---------size三种大小：normal  small mini=================================
+.el-dialog {
+  position: relative;
+  margin: 0 auto 50px;
+  margin-top: 15vh;
+  .el-dialog__header {
+    padding: 13px 13px 11px 14px;
+    background-color: $aqscThemeColor;
+    span {
+      color: $aqscWhiteBackgroundColor;
+    }
+    .el-dialog__headerbtn{
+      top: 12px;
+      right: 13px;
+      .el-icon-close{
+        color: $aqscWhiteBackgroundColor;
+      }
+    }
+  }
+  .el-dialog__body {
+    padding: 32px 36px;
+    .el-row {
+      .el-col-12 {
+        &:first-child {
+          padding-right: 36.5px;
+        }
+
+        &:last-child {
+          padding-left: 36.5px;
+        }
+      }
+    }
+  }
+  .el-dialog__footer {
+    padding-top: 0;
+    button {
+      width: 60px;
+      height: 32px;
+      padding: 0;
+      span{
+        font-size: 12px;
+      }
+    }
+  }
+}
+.aqsc-dialog-normal{
+  .el-dialog{
+    width: 800px;
+    .el-dialog__body {
+      height: 528px;
+      overflow-y: auto;
+    }
+  }
+}
+.aqsc-dialog-small{
+  .el-dialog{
+    width: 640px;
+    .el-dialog__body {
+      height: 368px;
+      overflow-y: auto;
+    }
+  }
+}
+.aqsc-dialog-mini {
+  .el-dialog {
+    width: 540px;
+    .el-dialog__body {
+      eight: 268px;
+      overflow-y: auto;
+    }
+  }
+}
+
+// ==================================自定义修改element样式----------tabs==========================================
+.el-tabs {
+  .el-tabs__header {
+    margin-bottom: 0;
+    .el-tabs__nav {
+      .el-tabs__item {
+        height: 37px;
+        line-height: 37px;
+        padding-left: 32px !important;
+        padding-right: 32px !important;
+        background-color: $aqscNormalBackgroundColor;
+        border-bottom: 1px solid $aqscBorderColor1;
+        &.is-active {
+          border-bottom: none;
+          background-color: $aqscWhiteBackgroundColor;
+        }
+      }
+    }
+  }
+
+  .el-tabs__content {
+    padding-top: 15px;
+    border-left: 1px solid $aqscBorderColor1;
+    border-right: 1px solid $aqscBorderColor1;
+  }
+}
+
+// ==================================自定义修改element样式----------table组件===========================================
+.el-table {
+  font-size: $aqscFontSizeNormal;
+  td {
+    padding: 2px 0;
+  }
+  th {
+    height: 33px;
+    & > .cell.highlight { //  筛选列表头的 字 由el的主系蓝色改为白色
+      color: #ffffff;
+    }
+  }
+  td {
+    height: 33px;
+  }
+  .el-table__header-wrapper {
+    tr {
+      height: 36px;
+      background: transparent;
+      border-radius: 4px 4px 0 0;
+      border: 1px solid transparent;
+      color: #FFFFFF;
+      th {
+        background: $aqscThemeColor;
+        &:nth-child(1) {
+          border-radius: 4px 0 0 0;
+        }
+        &:nth-last-child(2) {
+          border-radius: 0 4px 0 0;
+        }
+        &.deepblue-background-class {
+          background: #3388ee;
+        }
+      }
+    }
+  }
+  .el-table__fixed, .el-table__fixed-right {
+    .el-table__fixed-header-wrapper {
+      tr {
+        height: 36px;
+        background: $aqscThemeColor;
+        border-radius: 4px 4px 0 0;
+        border: 1px solid transparent;
+        color: #FFFFFF;
+        th {
+          background: transparent;
+          &:nth-child(1) {
+            border-radius: 4px 0 0 0;
+          }
+          &:nth-last-child(2) {
+            border-radius: 0 4px 0 0;
+          }
+        }
+      }
+    }
+  }
+  // 排序上下箭头 由el的灰色改为白色
+  .sort-caret.ascending {
+    border-bottom-color: #ffffff;
+  }
+  .sort-caret.descending {
+    border-top-color: #ffffff;
+  }
+  //  筛选列表头的 '↓' 由el的主系蓝色改为白色
+  .el-table__column-filter-trigger i {
+    color: #ffffff;
+  }
+}
+// ---------------table斑马条纹颜色---------------------------
+.el-table--striped .el-table__body tr.el-table__row--striped td {
+  background: #f4f5f6;
+}
+// ---------------editgrid表格高亮行---------------------------
+.aqsc-editgrid-table .el-table__body tr.current-row>td {
+  background-color: #5fa5f8 !important;
+}
+.aqsc-editgrid-table .el-table__body tr.current-row:hover>td {
+  background-color: #5fa5f8 !important;
+}
+.aqsc-editgrid-table.last-column-button .el-table__body tr.current-row>td:last-child {
+  background-color: $aqscWhiteBackgroundColor !important;
+}
+.aqsc-editgrid-table.last-column-button .el-table__body tr.current-row:hover>td:last-child {
+  background-color: $aqscNormalBackgroundColor !important;
+}
+.table-tips {
+  font-size: 14px;
+  padding: 5px 10px;
+  border: 1px solid #EBEEF5;
+}
+// ==========================================分页组件div样式------分页组件靠右==========================================
+.pageDiv {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid $aqscBorderColor3;
+  border-top: none;
+}
+.el-pagination {
+  float: right;
+  align-self: flex-end;
+  margin-top: 0;
+  padding: 4px 15px;
+}
+
+// ========================================日期时间组件---------中间'至'样式调整========================================
+.el-range-separator {
+  box-sizing: content-box;
+}
+
+// ==================================自定义修改element样式----------input组件==========================================
+// ---------------form中input行间隔---------------------------
+.el-form-item {
+  /*djg2020-10-26 修改margin-bottom:3px 改为 -5px */
+  margin-bottom: -5px;
+  /*djg2020-10-26 增加 el-form-item__label margin-bottom: -5px;*/
+  .el-form-item__label {
+    font-size: 14px;
+    color: $aqscNormalFontColor;
+    padding-right: 6px;
+    margin-bottom: -5px;
+  }
+  .el-input,.el-select{
+    /*djg2020-10-26 修改margin-bottom:10px 改为 3px*/
+    margin-bottom: 7px;
+    & + .el-form-item__error {
+      /*djg2020-10-26 增加color属性*/
+      color: rgba(255, 255, 255, 0);
+      top: calc(100% - 13px);
+    }
+  }
+  .el-input.el-input--medium,.el-select.el-select--medium,.el-date-editor--daterange.el-range-editor--medium {
+    /*djg2020-10-26 修改margin-bottom:9px 改为 2px*/
+    margin-bottom: 2px;
+    & + .el-form-item__error {
+      color: rgba(255, 255, 255, 0);
+      top: calc(100% - 13px);
+    }
+  }
+  .el-input.el-input--small,.el-select.el-select--small ,.el-date-editor--daterange.el-range-editor--small{
+    /*djg2020-10-26 修改margin-bottom:4px 改为 1px*/
+    margin-bottom: 1px;
+    & + .el-form-item__error {
+      color: rgba(255, 255, 255, 0);
+      top: calc(100% - 11px);	//small
+    }
+  }
+  .el-input.el-input--mini,.el-select.el-select--mini,.el-date-editor--daterange.el-range-editor--mini  {
+    margin-bottom: 0;
+    & + .el-form-item__error {
+      color: rgba(255, 255, 255, 0);
+      top: calc(100% - 9px);
+    }
+  }
+  /*djg2020-10-26 新增针对textarea的控制*/
+  .el-textarea{
+    margin-top: 5px;
+    margin-bottom: 5px;
+    & + .el-form-item__error {
+      color: rgba(255, 255, 255, 0);
+      top: calc(100% - 11px);	//small
+    }
+  }
+  .aqsc-icon__small {
+    padding: 0 5px 0 0 !important;
+  }
+
+  .el-input__icon {
+    font-size: 16px !important;
+    color: $aqscNormalFontColor !important;
+  }
+
+
+}
+/*djg 2020-10-29 修改disabled的组件字体颜色*/
+.el-input.is-disabled .el-input__inner, .el-textarea.is-disabled .el-textarea__inner {
+  color: $aqscNormalFontColor;
+}
+
+// ==================================自定义修改element样式----------button组件==========================================
+.el-button {
+  padding: 5px 15px;
+  &.is-round{
+    border-radius: 9px;
+  }
+}
+.el-button--mini.is-round {
+  padding: 3px 15px;
+}
+/* 折叠面板按钮样式 */
+.aqsc-collapse-toolpannel-button {
+  border: 1px solid $aqscBorderColor1;
+  background: $aqscWhiteBackgroundColor;
+  color: $aqscNormalFontColor;
+  padding: 6px 10px;
+  &:hover {
+    border: 1px solid $aqscThemeColor;
+    color: $aqscThemeColor;
+    background: $aqscWhiteBackgroundColor;
+  }
+  &:focus {
+    border: 1px solid $aqscBorderColor1;
+    background: $aqscWhiteBackgroundColor;
+    color: $aqscNormalFontColor;
+    padding: 6px 10px;
+  }
+  &:active {
+    background: $aqscThemeColor;
+    color: $aqscWhiteBackgroundColor;
+  }
+  span {
+    padding-left: 5px;
+  }
+}
+/* 查询按钮样式 */
+.aqsc-collapse-toolpannel-button-query {
+  border: 1px solid transparent;
+  background: $aqscNormalBackgroundColor;
+  color: $aqscNormalFontColor;
+  padding: 6px 10px;
+  &.el-button.is-disabled {
+    background-color: $aqscNormalBackgroundColor;
+  }
+  &:hover {
+    border: 1px solid $aqscThemeColor;
+    color: $aqscThemeColor;
+    background: $aqscNormalBackgroundColor;
+  }
+  &:focus {
+    border: 1px solid $aqscBorderColor1;
+    background: $aqscNormalBackgroundColor;
+    color: $aqscNormalFontColor;
+    padding: 6px 10px;}
+  &:active {
+    background: $aqscThemeColor;
+    color: $aqscWhiteBackgroundColor;}
+  span {
+    padding-left: 5px;
+  }
+}
+/* 模态框按钮样式 */
+.aqsc-collapse-toolpannel-button-dialog {
+  border: 1px solid $aqscBorderColor1;
+  background: $aqscWhiteBackgroundColor;
+  color: $aqscNormalFontColor;
+  padding: 6px 10px;
+  &:hover {
+    border: 1px solid $aqscThemeColor;
+    color: $aqscThemeColor;
+    background: $aqscWhiteBackgroundColor;
+  }
+  &:focus {
+    border: 1px solid $aqscBorderColor1;
+    background: $aqscWhiteBackgroundColor;
+    color: $aqscNormalFontColor;
+    padding: 6px 10px;
+  }
+  &:active {
+    background: $aqscThemeColor;
+    color: $aqscWhiteBackgroundColor;
+  }
+  span {
+    padding-left: 5px;
+  }
+}
+// ==================================自定义修改element样式----------badg组件==========================================
+.el-badge__content{
+  border: 1px solid transparent;
+}
+
+// ==================================自定义样式======================================================================
+.aqscNormalbackgroundColor {
+  background-color: $aqscNormalBackgroundColor;
+}
+.aqscBorderColor{
+  border-bottom: 1px solid $aqscBorderColor1;
+}
+.hide-table-current-column {
+  display: none;
+}
+//=======================表格中显示换行符====================
+
+.el-table .cell {
+  white-space: pre-wrap; //保留空白符序列，但是正常地进行换行。
+}
+//=============================悬浮框样式修改table悬浮框=========================================
+.el-tooltip__popper.is-dark {
+  background:  $aqscNormalBackgroundColor !important;
+  color:$aqscNormalFontColor;
+  max-width: 50%;
+}
+.el-tooltip__popper[x-placement^=top] .popper__arrow{
+  border-top-color:  $aqscNormalBackgroundColor ;
+}
+.el-tooltip__popper[x-placement^=top] .popper__arrow:after {
+  border-top-color:  $aqscNormalBackgroundColor ;
+}
+
+.el-tooltip__popper[x-placement^=bottom] .popper__arrow{
+  border-bottom-color:   $aqscNormalBackgroundColor ;
+}
+.el-tooltip__popper[x-placement^=bottom] .popper__arrow:after {
+  border-bottom-color:  $aqscNormalBackgroundColor ;
+}
+
+.el-tooltip__popper[x-placement^=left] .popper__arrow{
+  border-left-color:   $aqscNormalBackgroundColor ;
+}
+.el-tooltip__popper[x-placement^=left] .popper__arrow:after {
+  border-left-color:  $aqscNormalBackgroundColor ;
+}
+
+.el-tooltip__popper[x-placement^=right] .popper__arrow{
+  border-right-color:   $aqscNormalBackgroundColor ;
+}
+.el-tooltip__popper[x-placement^=right] .popper__arrow:after {
+  border-right-color: $aqscNormalBackgroundColor ;
+}

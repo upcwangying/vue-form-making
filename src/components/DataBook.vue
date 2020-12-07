@@ -1,6 +1,6 @@
 <template>
   <el-tooltip :disabled="tooltipDisable" class="item" effect="dark" :content="tooltipContentStr" placement="top">
-    <el-select v-model="svalue" :placeholder="spholder" filterable :clearable="clearable" :disabled="disabled" style="width:100%" :collapse-tags="collapseTags"
+    <el-select v-model="svalue" :placeholder="spholder" filterable :clearable="clearable" :disabled="disabled || readonly" style="width:100%" :collapse-tags="collapseTags"
                :size="size" :multiple="multiple" @change="selectChange">
       <el-option v-for="item in options" :key="item.dataid" :label="item[displayField]" :value="item[valueField]" />
     </el-select>
@@ -20,10 +20,16 @@
         default: ''
       },
       groupcode: {
-        type: String,
-        default: ''
+        type: Array,
+        default() {
+          return []
+        }
       },
       disabled: {
+        type: Boolean,
+        default: false
+      },
+      readonly: {
         type: Boolean,
         default: false
       },
@@ -64,7 +70,8 @@
         svalue: '',
         spholder: '请选择',
         tooltipContentStr: "",
-        tooltipDisable: true
+        tooltipDisable: true,
+        groupcode_: this.groupcode[this.groupcode.length-1] || ''
       }
     },
     watch: {
@@ -116,7 +123,7 @@
         }
       },
       getCrama() {
-        queryDataBook({ groupcode: this.groupcode }).then(response => {
+        queryDataBook({ groupcode: this.groupcode_ }).then(response => {
           const datas = response.dataset.datas;
           const options = []
           datas.forEach(itee => {

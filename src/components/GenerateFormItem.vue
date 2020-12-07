@@ -1,9 +1,21 @@
 <template>
   <el-form-item
+    v-show="!showTableOnly"
     :prop="widget.model"
     :label="widget.type === 'table' || widget.type === 'sheet' ? '' : widget.name"
     :label-width="widget.type === 'table' ? '0px' : 'auto'"
   >
+
+    <template v-if="widget.type=='databook'">
+      <data-book-select
+        v-model="dataModel"
+        :disabled="disabled || widget.options.disabled"
+        :readonly="readonly || widget.options.readonly"
+        :placeholder="widget.options.placeholder"
+        :groupcode="widget.options.groupcode"
+        value-field="datacode"
+        :style="{width: widget.options.width}" />
+    </template>
 
     <template v-if="widget.type === 'staff'">
       <staff-component
@@ -164,7 +176,7 @@
         :disabled="disabled || widget.options.disabled"
         :readonly="readonly || widget.options.readonly"
         :placeholder="widget.options.placeholder"
-        groupcode="AQSC_JSJD_SUB_QUARTER"
+        :groupcode="['AQSC_JSJD_SUB_QUARTER']"
         value-field="datacode"
         :style="{width: widget.options.width}" />
     </template>
@@ -304,7 +316,7 @@
         :span-method="objectSpanMethod(arguments, widget.mergeRule)"
         style="width: 100%">
         <template v-for="column in widget.structColumns">
-          <table-column v-if="column.children && column.children.length" :key="column.id" :prop="column.prop" :label="column.label" :width="column.width" :coloumn-header="column" :show-edit="!disabled" />
+          <table-column v-if="column.children && column.children.length" :key="column.id" :prop="column.prop" :label="column.label" :width="column.width" :coloumn-header="column" :show-edit="!disabled" :readonly="readonly" />
           <el-table-column v-else :key="column.id" :prop="column.prop" :label="column.label" :width="column.width">
             <template slot-scope="{row, $index}">
               <el-input v-if="!disabled" v-model="row[column.prop]" :readonly="readonly" placeholder="请输入" size="small" />
@@ -315,7 +327,9 @@
     </template>
 
     <template v-if="widget.type === 'sheet'">
-      <spread-sheet style="width: 100%" ref="spreadsheet"  />
+      <spread-sheet style="width: 100%" ref="spreadsheet" :zbbmDatas="zbbmDatas"  :cellPro="cellPro" :jizuData="jizuData" :showgrid="showGrid" :readonly="readonly" @updateInfo="cellSelectsb" :width_="width_" :height_="height_" />
+      <sb-componet :dialog-form-visible="dialogFormVisisbjzm"  @close="dialogFormVisisbjzm=false"
+                    @row-dblclick="clicksb" :bukrs="bukrs" :werks="werks" ></sb-componet>
     </template>
 
     <template v-if="widget.type === 'text'">
@@ -331,9 +345,10 @@ import StaffComponent from '@/components/StaffComponent';
 import DataBookSelect from '@/components/DataBook';
 import SpreadSheet from '@/components/SpreadSheet';
 import TableColumn from '@/components/TableColumn';
+import sbComponet from '@/components/sbComponent';
 
 export default {
-  props: ['widget', 'models', 'rules', 'remote', 'disabled', 'readonly'],
+  props: ['widget', 'models', 'rules', 'remote', 'disabled', 'readonly','zbbmDatas','cellPro','jizuData','showGrid',"werks","bukrs",'width_','height_'],
   components: {
     SpreadSheet,
     FmUpload,
@@ -341,10 +356,16 @@ export default {
     StaffComponent,
     DataBookSelect,
     TableColumn,
+    sbComponet
   },
   data() {
     return {
       dataModel: this.models[this.widget.model],
+      showTableOnly: false,
+      dialogFormVisisbjzm: false,
+      sheet:null,
+      ci:0,
+      ri:0
     }
   },
   created() {
@@ -368,7 +389,25 @@ export default {
 
     this.initDateTimeComponentDefaultValue();
   },
+  mounted() {
+    if (this.widget.type === 'table' && (this.widget.options.cellComputeRules.length > 0)) {
+      this.tableCellAutoComp();
+    }
+  },
   methods: {
+    cellSelectsb(sheet,ri,ci){
+      this.dialogFormVisisbjzm =true
+      this.sheet=sheet
+      this.ri=ri
+      this.ci=ci
+    },
+    clicksb(row) {
+      this.sheet.cellText(this.ri,this.ci,row.sbmc).reRender()
+      this.dialogFormVisisbjzm = false;
+    },
+    tableCellAutoComp() {
+      // console.log('widget : ', this.widget);
+    },
     loadSpreadSheetDataByGenerateFormItem(data) {
       this.$refs.spreadsheet && this.$refs.spreadsheet.setSpreadSheetData(data)
     },
@@ -449,6 +488,16 @@ export default {
           return result
         }
       }
+    },
+    displayTableOnly(showOnlyArray) {
+      const showOnlyArray_ = showOnlyArray || ['table', 'sheet']
+      this.showTableOnly = (showOnlyArray_.indexOf(this.widget.type) === -1)
+    },
+    displaystrokestyle_(flag) {
+      this.showgrid = flag
+    },
+    resetReportStatus() {
+      this.showTableOnly = false
     },
   },
   watch: {

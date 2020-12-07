@@ -31,6 +31,14 @@
         <el-input style="width: 90px;" type="number" v-model.number="data.options.size.height"></el-input>
       </el-form-item>
 
+      <el-form-item :label="$t('fm.config.widget.groupcode')"
+                    v-if="Object.keys(data.options).indexOf('groupcode')>=0 && (data.type!=='time' || data.type!=='date')">
+        <el-cascader
+          v-model="data.options.groupcode"
+          :options="groupCodeOptions"
+          :props="{ expandTrigger: 'hover', label: 'dataname', value: 'datacode' }">
+        </el-cascader>
+      </el-form-item>
       <el-form-item :label="$t('fm.config.widget.placeholder')"
                     v-if="Object.keys(data.options).indexOf('placeholder')>=0 && (data.type!=='time' || data.type!=='date')">
         <el-input v-model="data.options.placeholder"></el-input>
@@ -403,7 +411,7 @@
             <el-button type="text" @click="handleAddTableColumn">{{ $t('fm.actions.addColumn') }}</el-button>
           </div>
         </el-form-item>
-        <el-form-item label="列表样式">
+        <el-form-item label="列表样式" v-if="cellDom && areaDom">
           <!--<el-row type="flex" justify="space-around">-->
           <!--<el-checkbox-group v-model="currrentCheckOfMergeCell" :max="1">-->
           <!--<li v-for="(item, index) in data.mergeRule" :key="index + '_li'">-->
@@ -424,29 +432,44 @@
             <el-button @click="handleCancelMergeClick">取消合并</el-button>
           </el-row>
         </el-form-item>
-        <el-form-item label="单元格属性">
+        <el-form-item label="单元格属性" v-if="cellDom">
           <el-row type="flex" justify="space-around" style="padding-bottom: 15px;">
             <el-col>
-              <el-button>显示指标符号</el-button>
+              <el-button style="width: 80%;margin-left: 10%;">显示指标符号</el-button>
             </el-col>
             <el-col>
-              <el-button>显示指标单位</el-button>
+              <el-button style="width: 80%;margin-left: 10%;">显示指标单位</el-button>
             </el-col>
           </el-row>
           <el-row type="flex" justify="space-around" style="padding-bottom: 15px;">
             <el-col>
-              <el-button>显示指标标准值</el-button>
+              <el-button style="width: 80%;margin-left: 10%;">显示指标标准值</el-button>
             </el-col>
             <el-col>
-              <el-button>显示指标期望值</el-button>
+              <el-button style="width: 80%;margin-left: 10%;">显示指标期望值</el-button>
             </el-col>
           </el-row>
           <el-row type="flex" justify="space-around" style="padding-bottom: 15px;">
             <el-col>
-              <el-button @click="showJz">显示机组</el-button>
+              <el-button @click="showJz" style="width: 80%;margin-left: 10%;">显示机组</el-button>
             </el-col>
             <el-col>
-              <el-button>重置</el-button>
+              <el-button style="width: 80%;margin-left: 10%;">显示设备</el-button>
+            </el-col>
+          </el-row>
+          <el-row type="flex" justify="space-around" style="padding-bottom: 15px;">
+            <el-col :span="6">
+              <span style="padding-left: 20%;">公式计算:</span>
+            </el-col>
+            <el-col :span="18">
+              <el-input v-model="compFormula" @change="cellAutoComputed" style="padding-right: 5%;"></el-input>
+            </el-col>
+          </el-row>
+          <el-row type="flex" justify="space-around" style="padding-bottom: 15px;">
+            <el-col>
+              <el-button  style="width: 80%;margin-left: 10%;">重置</el-button>
+            </el-col>
+            <el-col>
             </el-col>
           </el-row>
         </el-form-item>
@@ -528,13 +551,14 @@
 <script>
   import Draggable from 'vuedraggable'
   import AddColumn from '@/components/AddColumn';
+  import { queryDataBookGroupCode } from '@/api/databook';
 
   export default {
     components: {
       Draggable,
       AddColumn,
     },
-    props: ['data', 'currcheck'],
+    props: ['data', 'currcheck', 'module', 'cellDom', 'areaDom'],
     data() {
       return {
         validator: {
@@ -547,6 +571,8 @@
         columnCurrentCheck: this.currcheck,
         rowCurrentCheck: [],
         // currrentCheckOfMergeCell: [],
+        groupCodeOptions: [],
+        compFormula: ''
       }
     },
     computed: {
@@ -554,7 +580,11 @@
         return this.data && Object.keys(this.data).length > 0;
       }
     },
-    mounted() {},
+    mounted() {
+      queryDataBookGroupCode(this.module).then(res => {
+        this.groupCodeOptions = res.dataset.datas;
+      })
+    },
     methods: {
       handleOptionsRemove(index) {
         if (this.data.type === 'grid') {
@@ -697,6 +727,16 @@
       showJz() {
         this.$emit('show-jz')
       },
+      cellAutoComputed(val) {
+        this.$emit('cell-auto-computed', val)
+        this.$emit('clean-cell-dom')
+      },
+      setCompFormula() {
+        if (this.data.type !== 'table') { return }
+        // this.data.options
+        // console.log('cellDom : ', this.cellDom)
+        // console.log('data : ', this.data)
+      },
     },
     watch: {
       'data.options.isRange': function (val) {
@@ -730,6 +770,9 @@
       currcheck(val) {
         this.columnCurrentCheck = val
       },
+      cellDom(val) {
+        this.setCompFormula();
+      }
     },
   }
 </script>

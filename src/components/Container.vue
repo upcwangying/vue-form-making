@@ -77,16 +77,17 @@
           </el-aside>
 
           <el-container class="center-container" direction="vertical">
-<!--            <el-header class="btn-bar" style="height: 45px;">-->
-            <!--              <slot name="action">-->
-            <!--              </slot>-->
-            <!--                          <el-button v-if="upload" type="text" size="medium" icon="el-icon-upload2" @click="handleUpload">{{$t('fm.actions.import')}}</el-button>-->
-            <!--              <el-button v-if="clearable" type="text" size="medium" icon="el-icon-delete" @click="handleClear">{{$t('fm.actions.clear')}}</el-button>-->
-            <!--              <el-button v-if="generateJson" type="text" size="medium" icon="el-icon-tickets" @click="handleGenerateJson">{{$t('fm.actions.json')}}</el-button>-->
-            <!--              <el-button v-if="generateCode" type="text" size="medium" icon="el-icon-document" @click="handleGenerateCode">{{$t('fm.actions.code')}}</el-button>-->
-            <!--            </el-header>-->
+            <!--<el-header class="btn-bar" style="height: 45px;">-->
+            <!--<slot name="action">-->
+            <!--</slot>-->
+            <!--<el-button v-if="upload" type="text" size="medium" icon="el-icon-upload2" @click="handleUpload">{{$t('fm.actions.import')}}</el-button>-->
+            <!--<el-button v-if="clearable" type="text" size="medium" icon="el-icon-delete" @click="handleClear">{{$t('fm.actions.clear')}}</el-button>-->
+            <!--<el-button v-if="generateJson" type="text" size="medium" icon="el-icon-tickets" @click="handleGenerateJson">{{$t('fm.actions.json')}}</el-button>-->
+            <!--<el-button v-if="generateCode" type="text" size="medium" icon="el-icon-document" @click="handleGenerateCode">{{$t('fm.actions.code')}}</el-button>-->
+            <!--</el-header>-->
             <el-main :class="{'widget-empty': widgetForm.list.length === 0}">
               <widget-form v-if="!resetJson" ref="widgetForm" :data="widgetForm" :select.sync="widgetFormSelect"
+                           :zbDatas="zbDatas"  :cellPro="cellPro" :jizuData="jizuData" :werks="werks" :bukrs="bukrs"
                            :cell-dom.sync="cellDomBlue" :area-dom.sync="areaDomRed" :ui-select="uiSelect"></widget-form>
             </el-main>
           </el-container>
@@ -105,10 +106,13 @@
                 <zhi-biao-config v-show="configTab ==='zhibiao'" :data="zhiBiaoSelect"
                                  :zbattribute="zbAttribute"></zhi-biao-config>
                 <widget-config ref="widgetConfig" v-show="configTab ==='widget'" :data="widgetFormSelect"
-                               :currcheck.sync="currentCheck" @show-add-column="addColumn" @show-add-row="addRow"
-                               @drag-end="dragend" @remove-column="removeColumn" @remove-row="removeRow"
-                               @merge-cell="mergeCell" @update-row-check="updateRowCheck"
-                               @show-jz="widgetConShowJz"></widget-config>
+                               :currcheck.sync="currentCheck" :module="module"
+                               :cell-dom="cellDomBlue" :area-dom="areaDomRed"
+                               @show-add-column="addColumn" @show-add-row="addRow" @drag-end="dragend"
+                               @remove-column="removeColumn" @remove-row="removeRow"
+                               @merge-cell="mergeCell" @update-row-check="updateRowCheck" @show-jz="widgetConShowJz"
+                               @cell-auto-computed="cellAutoComputed"
+                               @clean-cell-dom="cleanCellDom"></widget-config>
                 <form-config v-show="configTab ==='form'" :data="widgetForm.config"></form-config>
               </el-main>
             </el-container>
@@ -122,8 +126,9 @@
             width="1000px"
             form
           >
-            <generate-form insite="true" @on-change="handleDataChange" v-if="previewVisible" :data="widgetForm"
-                           :value="widgetModels" :remote="remoteFuncs" ref="generateForm">
+            <generate-form insite="true" @on-change="handleDataChange" v-if="previewVisible" :data="widgetForm" :werks="werks" :bukrs="bukrs"
+                           :zbDatas="zbDatas" :cellPro="cellPro" :jizuData="jizuData" :showGrid="false"
+                           :value="widgetModels" :remote="remoteFuncs" ref="generateForm" :width_="width_" :height_="height_">
 
               <template v-slot:blank="scope">
                 Width <el-input v-model="scope.model.blank.width" style="width: 100px"></el-input>
@@ -218,7 +223,7 @@
   import {getReport, postReport, getBbfl} from '@/api/report';
   import {getZb, getZbDetal} from '@/api/jsjdQuery';
   import _clonedeep from 'lodash/cloneDeep'
-
+  import { getMethod } from "@/util/method";
   export default {
     name: 'fm-making-form',
     components: {
@@ -252,9 +257,22 @@
         type: Boolean,
         default: false
       },
+      module: {
+        type: String,
+        default: 'jsjd'
+      },
+      bukrs: {
+        type: String,
+        default: "5120"
+      },
+      werks: {
+        type: String,
+        default: "W040"
+      },
     },
     data() {
       return {
+        zbDatas: [],
         resetJson: false,
         showAddColumn: false,
         widgetForm: JSON.parse(JSON.stringify(templateInitialData)),
@@ -314,18 +332,27 @@
         currentCheck: [],
         cellDomBlue: null,
         areaDomRed: null,
+        cellPro: {},
+        jizuData:'',
+        sbData:'',
         uiSelect: {
           jz: [],
           sb: [],
         },
+        width_: 230,
+        height_: 70,
         quateTableLoading: false,
       }
     },
     mounted() {
       this.cloneDeep = require('lodash').cloneDeep
+      this.cellPro = {datasource: 'TPRI_VUE', table: 'TPRI_DMP_REPORT_DATA_TEST', field: 'VALUE'}
       this.query_bbfl();
     },
     methods: {
+      cleanCellDom() {
+        this.cellDomBlue = null
+      },
       transIdLabel(datas) {
         datas.forEach(item => {
           item.id = item.dbid;
@@ -355,11 +382,41 @@
           this.bbflTreeData = this['bbflTreeDataFor' + this.syorjbParam]
         }
       },
+      queryjz(param) {
+        console.log(this.widgetForm.werks)
+        const p = { is_del: 0, werks: this.widgetForm.werks === "undefined"?"_null":this.widgetForm.werks, bukrs: this.widgetForm.bukrs === "undefined"?"_null":this.widgetForm.bukrs };
+        Object.assign(p, param);
+        getMethod('/sjgl/process/aqsc_zsj_jizupz?m=query', p).then(response => {
+         let options = response.dataset.datas;
+
+         let ss=[];
+          options.forEach(item => {
+            let obj=item.dbid+":"+item.txt
+            ss.push(obj)
+          })
+          this.jizuData=ss.toString()
+        })
+          .catch(() => {
+            this.$message({
+              type: "error",
+              message: "查询数据失败"
+            });
+          });
+      },
       query_zb(jtzbfl) {
         this.quateTableLoading = true
+        this.zbDatas = []
         getZb(this.syorjbParam, jtzbfl).then(res => {
           if (res.success) {
             this.zbflSelectData = [...res.dataset.datas]
+            let zbDatas_ = []
+            this.zbflSelectData.forEach(item => {
+              let obj = {}
+              obj.key = item.dbid
+              obj.title = item.zbmc
+              zbDatas_.push(obj)
+            })
+            this.zbDatas = zbDatas_
             this.quateTableLoading = false
           }
         }).catch(err => {
@@ -379,10 +436,15 @@
       selectTree(isCheck, obj) {
         if (isCheck) {
           this.selectTreeNode = obj
+          console.log(JSON.stringify(this.widgetForm))
+          this.cellPro = {datasource: 'TPRI_VUE', table: 'TPRI_DMP_REPORT_DATA_TEST', field: 'VALUE'}
           const {dbid, is_temp} = this.selectTreeNode
           is_temp === '1' && this.queryTemplateData(dbid)
           is_temp === '0' && this.handleClear()
           is_temp === '0' && this.query_zb(dbid)
+          this.$nextTick(() => {
+            this.queryjz();
+          })
         } else {
           this.selectTreeNode = null
           this.handleClear()
@@ -468,7 +530,6 @@
               item = item[0]
             }
             if (item.type === 'table') {
-              console.log(item)
               let data = Object.create(null)
               // data['type'] = item.type
               // data['rows'] = item.rows
@@ -537,7 +598,7 @@
         const data = this.$refs.widgetForm && this.$refs.widgetForm.querySpreadSheetDataByWidgetForm()
         const tableDataList = []
         for (const dataItem of data) {
-          const {cols, rows, merges} = dataItem
+          const {cols, rows, merges, rightMenus} = dataItem
           const {len: columnLength} = cols
           const {len: rowLength} = rows
           const datas = []
@@ -547,35 +608,37 @@
             for (let j = 0; j < columnLength; j++) {
               if (!cells[j]) continue
               const {text} = cells[j]
-              let headers = false
-              if (i === 0) {
-                headers = true
-              }
-              if (headers) {
-                datas.push({
-                  rowIndex: i,
-                  columnIndex: j,
-                  text,
-                  headers: true, // 是否是表头
-                })
-              } else {
-                datas.push({
-                  rowIndex: i,
-                  columnIndex: j,
-                  text,
-                  headers: false, // 是否是表头
-                  zbbm: '', //
-                  datasource: '',
-                  table: '',
-                  field: '',
-                })
+              for (const m in rightMenus) {
+                if (i === Number(rightMenus[m].ri) && j === Number(rightMenus[m].ci)) {
+                  if (rightMenus[m].headers === "true") {
+                    datas.push({
+                      rowIndex: i,
+                      columnIndex: j,
+                      text: text,
+                      headers: rightMenus[m].headers, // 是否是表头
+                    })
+                  } else {
+                    datas.push({
+                      rowIndex: i,
+                      columnIndex: j,
+                      text: text,
+                      headers: rightMenus[m].headers, // 是否是表头
+                      zbbm: rightMenus[m].zbbm, //
+                      datasource: rightMenus[m].datasource,
+                      table: rightMenus[m].table,
+                      field: rightMenus[m].field,
+                    })
+                  }
+                }
               }
             }
           }
 
           tableDataList.push({
+            type: "sheet",
             cols: columnLength,
             rows: rowLength,
+            model: "model2",
             datas
           })
         }
@@ -676,8 +739,6 @@
             if (item instanceof Array) {
               item = item[0]
             }
-
-
             if (item.type === 'table') {
               let tableData = Object.create(null)
               tableData['type'] = item.type
@@ -700,18 +761,60 @@
               const data = this.$refs.widgetForm && this.$refs.widgetForm.querySpreadSheetDataByWidgetForm()
               const ss = _clonedeep(item.options)
               let sheetData = Object.create(null)
-              sheetData['type'] = item.type
-              sheetData['key'] = item.model
-              sheetData['datasource'] = ss.datasource
-              sheetData['table'] = ss.table
-              // OtherData['field'] = item.options.field
+              if (ss.length > 0) {
+                const rowsarrys = ss[0].rows
+                const rightsmenus = ss[0].rightMenus
+                const datas_ = []
+                for (const x in rowsarrys) {
+                  const cells = rowsarrys[x].cells
+                  for (const k in cells) {
+                    for (const m in rightsmenus) {
+                      const rowsColumns = {}
+                      if (Number(x) === Number(rightsmenus[m].ri) && Number(k) === Number(rightsmenus[m].ci)) {
+                        rowsColumns["rowIndex"] = Number(x)
+                        rowsColumns["columnIndex"] = Number(k)
+                        if (cells[Number(k)].type === "list"||cells[Number(k)].type === "jizu") {
+                          rowsColumns["text"] = cells[Number(k)].value
+                        } else {
+                          rowsColumns["text"] = cells[Number(k)].text
+                        }
+                        rowsColumns["headers"] = rightsmenus[m].headers
+                        if (rightsmenus[m].headers === "false") {
+                          rowsColumns["datasource"] = rightsmenus[m].datasource
+                          rowsColumns["table"] = rightsmenus[m].table
+                          rowsColumns["zbbm"] = rightsmenus[m].zbbm
+                          rowsColumns["field"] = rightsmenus[m].field
+                        }
+                        // if(!rightsmenus[m].headers){
+                        //   rowsColumns["datasource"] = "TPRI_VUE"
+                        //   rowsColumns["table"] = "TPRI_DMP_REPORT_DATA_TEST"
+                        //   rowsColumns["zbbm"] = "12"
+                        //   rowsColumns["field"] = "value"
+                        // }
+                        datas_.push(rowsColumns)
+                      }
+                    }
+                  }
+                }
+                sheetData['type'] = item.type
+                sheetData['key'] = item.model
+                sheetData['model'] = "model2"
+                sheetData['cols'] = ss[0].cols.len
+                sheetData['rows'] = ss[0].rows.len
+                sheetData['datas'] = datas_
+                // data['dataTransformRules'] = item.options.dataTransformRules
+                sheetData['defaultFields'] = 'werks,bukrs,create_by,create_time,update_by,update_time,is_del'
+                tables.push(sheetData)
+              }
+              // sheetData['datasource'] = ss.datasource
+              // sheetData['table'] = ss.table
+              // sheetData['field'] = ss.field
               item.options = data
               if (item.options.length > 0) {
                 item.options[0]['type'] = ss.type
                 item.options[0]['key'] = ss.model
                 item.options[0]['datasource'] = ss.datasource
                 item.options[0]['table'] = ss.table
-                tables.push(sheetData)
               }
             } else {
               let OtherData = Object.create(null)
@@ -740,12 +843,10 @@
           const {list} = json
           this.setJSON(JSON.parse(json), null)
           this.$nextTick(() => {
-            console.log(JSON.parse(json).list)
             for (let item of JSON.parse(json).list) {
               if (item.type === "sheet") {
                 if (item.options.length > 0) {
                   const optionsJson = item.options[0]
-                  console.log(optionsJson)
                   this.loadSpreadSheetData(optionsJson)
                 }
               }
@@ -1055,6 +1156,24 @@
         // console.log('widgetFormSelect : ', this.widgetFormSelect)
         this.uiSelect.jz.push({rowIndex: this.cellDomBlue.row.rowIndex, prop: this.cellDomBlue.column.property})
       },
+      cellAutoComputed(val) {
+        for (const wfItemIndex in this.widgetForm.list) {
+          if (this.widgetForm.list[wfItemIndex].key === this.widgetFormSelect.key) {
+            let newCellComputeRules = true
+            this.widgetForm.list[wfItemIndex].options.cellComputeRules || (this.$set(this.widgetForm.list[wfItemIndex].options, 'cellComputeRules', []));
+            for (const ruleItemIndex in this.widgetForm.list[wfItemIndex].options.cellComputeRules) {
+              (this.widgetForm.list[wfItemIndex].options.cellComputeRules[ruleItemIndex].rowIndex === this.cellDomBlue.row.rowIndex && this.widgetForm.list[wfItemIndex].options.cellComputeRules[ruleItemIndex].colIndex === this.cellDomBlue.column.columnIndex) && (this.$set(this.widgetForm.list[wfItemIndex].options.cellComputeRules[ruleItemIndex], 'formula', val), newCellComputeRules = false);
+            }
+            newCellComputeRules && (this.widgetForm.list[wfItemIndex].options.cellComputeRules.push({
+              rowIndex: this.cellDomBlue.row.rowIndex,
+              colIndex: this.cellDomBlue.column.columnIndex,
+              formula: val
+            }));
+          }
+        }
+        // console.log('=-=-=-> ', this.widgetForm)
+        // console.log('=-=-=-> ', this.widgetFormSelect)
+      },
       handleGoGithub() {
         window.location.href = 'https://github.com/upcwangying/vue-form-making'
       },
@@ -1069,7 +1188,6 @@
       handleTest() {
         this.$refs.generateForm.getData().then(result => {
           const {list} = this.widgetForm
-
           let dataList = []
           const listFunc = (data) => {
             for (let item of data) {
@@ -1078,7 +1196,6 @@
               if (item instanceof Array) {
                 item = item[0]
               }
-
               if (item.type === 'table') {
                 let data = Object.create(null)
                 data['type'] = item.type
@@ -1108,22 +1225,59 @@
                 const data = this.$refs.widgetForm && this.$refs.widgetForm.querySpreadSheetDataByWidgetForm()
                 const ss = _clonedeep(item.options)
                 let sheetData = Object.create(null)
-                sheetData['type'] = item.type
-                sheetData['key'] = item.model
-                sheetData['datasource'] = ss.datasource
-                sheetData['table'] = ss.table
-                // OtherData['field'] = item.options.field
+                if (ss.length > 0) {
+                  const rowsarrys = ss[0].rows
+                  const rightsmenus = ss[0].rightMenus
+                  console.log(rowsarrys)
+                  const datas_ = []
+                  for (const x in rowsarrys) {
+                    const cells = rowsarrys[x].cells
+                    for (const k in cells) {
+                      for (const m in rightsmenus) {
+                        const rowsColumns = {}
+                        if (Number(x) === Number(rightsmenus[m].ri) && Number(k) === Number(rightsmenus[m].ci)) {
+                          rowsColumns["rowIndex"] = Number(x)
+                          rowsColumns["columnIndex"] = Number(k)
+                          if (cells[Number(k)].type === "list") {
+                            rowsColumns["text"] = cells[Number(k)].value
+                          } else {
+                            rowsColumns["text"] = cells[Number(k)].text
+                          }
+                          rowsColumns["headers"] = rightsmenus[m].headers
+                          if (rightsmenus[m].headers === "false") {
+                            rowsColumns["datasource"] = rightsmenus[m].datasource
+                            rowsColumns["table"] = rightsmenus[m].table
+                            rowsColumns["zbbm"] = rightsmenus[m].zbbm
+                            rowsColumns["field"] = rightsmenus[m].field
+                          }
+                          datas_.push(rowsColumns)
+                        }
+                      }
+                    }
+                  }
+                  sheetData['type'] = item.type
+                  sheetData['key'] = item.model
+                  sheetData['model'] = "model2"
+                  sheetData['cols'] = ss[0].cols.len
+                  sheetData['rows'] = ss[0].rows.len
+                  sheetData['datas'] = datas_
+                  // data['dataTransformRules'] = item.options.dataTransformRules
+                  sheetData['defaultFields'] = 'werks,bukrs,create_by,create_time,update_by,update_time,is_del'
+                  dataList.push(sheetData)
+                }
                 item.options = data
                 if (item.options.length > 0) {
                   item.options[0]['type'] = ss.type
                   item.options[0]['key'] = ss.model
                   item.options[0]['datasource'] = ss.datasource
                   item.options[0]['table'] = ss.table
-                  dataList.push(sheetData)
                 }
               } else {
                 let OtherData = Object.create(null)
                 OtherData['type'] = item.type
+                if (item.type === 'databook') {
+                  OtherData['groupcode'] = item.options.groupcode
+                }
                 OtherData['key'] = item.model
                 OtherData['value'] = item.options.defaultValue
                 OtherData['datasource'] = item.options.datasource

@@ -53,6 +53,14 @@
             :remote="remote"
             :disabled="disabled"
             :readonly="readonly"
+            :zbbmDatas="zbDatas"
+            :cellPro="cellPro"
+            :jizuData="jizuData"
+            :showGrid="showGrid"
+            :werks="werks"
+            :bukrs="bukrs"
+            :width_="width_"
+            :height_="height_"
             @input-change="onInputChange"
           >
           </generate-form-item>
@@ -71,18 +79,22 @@ export default {
   components: {
     GenerateFormItem
   },
-  props: ['data', 'remote', 'value', 'insite', 'formLoading', 'disabled', 'readonly'],
+  props: ['data', 'remote', 'value', 'insite', 'formLoading', 'disabled', 'readonly', 'module',
+    'zbDatas','cellPro','jizuData','showGrid','werks','bukrs','width_','height_'],
   data () {
     return {
       models: {},
-      rules: {}
+      rules: {},
+      module_: this.module || 'jsjd'
     }
   },
   created () {
     this.generateModule(this.data.list)
   },
   mounted () {
-    this.loadsheetData(this.data.list)
+    this.querysheetDate(this.data.list)
+    // this.displaystrokestyle(true)
+    // this.displayTableOnly(["sheet"])
   },
   methods: {
     generateModule (genList) {
@@ -151,13 +163,19 @@ export default {
     reset () {
       this.$refs.generateForm.resetFields()
     },
+    querysheetDate(genList){
+      this.loadsheetData(genList)
+    },
     loadsheetData(genList) {
       for (let i = 0; i < genList.length; i++) {
         if (genList[i].type === 'sheet') {
           if (genList[i].options.length > 0) {
             const optionsJson = genList[i].options[0]
-            this.$refs.generateFormItem_2 && this.$refs.generateFormItem_2[0].loadSpreadSheetDataByGenerateFormItem(optionsJson)
-
+            for (let j = 0; j < this.$refs.generateFormItem_2.length; j++) {
+              if(this.$refs.generateFormItem_2[j].widget.type ===  "sheet"){
+                this.$refs.generateFormItem_2[j].loadSpreadSheetDataByGenerateFormItem(optionsJson)
+              }
+            }
           }
         }
       }
@@ -211,8 +229,37 @@ export default {
         }
       })
     },
+    displayTableOnly(showOnlyArray) {
+      const generateFormItem_1 = this.$refs['generateFormItem_1'] || null;
+      const generateFormItem_2 = this.$refs['generateFormItem_2'] || null;
+      generateFormItem_1 && generateFormItem_1.forEach(item => {
+        item.displayTableOnly(showOnlyArray)
+      })
+      generateFormItem_2 && generateFormItem_2.forEach(item => {
+        item.displayTableOnly(showOnlyArray)
+      })
+    },
+    resetReportStatus() {
+      const generateFormItem_1 = this.$refs['generateFormItem_1'] || null;
+      const generateFormItem_2 = this.$refs['generateFormItem_2'] || null;
+      generateFormItem_1 && generateFormItem_1.forEach(item => {
+        item.resetReportStatus()
+      })
+      generateFormItem_2 && generateFormItem_2.forEach(item => {
+        item.resetReportStatus()
+      })
+    }
   },
   watch: {
+    zbDatas(val){
+      this.zbDatas=val
+    },
+    cellPro(val){
+      this.cellPro=val
+    },
+    jizuData(val){
+      this.jizuData=val
+    },
     data: {
       deep: true,
       handler (val) {

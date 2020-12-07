@@ -29,6 +29,7 @@ export default {
         divider: 'Divider',
         jizu: 'Unit',
         staff: 'Person',
+        databook: 'DataBook',
         sheet: 'SpreadSheet'
       },
       basic: {

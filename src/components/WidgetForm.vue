@@ -54,8 +54,9 @@
               </el-row>
             </template>
             <template v-else>
-              <widget-form-item v-if="element && element.key" ref="widget_form_item_table" :key="element.key" :element="element"
-                                :select.sync="selectWidget" :celldom.sync="cellDomBlue" :areadom.sync="areaDomRed"
+              <widget-form-item v-if="element && element.key" ref="widget_form_item_table" :key="element.key" :element="element"   :werks="werks"
+                                :bukrs="bukrs"
+                                :select.sync="selectWidget" :celldom.sync="cellDomBlue" :areadom.sync="areaDomRed"  :zbbmDatas="zbDatas"  :cellPro="cellPro" :jizuData="jizuData"
                                 :index="index" :data="data" :ui-select="uiselect" :changeshowtt="changeShowTableTag"></widget-form-item>
             </template>
           </template>
@@ -74,7 +75,7 @@
       Draggable,
       WidgetFormItem
     },
-    props: ['data', 'select', 'cellDom', 'areaDom', 'uiSelect'],
+    props: ['data', 'select', 'cellDom', 'areaDom', 'uiSelect','zbDatas','cellPro','jizuData','werks','bukrs'],
     data () {
       return {
         selectWidget: this.select,
@@ -97,10 +98,18 @@
     },
     methods: {
       querySpreadSheetDataByWidgetForm() {
-        return this.$refs.widget_form_item_table && this.$refs.widget_form_item_table[0].querySpreadSheetDataByWidgetFormItem()
+        for (let i in this.$refs.widget_form_item_table) {
+          if(this.$refs.widget_form_item_table[i].element.type === "sheet"){
+            return this.$refs.widget_form_item_table && this.$refs.widget_form_item_table[0].querySpreadSheetDataByWidgetFormItem()
+          }
+        }
       },
       loadSpreadSheetDataByWidgetForm(data) {
-         this.$refs.widget_form_item_table && this.$refs.widget_form_item_table[0].loadSpreadSheetDataByWidgetFormItem(data)
+        for (let i in this.$refs.widget_form_item_table) {
+          if(this.$refs.widget_form_item_table[i].element.type === "sheet"){
+            this.$refs.widget_form_item_table && this.$refs.widget_form_item_table[i].loadSpreadSheetDataByWidgetFormItem(data)
+          }
+        }
       },
       updateSelectWidget(index) {
         if (this.data.list[index].type === 'table') {
@@ -236,6 +245,15 @@
       },
       areaDomRed (val) {
         this.$emit('update:areaDom', val)
+      },
+      zbDatas(val){
+        this.zbDatas=val
+      },
+      cellPro(val){
+        this.cellPro=val
+      },
+      jizuData(val){
+        this.jizuData=val
       },
       selectWidget: {
         handler (val) {

@@ -5,6 +5,7 @@ export const basicComponents = [
     options: {
       width: '100%',
       defaultValue: '',
+      readonly: false,
       required: false,
       dataType: 'string',
       pattern: '',
@@ -21,6 +22,7 @@ export const basicComponents = [
     options: {
       width: '100%',
       defaultValue: '',
+      readonly: false,
       required: false,
       disabled: false,
       pattern: '',
@@ -37,6 +39,7 @@ export const basicComponents = [
       width: '',
       required: false,
       defaultValue: 0,
+      readonly: false,
       min: '',
       max: '',
       step: 1,
@@ -187,6 +190,8 @@ export const basicComponents = [
     icon: 'icon-date',
     options: {
       defaultValue: '',
+      readonly: false,
+      disabled: false,
       width: '',
       datasource: 'TPRI_VUE',
       table: 'TPRI_DMP_REPORT_DATA_TEST',
@@ -312,6 +317,8 @@ export const basicComponents = [
     icon: 'icon-wenzishezhi-',
     options: {
       defaultValue: 'This is a text',
+      readonly: false,
+      disabled: false,
       customClass: '',
       datasource: 'TPRI_VUE',
       table: 'TPRI_DMP_REPORT_DATA_TEST',
@@ -322,6 +329,8 @@ export const basicComponents = [
     type: 'jizu',
     icon: '',
     options: {
+      readonly: false,
+      disabled: false,
       width: '',
       datasource: 'TPRI_VUE',
       table: 'TPRI_DMP_REPORT_DATA_TEST',
@@ -332,6 +341,22 @@ export const basicComponents = [
     type: 'staff',
     icon: '',
     options: {
+      readonly: false,
+      disabled: false,
+      width: '',
+      datasource: 'TPRI_VUE',
+      table: 'TPRI_DMP_REPORT_DATA_TEST',
+      field: 'value'
+    }
+  },
+  {
+    type: 'databook',
+    icon: '',
+    options: {
+      groupcode:[],
+      defaultValue: '',
+      readonly: false,
+      disabled: false,
       width: '',
       datasource: 'TPRI_VUE',
       table: 'TPRI_DMP_REPORT_DATA_TEST',
@@ -463,6 +488,7 @@ export const layoutComponents = [
     options: {
       datasource: 'TPRI_VUE',
       table: 'TPRI_DMP_REPORT_DATA_TEST',
+      field: 'value'
     }
   }
 ]
